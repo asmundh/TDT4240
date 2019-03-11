@@ -3,6 +3,9 @@
 *.ap_
 *.aab
 
+#Mac
+.DS_Store
+
 # Files for the ART/Dalvik VM
 *.dex
 
@@ -34,6 +37,7 @@ proguard/
 captures/
 
 # IntelliJ
+.idea
 *.iml
 .idea/workspace.xml
 .idea/tasks.xml
