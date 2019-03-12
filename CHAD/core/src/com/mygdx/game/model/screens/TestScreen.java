@@ -3,45 +3,40 @@ package com.mygdx.game.model.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.components.StateComponent;
-import com.mygdx.game.model.systems.GameStateManager;
 
-public class GameScreen extends ScreenAdapter implements ScreenInterface {
+public class TestScreen extends ScreenAdapter implements ScreenInterface {
 
     CardGame game;
 
-    protected GameScreen(CardGame game) {
+    public TestScreen(CardGame game){
         this.game = game;
     }
 
     @Override
     public void update(float dt) {
-        System.out.print("Game");
+        System.out.print("Test");
         handleInput();
     }
 
     @Override
     public void draw() {
         GL20 gl = Gdx.gl;
-        gl.glClearColor(0, 0, 1, 1);
+        gl.glClearColor(0, 1, 0, 1);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    }
-
-    @Override
-    public void render (float dt) {
-        update(dt);
-        draw();
     }
 
     @Override
     public void handleInput() {
-        if(Gdx.input.isTouched()){
-            game.setScreen(new TestScreen(game));
+        if(Gdx.input.isTouched()) {
+            game.setScreen(new MenuScreen(game));
             //game.getScreen().dispose();
         }
+    }
 
+    @Override
+    public void render (float dt) {
+        draw();
+        update(dt);
     }
 }
