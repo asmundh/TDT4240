@@ -1,10 +1,10 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.model.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.components.StateComponent;
-import com.mygdx.game.systems.GameStateManager;
+import com.mygdx.game.model.components.StateComponent;
+import com.mygdx.game.model.systems.GameStateManager;
 
 public class MenuScreen extends StateComponent {
     private Texture playBtn;

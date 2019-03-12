@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.screens.MenuScreen;
-import com.mygdx.game.systems.GameStateManager;
+import com.mygdx.game.model.screens.MenuScreen;
+import com.mygdx.game.model.systems.GameStateManager;
 
 public class CardGame extends ApplicationAdapter {
 	SpriteBatch batch;
