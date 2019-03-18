@@ -13,7 +13,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     public MenuScreen(CardGame game) {
         playBtn = new Texture("badlogic.jpg");
         this.game = game;
-
     }
 
     @Override
