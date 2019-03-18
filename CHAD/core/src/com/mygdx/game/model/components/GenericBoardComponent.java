@@ -11,8 +11,8 @@ import javax.swing.ComponentInputMap;
 public class GenericBoardComponent {
 
     public Texture boardTexture;
-    public Player playerOne;
-    public Player playerTwo;
+    public PlayerComponent playerOne;
+    public PlayerComponent playerTwo;
     public List<Card> handOne = new ArrayList();
     public List<Card> handTwo = new ArrayList();
     public Card cardChosenOne;
