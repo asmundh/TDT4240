@@ -7,7 +7,7 @@ package com.mygdx.game.components;
  * and a type, e.g. damage.
  */
 
-public class CardPowerComponent {
+public class CardPowerComponent implements Component{
     public String powerName;
     public String powerEffectText;
     public int powerSize;
