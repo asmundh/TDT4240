@@ -3,14 +3,11 @@ package com.mygdx.game.model.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.components.StateComponent;
-import com.mygdx.game.model.systems.GameStateManager;
 
 public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
-    CardGame game;
+    private CardGame game;
 
     protected GameScreen(CardGame game) {
         this.game = game;

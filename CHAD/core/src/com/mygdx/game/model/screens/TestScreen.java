@@ -7,7 +7,7 @@ import com.mygdx.game.CardGame;
 
 public class TestScreen extends ScreenAdapter implements ScreenInterface {
 
-    CardGame game;
+    private CardGame game;
 
     public TestScreen(CardGame game){
         this.game = game;

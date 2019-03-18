@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,7 +10,7 @@ import com.mygdx.game.model.systems.GameStateManager;
 
 public class CardGame extends Game {
 	public SpriteBatch batch;
-	Texture img;
+	private Texture img;
 
 	private GameStateManager gsm;
 	
