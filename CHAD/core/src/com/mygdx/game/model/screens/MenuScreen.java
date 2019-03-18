@@ -36,8 +36,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void render (float dt) {
-        draw();
         update(dt);
+        draw();
 
     }
 
@@ -45,7 +45,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     public void handleInput() {
         if (Gdx.input.justTouched()) {
             game.setScreen(new GameScreen(game));
-            //game.getScreen().dispose();
         }
 
     }
