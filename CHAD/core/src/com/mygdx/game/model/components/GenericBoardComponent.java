@@ -4,11 +4,10 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ComponentInputMap;
 
-public class GenericBoardComponent {
+public class GenericBoardComponent implements Component{
 
     public Texture boardTexture;
     public PlayerComponent playerOne;
