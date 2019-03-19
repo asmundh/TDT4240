@@ -10,6 +10,11 @@ import com.mygdx.game.model.screens.MenuScreen;
 public class CardGame extends Game {
 	public SpriteBatch batch;
 	private Texture img;
+	public AndroidInterface androidInterface;
+
+	public CardGame(AndroidInterface androidInterface){
+		this.androidInterface = androidInterface;
+	}
 	
 	@Override
 	public void create () {
@@ -26,6 +31,7 @@ public class CardGame extends Game {
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.render();
+		System.out.println(this.androidInterface.getMessage());
 	}
 	
 	@Override
