@@ -19,7 +19,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     private Sprite settingBtn;
     private SpriteBatch sb;
 
-    public MenuScreen(CardGame game){ // Constructor initializes sprites and sets the sprite batch
+    public MenuScreen(CardGame game){ // Constructor initializes sprites and sets the sprite batch for the class
         super();
         this.game = game;
         sb = game.batch;
