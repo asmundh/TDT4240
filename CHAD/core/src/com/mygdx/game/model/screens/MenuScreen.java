@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.CardGame;
+import com.mygdx.game.model.screens.utils.assets;
 
 public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -32,8 +33,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     public void create() {
         playBtn.setSize(480,160);   // set size of play button
         settingBtn.setSize(480,160);   // set size of setting button
-        playBtn.setPosition(CardGame.WIDTH/4,CardGame.HEIGHT/3);   //set position of play button
-        settingBtn.setPosition(CardGame.WIDTH/4,CardGame.HEIGHT/6);   //set position of setting button
+        playBtn.setPosition(CardGame.WIDTH/2 -  playBtn.getWidth()/2,CardGame.HEIGHT/3);   //set position of play button
+        settingBtn.setPosition(CardGame.WIDTH/2 - settingBtn.getWidth()/2,CardGame.HEIGHT/6);   //set position of setting button
     }
 
     @Override
