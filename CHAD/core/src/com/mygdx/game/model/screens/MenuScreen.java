@@ -70,6 +70,4 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         update(dt);
         draw();
     }
-
-
 }
