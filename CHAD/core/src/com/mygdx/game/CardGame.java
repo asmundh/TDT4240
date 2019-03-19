@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,6 +18,7 @@ public class CardGame extends Game {
 		img = new Texture("badlogic.jpg");
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		this.setScreen(new MenuScreen(this));
+		Engine engine = new Engine();
 	}
 
 	@Override
