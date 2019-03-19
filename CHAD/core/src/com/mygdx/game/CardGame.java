@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.model.screens.MenuScreen;
 
 public class CardGame extends Game {
+	public final static int HEIGHT = 1080;
+	public final static int WIDTH = 1920;
+	public final static String TITLE = "C.H.A.D";
+
 	public SpriteBatch batch;
 	private Texture img;
 	
