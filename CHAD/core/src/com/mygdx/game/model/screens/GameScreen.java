@@ -14,6 +14,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     @Override
+    public void create() {}
+
+    @Override
     public void update(float dt) {
         handleInput();
     }

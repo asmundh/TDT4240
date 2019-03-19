@@ -11,20 +11,22 @@ import com.mygdx.game.CardGame;
 public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
     private CardGame game;
+
+    // Sprites for buttons and background
     private Sprite backgroud;
     private Sprite playBtn;
     private Sprite settingBtn;
     private SpriteBatch sb;
 
-    public MenuScreen(CardGame game){
+    public MenuScreen(CardGame game){ // Constructor initializes sprites and sets the sprite batch
         super();
         this.game = game;
         sb = game.batch;
         backgroud = new Sprite(new Texture("textures/background.png"));
         playBtn = new Sprite(new Texture("textures/PlayBtn.png"));
-        settingBtn = new Sprite(new Texture("textures/shitBtn.png"));
+        settingBtn = new Sprite(new Texture("textures/settingBtn.png"));
 
-        this.create();
+        this.create(); // Run create on one-time operations
     }
 
     public void create() {
@@ -35,12 +37,12 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt) { // Only thing we're checking for is if user presses button
         handleInput();
     }
 
     @Override
-    public void draw() {
+    public void draw() { // Draws sprite batch
         GL20 gl = Gdx.gl;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -52,15 +54,17 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     @Override
-    public void handleInput() {
+    public void handleInput() { // Checks if one of the buttons are pressed
         if (Gdx.input.isTouched()) {
+            // Checks for clicks using Rectangle's .contains()-method
             if (playBtn.getBoundingRectangle().contains(Gdx.input.getX(), Gdx.graphics.getHeight()-Gdx.input.getY())) {
                 // Play button pressed
                 game.setScreen(new GameScreen(game));
+                this.dispose();
             }
             if (settingBtn.getBoundingRectangle().contains(Gdx.input.getX(), Gdx.graphics.getHeight()-Gdx.input.getY())) {
                 // Setting button pressed
-                game.dispose(); // TODO remove dispose and use setScreen
+                // TODO se setScreen on appropriate screen
             }
         }
     }
@@ -71,5 +75,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         draw();
     }
 
-
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
 }

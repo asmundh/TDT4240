@@ -2,11 +2,19 @@ package com.mygdx.game.model.screens;
 
 public interface ScreenInterface {
 
-    public void update(float dt);
+    public void create(); // Used for one-time startup operations
 
-    public void draw();
+    public void update(float dt); // Used to update data that is going to be rendered
 
-    public void handleInput();
+    public void draw(); // Used to actually draw the elements to screen
 
-    public void render(float dt);
+    public void handleInput(); // Should contain methods to handle input from used
+
+    public void render(float dt); // Should run update() and draw()
+
+    //public void dispose(); // Disposes the screen. Run after changing screen
+
+    //OBS: render and dispose must be added manually (via "Generate" in IntelliJ)
+
+
 }
