@@ -33,6 +33,9 @@ public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Scr
     }
 
     @Override
+    public void create() {}
+
+    @Override
     public void update(float dt) {
         progress = MathUtils.lerp(progress, assets.getProgress(), .1f);
         if (assets.update() && progress >= assets.getProgress() - 0.001f) {

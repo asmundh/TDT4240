@@ -68,6 +68,9 @@ public class SplashScreen extends ScreenAdapter implements ScreenInterface, Scre
     }
 
     @Override
+    public void create() {}
+
+    @Override
     public void update(float dt) {
     }
 

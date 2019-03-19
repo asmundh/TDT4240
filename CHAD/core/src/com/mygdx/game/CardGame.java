@@ -9,15 +9,20 @@ import com.mygdx.game.model.screens.LoadingScreen;
 import com.mygdx.game.model.screens.utils.assets;
 
 public class CardGame extends Game {
+	public final static int HEIGHT = 1080; // Dev: DEL in production, sets window size to mobile
+	public final static int WIDTH = 1920;
+	public final static String TITLE = "C.H.A.D";
+
 	public SpriteBatch batch;
 	private assets assets;
 	
 	@Override
 	public void create () {
 		assets = new assets();
-		Gdx.graphics.setWindowedMode(840, 400); // Dev: DEL in production, sets window size to mobile
+		Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
 
 		batch = new SpriteBatch();
+
 		Gdx.gl.glClearColor(1, 0, 0, 1);
     
 		//this.setScreen(new MenuScreen(this));

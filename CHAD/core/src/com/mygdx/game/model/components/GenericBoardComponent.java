@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.smartcardio.Card;
 import javax.swing.ComponentInputMap;
 
 public class GenericBoardComponent {

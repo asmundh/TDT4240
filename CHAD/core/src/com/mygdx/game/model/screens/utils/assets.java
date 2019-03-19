@@ -8,6 +8,12 @@ public class assets {
 
     public static String badlogic = "badlogic.jpg";
 
+    public static String playBtn = "textures/playBtn.png";
+
+    public static String settingBtn = "textures/settingBtn.png";
+
+    public static String background = "textures/background.png";
+
     private static AssetManager assetManager;
 
     public assets() {
@@ -20,6 +26,9 @@ public class assets {
 
     public static void load() {
         assetManager.load(badlogic, Texture.class);
+        assetManager.load(playBtn, Texture.class);
+        assetManager.load(settingBtn, Texture.class);
+        assetManager.load(background, Texture.class);
     }
 
     public static float getProgress() {
