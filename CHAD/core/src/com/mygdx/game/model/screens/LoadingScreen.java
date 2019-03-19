@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.assets;
+import com.mygdx.game.model.screens.utils.Assets;
 
 public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Screen {
 
@@ -29,7 +29,7 @@ public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Scr
     @Override
     public void show() {
         this.progress = 0f;
-        assets.load();
+        Assets.load();
     }
 
     @Override
@@ -37,8 +37,8 @@ public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Scr
 
     @Override
     public void update(float dt) {
-        progress = MathUtils.lerp(progress, assets.getProgress(), .1f);
-        if (assets.update() && progress >= assets.getProgress() - 0.001f) {
+        progress = MathUtils.lerp(progress, Assets.getProgress(), .1f);
+        if (Assets.update() && progress >= Assets.getProgress() - 0.001f) {
             //game.setScreen(new SplashScreen(game));
             game.setScreen(new MenuScreen(game));
         }

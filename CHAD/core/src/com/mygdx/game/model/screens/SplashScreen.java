@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.assets;
+import com.mygdx.game.model.screens.utils.Assets;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
@@ -43,7 +43,7 @@ public class SplashScreen extends ScreenAdapter implements ScreenInterface, Scre
             }
         };
 
-        Texture splashTex = assets.getTexture(assets.badlogic);
+        Texture splashTex = Assets.getTexture(Assets.badlogic);
         Image logo = new Image(splashTex);
 
         logo.setOrigin(logo.getWidth() / 2, logo.getHeight() / 2);

@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.model.screens.LoadingScreen;
-import com.mygdx.game.model.screens.utils.assets;
+import com.mygdx.game.model.screens.utils.Assets;
 
 public class CardGame extends Game {
 	public final static int HEIGHT = 1080; // Dev: DEL in production, sets window size to mobile
@@ -14,11 +14,11 @@ public class CardGame extends Game {
 	public final static String TITLE = "C.H.A.D";
 
 	public SpriteBatch batch;
-	private assets assets;
+	private Assets assets;
 	
 	@Override
 	public void create () {
-		assets = new assets();
+		assets = new Assets();
 		Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
 
 		batch = new SpriteBatch();

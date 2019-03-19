@@ -4,7 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-public class assets {
+public class Assets {
 
     public static String badlogic = "badlogic.jpg";
 
@@ -16,7 +16,7 @@ public class assets {
 
     private static AssetManager assetManager;
 
-    public assets() {
+    public Assets() {
         assetManager = new AssetManager();
     }
 
