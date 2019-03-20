@@ -1,13 +1,8 @@
 package com.mygdx.game.model.components;
-
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.List;
 
-import javax.swing.ComponentInputMap;
-
-public class GenericBoardComponent {
+public class BoardComponent {
 
     public Texture boardTexture;
     public Player playerOne;
@@ -18,3 +13,4 @@ public class GenericBoardComponent {
     public Card cardChosenTwo;
 
 }
+
