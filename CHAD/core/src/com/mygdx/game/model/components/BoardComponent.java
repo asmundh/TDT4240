@@ -1,15 +1,10 @@
 package com.mygdx.game.model.components;
-
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.ArrayList;
 import java.util.List;
+import com.badlogic.ashley.core.Component;
 
-import javax.smartcardio.Card;
-import javax.swing.ComponentInputMap;
-
-public class GenericBoardComponent {
+public class BoardComponent implements Component {
 
     public Texture boardTexture;
     public PlayerComponent playerOne;
@@ -21,3 +16,4 @@ public class GenericBoardComponent {
     public List<Card> deckOne = new ArrayList();
     public List<Card> deckTwo = new ArrayList();
 }
+
