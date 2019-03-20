@@ -1,4 +1,4 @@
-package com.mygdx.game.components;
+package com.mygdx.game.model.components;
 
 /*
  * This component describes the power of a card.

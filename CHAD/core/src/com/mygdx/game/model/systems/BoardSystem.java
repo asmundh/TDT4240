@@ -13,8 +13,20 @@ public class BoardSystem {
     }
 
     public void drawCard(Entity entity) {
+        /*
+        TODO: add functionality for drawing a new card.
+         */
+
 
 
     }
+
+    public void chooseCard(Entity entity) {
+        /*
+        TODO: add functionality for choosing a card to attack with
+         */
+    }
+
+
 
 }
