@@ -4,20 +4,29 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.model.screens.MenuScreen;
+import com.mygdx.game.model.screens.LoadingScreen;
+import com.mygdx.game.model.screens.utils.Assets;
 
 public class CardGame extends Game {
+	public final static int HEIGHT = 1080; // Dev: DEL in production, sets window size to mobile
+	public final static int WIDTH = 1920;
+	public final static String TITLE = "C.H.A.D";
+
 	public SpriteBatch batch;
-	private Texture img;
+	private Assets assets;
 	
 	@Override
 	public void create () {
+		assets = new Assets();
+		Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
+
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+
 		Gdx.gl.glClearColor(1, 0, 0, 1);
-		this.setScreen(new MenuScreen(this));
+    
+		//this.setScreen(new MenuScreen(this));
+		this.setScreen(new LoadingScreen(this));
 		Engine engine = new Engine();
 	}
 
@@ -33,6 +42,14 @@ public class CardGame extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		assets.dispose();
+	}
+
+	public float getWidth() {
+		return Gdx.graphics.getWidth();
+	}
+
+	public float getHeight() {
+		return Gdx.graphics.getHeight();
 	}
 }

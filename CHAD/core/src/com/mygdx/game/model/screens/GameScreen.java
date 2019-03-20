@@ -14,8 +14,10 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     @Override
+    public void create() {}
+
+    @Override
     public void update(float dt) {
-        System.out.print("Game");
         handleInput();
     }
 
@@ -36,8 +38,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void handleInput() {
         if(Gdx.input.isTouched()){
-            game.setScreen(new TestScreen(game));
-            //game.getScreen().dispose();
+            game.setScreen(new MenuScreen(game));
         }
 
     }
