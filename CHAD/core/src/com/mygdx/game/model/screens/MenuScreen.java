@@ -22,7 +22,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         super();
         this.game = game;
         sb = game.batch;
-        backgroud = new Sprite(Assets.getTexture(Assets.background));
+        backgroud = new Sprite(Assets.getTexture(Assets.menuBG));
+        //backgroud = new Sprite(Assets.getTexture(Assets.background));
         playBtn = new Sprite(Assets.getTexture(Assets.playBtn));
         settingBtn = new Sprite(Assets.getTexture(Assets.settingBtn));
 
