@@ -14,6 +14,8 @@ public class Assets {
 
     public static String background = "textures/background.png";
 
+    public static String menuBG = "textures/menu_bg.png";
+
     private static AssetManager assetManager;
 
     public Assets() {
@@ -29,6 +31,7 @@ public class Assets {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
+        assetManager.load(menuBG, Texture.class);
     }
 
     public static float getProgress() {
