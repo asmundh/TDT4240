@@ -1,8 +1,12 @@
 package com.mygdx.game.model.components;
+
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Texture;
 
+import java.util.ArrayList;
 import java.util.List;
-import com.badlogic.ashley.core.Component;
+
+import javax.smartcardio.Card;
 
 public class BoardComponent implements Component {
 

@@ -1,7 +1,5 @@
 package com.mygdx.game.model.systems;
 
-import com.mygdx.game.view.CardView;
-
 import javax.swing.text.html.parser.Entity;
 
 public class CardSystem {
@@ -12,7 +10,7 @@ public class CardSystem {
          */
     }
 
-    @Override
+    //@Override
     public void processEntity(Entity entity) {
         //TODO Get entity,make actions, like move card, attack initated etc.
 
