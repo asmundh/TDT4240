@@ -28,7 +28,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         super();
         this.game = game;
         sb = game.batch;
-        background = Assets.getTexture(Assets.background);
+        background = Assets.getTexture(Assets.menuBG);
 
         create(); // Run create on one-time operations
     }
@@ -38,15 +38,15 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         Gdx.input.setInputProcessor(stage); // Set inputs to be handled by the stage
 
         // Initialize a  button using texture from Assets, first is up-texture, second is down. Set the size, make is transformable and set the origin to the middle
-        final Button playBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.playBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))));
-        playBtn.setSize(400, 100);
+        final Button playBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.playBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.playBtn))));
         playBtn.setTransform(true);
+        playBtn.setSize(300, 108);
         playBtn.setOrigin(playBtn.getWidth()/2, playBtn.getHeight()/2);
 
         // Initialize a  button using texture from Assets. Set the size, make is transformable and set the origin to the middle
-        final Button setBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.playBtn))));
-        setBtn.setSize(400, 100);
+        final Button setBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))));
         setBtn.setTransform(true);
+        setBtn.setSize(300, 108);
         setBtn.setOrigin(setBtn.getWidth()/2, setBtn.getHeight()/2);
 
         playBtn.addListener(new ClickListener() {
@@ -88,9 +88,12 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
         Table menuTable = new Table(); // Table containing the buttons on the screen
         menuTable.add(playBtn).pad(10);
+        menuTable.getCell(playBtn).height(108).width(300);
         menuTable.row();
         menuTable.add(setBtn);
+        menuTable.getCell(setBtn).height(108).width(300);
         menuTable.setFillParent(true);
+        menuTable.moveBy(0,-200);
 
         stage.addActor(menuTable); // Add the table containing the buttons to the stage
     }
