@@ -1,14 +1,17 @@
 package com.mygdx.game.model.components;
 import com.badlogic.gdx.graphics.Texture;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
+import com.badlogic.ashley.core.Component;
+
 
 import javax.smartcardio.Card;
 import javax.swing.ComponentInputMap;
 
+public class BoardComponent implements Component {
 
-public class BoardComponent {
 
     public Texture boardTexture;
     public PlayerComponent playerOne;
