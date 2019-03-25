@@ -23,7 +23,7 @@ public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Scr
     public LoadingScreen(CardGame game) {
         this.game = game;
         shapeRenderer = new ShapeRenderer();
-        bgTex = new Texture("splash.jpg");
+        bgTex = new Texture("splash.png");
     }
 
     @Override
