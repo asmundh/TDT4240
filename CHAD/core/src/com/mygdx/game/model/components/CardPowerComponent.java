@@ -7,7 +7,9 @@ package com.mygdx.game.model.components;
  * and a type, e.g. damage.
  */
 
-public class CardPowerComponent {
+import com.badlogic.ashley.core.Component;
+
+public class CardPowerComponent implements Component {
     public String powerName;
     public String powerEffectText;
     public int powerSize;
