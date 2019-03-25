@@ -1,0 +1,43 @@
+{
+  "cards": [
+    {
+      "name": "Goblin",
+      "power": 2,
+      "health": 2,
+      "cost": 1,
+      "cardPower": {
+        "powerName": "Act like a goblin",
+        "powerEffect": "Hit your opponent with a club for extra damage",
+        "powerSize": 2,
+        "powerType": "SELF_DAMAGE_INCREASE"
+      },
+      "sprite": "goblin.png"
+    },
+    {
+      "name": "Orc",
+      "power": 3,
+      "health": 3,
+      "cost": 2,
+      "cardPower": {
+        "powerName": "Act like an orc",
+        "powerEffect": "Hit your opponent in the head for extra damage",
+        "powerSize": 2,
+        "powerType": "SELF_DAMAGE_INCREASE"
+      },
+      "sprite": "orc.png"
+    },
+    {
+      "name": "Ogre",
+      "power": 3,
+      "health": 9,
+      "cost": 5,
+      "cardPower": {
+        "powerName": "Rally ",
+        "powerEffect": "Encourage your troops to fight harder. +1 damage increase to all allies",
+        "powerSize": 1,
+        "powerType": "GROUP_DAMAGE_INCREASE"
+      },
+      "sprite": "ogre.png"
+    }
+  ]
+}
