@@ -39,7 +39,7 @@ public class SplashScreen extends ScreenAdapter implements ScreenInterface, Scre
         Runnable transitionRunnable = new Runnable() {
             @Override
             public void run() {
-                game.setScreen(new MenuScreen(game));
+                game.setScreen(new MenuScreen(game, engine));
             }
         };
 
