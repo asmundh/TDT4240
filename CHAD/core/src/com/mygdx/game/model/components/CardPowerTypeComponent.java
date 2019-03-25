@@ -1,4 +1,4 @@
-package com.mygdx.game.components;
+package com.mygdx.game.model.components;
 import com.badlogic.ashley.core.Component;
 /*
  * Stores what type of stat the power has an effect on.

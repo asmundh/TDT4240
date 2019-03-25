@@ -1,5 +1,6 @@
 package com.mygdx.game.model.screens;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -23,12 +24,14 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     private SpriteBatch sb;
     private Stage stage;
     private Texture background;
+    private Engine engine;
 
-    public MenuScreen(CardGame game){ // Constructor initializes background and runs create()
+    public MenuScreen(CardGame game, Engine engine){ // Constructor initializes background and runs create()
         super();
         this.game = game;
         sb = game.batch;
         background = Assets.getTexture(Assets.menuBG);
+        this.engine = engine;
 
         create(); // Run create on one-time operations
     }
@@ -52,7 +55,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         playBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen(game, engine));
             }
 
             @Override // Fires when the button is pressed down
