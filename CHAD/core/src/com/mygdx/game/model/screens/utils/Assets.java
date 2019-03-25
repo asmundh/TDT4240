@@ -77,8 +77,8 @@ public class Assets {
         return assetManager.get(tex, TextureAtlas.class);
     }
 
-    public static Skin getSkin(String tex) {
-        return assetManager.get(tex, Skin.class);
+    public static Skin getSkin(String path) {
+        return assetManager.get(path, Skin.class);
     }
 
 }
