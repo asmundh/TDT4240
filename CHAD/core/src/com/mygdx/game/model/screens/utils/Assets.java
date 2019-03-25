@@ -3,7 +3,7 @@ package com.mygdx.game.model.screens.utils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.HashMap;
 
@@ -22,6 +22,10 @@ public class Assets {
     public static String orc = "textures/cards/goblin.png";
 
     public static String goblin_king = "textures/background.png";
+
+    public static String deck1 = "decks/deck1.json";
+
+    public static String deck2 = "decks/deck2.json";
 
     public static HashMap<String, String> cards = new HashMap<String, String>() {{
         put("goblin", "textures/cards/goblin.png");
@@ -49,6 +53,9 @@ public class Assets {
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
 
+        assetManager.load(deck1, Skin.class);
+        assetManager.load(deck2, Skin.class);
+
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
@@ -68,6 +75,10 @@ public class Assets {
 
     public static TextureAtlas getTextureAtlas(String tex){
         return assetManager.get(tex, TextureAtlas.class);
+    }
+
+    public static Skin getSkin(String tex) {
+        return assetManager.get(tex, Skin.class);
     }
 
 }
