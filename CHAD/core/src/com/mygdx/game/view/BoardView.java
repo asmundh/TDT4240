@@ -29,7 +29,6 @@ public class BoardView {
 
 
 
-    //private String pathToImage = "goblin.png";
 
     private List<CardView> cards = new ArrayList<>();
     private List<CardView> cardsInHand = new ArrayList<>();
@@ -54,7 +53,6 @@ public class BoardView {
     };
 
 
-    //private CardView cv1 = new CardView(pathToImage, 3, 5);
 
 
 
@@ -71,22 +69,6 @@ public class BoardView {
 
 
         shapeRenderer = new ShapeRenderer();
-
-        /*
-        this.cards.add(cv1);
-        this.cards.add(cv1);
-        this.cards.add(cv1);
-        this.cards.add(cv1);
-        this.cards.add(cv1);
-        this.cards.add(cv1);
-        this.cards.add(cv1);
-
-
-        this.cardsInHand.add(cv1);
-        this.cardsInHand.add(cv1);
-        this.cardsInHand.add(cv1);
-        this.cardsInHand.add(cv1);
-       */
 
 
     }

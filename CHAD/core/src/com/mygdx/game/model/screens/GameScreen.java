@@ -15,6 +15,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     private BoardView bv;
     private SpriteBatch batch;
+
+    //adding card for testing purposes
     private CardView cv1 = new CardView("goblin.png", 3, 5);
 
 
@@ -24,6 +26,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         this.bv = new BoardView(game);
         this.batch = new SpriteBatch();
 
+        //adding cards to boardView for testing purposes
         this.bv.addCardToBoard(cv1);
         this.bv.addCardToBoard(cv1);
         this.bv.addCardToBoard(cv1);
@@ -32,14 +35,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         this.bv.addCardToBoard(cv1);
         this.bv.addCardToBoard(cv1);
         this.bv.addCardToBoard(cv1);
-
-
         this.bv.addCardToHand(cv1);
         this.bv.addCardToHand(cv1);
         this.bv.addCardToHand(cv1);
         this.bv.addCardToHand(cv1);
         this.bv.addCardToHand(cv1);
-
         this.bv.setShowHand(false);
 
     }
