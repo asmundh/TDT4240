@@ -16,9 +16,6 @@ public class BoardSystem {
         /*
         TODO: add functionality for drawing a new card.
          */
-
-
-
     }
 
     public void chooseCard(Entity entity) {
