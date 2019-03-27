@@ -37,7 +37,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public void handleInput() {
         if(Gdx.input.isTouched()){
             game.setScreen(new TestScreen(game));
-            //game.getScreen().dispose();
+
+            // game.getScreen().dispose();
         }
 
     }

@@ -24,13 +24,23 @@ public class TestScreen extends ScreenAdapter implements ScreenInterface {
         GL20 gl = Gdx.gl;
         gl.glClearColor(0, 1, 0, 1);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // try to print player name
+
     }
 
     @Override
     public void handleInput() {
         if(Gdx.input.isTouched()) {
-            game.setScreen(new MenuScreen(game));
+
+
             //game.getScreen().dispose();
+            game.setScreen(new MenuScreen(game));
+
+            // test changeView()
+            game.androidInterface.changeView();
+            System.out.println("PlayerId printed from com.mygdx.game core testscreen: " + game.androidInterface.getPlayerId());
+            System.out.println("Displayname printed from com.mygdx.game core testscreen: " + game.androidInterface.getDisplayname());
         }
     }
 

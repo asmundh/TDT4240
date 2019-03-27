@@ -22,6 +22,7 @@ public class CardGame extends Game {
 		img = new Texture("badlogic.jpg");
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		this.setScreen(new MenuScreen(this));
+		System.out.println(this.androidInterface.getMessage());
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class CardGame extends Game {
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.render();
-		System.out.println(this.androidInterface.getMessage());
+		// System.out.println(this.androidInterface.getMessage()); ONLY USED TO TEST INTERFACE
 	}
 	
 	@Override
