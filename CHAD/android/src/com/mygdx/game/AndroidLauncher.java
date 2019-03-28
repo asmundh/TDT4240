@@ -56,6 +56,9 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	// Client used to interact with the TurnBasedMultiplayer system.
 	private TurnBasedMultiplayerClient mTurnBasedMultiplayerClient = null;
 
+	// Flag to see if signed in
+	private boolean mSignedIn;
+
 	// Client used to interact with the Invitation system.
 	private InvitationsClient mInvitationsClient = null;
 
@@ -488,6 +491,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 					public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
 						if (task.isSuccessful()) {
 							Log.d(TAG, "signInSilently(): success");
+							mSignedIn = true;
 							mGoogleSignInAccount = task.getResult();
 							onConnected(task.getResult());
 						} else {
@@ -986,8 +990,13 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 	// Function to start a quickmatch from libGDX
 
-	public void startQuickMatch(){
-		Log.d(AppSettings.tag, "startQuickMatch()");
+	public void startQuickMatch() {
+
+		if (mSignedIn != true) {
+			// not signed in
+		} else {
+
+			Log.d(AppSettings.tag, "startQuickMatch()");
 
 		/*
 		// min players, maxplayers, allowAutomatch
@@ -998,36 +1007,37 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 			}
 		});
 		*/
-		Bundle autoMatchCriteria;
+			Bundle autoMatchCriteria;
 
-		int minAutoMatchPlayers = 1;
-		int maxAutoMatchPlayers = 1;
+			int minAutoMatchPlayers = 1;
+			int maxAutoMatchPlayers = 1;
 
-		if (minAutoMatchPlayers > 0) {
-			autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers,
-					maxAutoMatchPlayers, 0);
-		} else {
-			autoMatchCriteria = null;
-		}
+			if (minAutoMatchPlayers > 0) {
+				autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers,
+						maxAutoMatchPlayers, 0);
+			} else {
+				autoMatchCriteria = null;
+			}
 		/*
 		TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
 				.addInvitedPlayers(invitees)
 				.setAutoMatchCriteria(autoMatchCriteria).build();
 		*/
 
-		TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
-				.setAutoMatchCriteria(autoMatchCriteria).build();
+			TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
+					.setAutoMatchCriteria(autoMatchCriteria).build();
 
-		// Start the match
-		mTurnBasedMultiplayerClient.createMatch(tbmc)
-				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-					@Override
-					public void onSuccess(TurnBasedMatch turnBasedMatch) {
-						onInitiateMatch(turnBasedMatch);
-					}
-				})
-				.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
-		//showSpinner();
+			// Start the match
+			mTurnBasedMultiplayerClient.createMatch(tbmc)
+					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+						@Override
+						public void onSuccess(TurnBasedMatch turnBasedMatch) {
+							onInitiateMatch(turnBasedMatch);
+						}
+					})
+					.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
+			//showSpinner();
+		}
 	}
 
 	/*
