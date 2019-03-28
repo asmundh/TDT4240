@@ -39,8 +39,10 @@ public class TestScreen extends ScreenAdapter implements ScreenInterface {
 
             // test changeView()
             game.androidInterface.changeView();
+            game.androidInterface.startQuickMatch();
             System.out.println("PlayerId printed from com.mygdx.game core testscreen: " + game.androidInterface.getPlayerId());
-            System.out.println("Displayname printed from com.mygdx.game core testscreen: " + game.androidInterface.getDisplayname());
+            System.out.println("Displayname printed from com.mygdx.game core testscreen: " + game.androidInterface.getDisplayName());
+            System.out.println("Opponent displayname: " + game.androidInterface.getOpponentDisplayName());
         }
     }
 

@@ -19,10 +19,24 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
     }
 
     public String getPlayerId(){
+
         return mAndroidLauncher.getPlayerId();
     }
 
-    public String getDisplayname(){
+    public String getDisplayName(){
+
         return mAndroidLauncher.getDisplayName();
+    }
+
+    public boolean getIsDoingTurn(){
+        return mAndroidLauncher.getIsDoingTurn();
+    }
+
+    public void startQuickMatch(){
+        mAndroidLauncher.startQuickMatch();
+    }
+
+    public String getOpponentDisplayName(){
+        return mAndroidLauncher.getOpponentDisplayName();
     }
 }

@@ -31,6 +31,7 @@ import com.google.android.gms.games.TurnBasedMultiplayerClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.InvitationCallback;
 import com.google.android.gms.games.multiplayer.Multiplayer;
+import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
@@ -40,6 +41,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class AndroidLauncher extends AndroidApplication implements View.OnClickListener{
@@ -67,6 +69,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	private static final int RC_SIGN_IN = 9001;
 	final static int RC_SELECT_PLAYERS = 10000;
 	final static int RC_LOOK_AT_MATCHES = 10001;
+	final static int LIBGDX_QUICK_MATCH = 10002;
 
 	// Should I be showing the turn API?
 	public boolean isDoingTurn = false;
@@ -85,6 +88,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	private View gameView;
 	private View signInView;
 
+	private String mOpponentDisplayName = null;
 
 
 	@Override
@@ -172,7 +176,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 								mDisplayName = player.getDisplayName();
 								Log.d(AppSettings.tag, "Displayname: " + mDisplayName);
 								mPlayerId = player.getPlayerId();
-								setViewVisibility();
+								//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 							}
 						}
 				)
@@ -198,7 +202,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				.addOnFailureListener(createFailureListener(
 						"There was a problem getting the activation hint!"));
 
-		setViewVisibility();
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 
 		// As a demonstration, we are registering this activity as a handler for
 		// invitation and match events.
@@ -221,7 +225,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		mTurnBasedMultiplayerClient = null;
 		mInvitationsClient = null;
 
-		setViewVisibility();
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 	}
 
 	// This is a helper functio that will do all the setup to create a simple failure message.
@@ -301,7 +305,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				.addOnFailureListener(createFailureListener("There was a problem cancelling the match!"));
 
 		isDoingTurn = false;
-		setViewVisibility();
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 	}
 
 	// Leave the game during your turn. Note that there is a separate
@@ -319,7 +323,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				})
 				.addOnFailureListener(createFailureListener("There was a problem leaving the match!"));
 
-		setViewVisibility();
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 	}
 
 
@@ -336,7 +340,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				.addOnFailureListener(createFailureListener("There was a problem finishing the match!"));
 
 		isDoingTurn = false;
-		setViewVisibility();
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 	}
 
 
@@ -397,9 +401,9 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	// Switch to gameplay view.
 	public void setGameplayUI() {
 		isDoingTurn = true;
-		setViewVisibility();
-		mDataView.setText(mTurnData.data);
-		mTurnTextView.setText(getString(R.string.turn_label, mTurnData.turnCounter));
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
+		// COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI mDataView.setText(mTurnData.data);
+		// COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI mTurnTextView.setText(getString(R.string.turn_label, mTurnData.turnCounter));
 	}
 
 	// Helpful dialogs
@@ -647,6 +651,45 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 					.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
 			showSpinner();
 		}
+		else if(requestCode == LIBGDX_QUICK_MATCH){
+			if (resultCode != Activity.RESULT_OK) {
+				// Canceled or other unrecoverable error.
+				logBadActivityResult(requestCode, resultCode,
+						"User cancelled returning from 'Select players to Invite' dialog");
+				return;
+			}
+			// get the invitee list
+			ArrayList<String> invitees = intent
+					.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
+
+			// get automatch criteria
+			Bundle autoMatchCriteria;
+
+			int minAutoMatchPlayers = intent.getIntExtra(Multiplayer.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
+			int maxAutoMatchPlayers = intent.getIntExtra(Multiplayer.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
+
+			if (minAutoMatchPlayers > 0) {
+				autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers,
+						maxAutoMatchPlayers, 0);
+			} else {
+				autoMatchCriteria = null;
+			}
+
+			TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
+					.addInvitedPlayers(invitees)
+					.setAutoMatchCriteria(autoMatchCriteria).build();
+
+			// Start the match
+			mTurnBasedMultiplayerClient.createMatch(tbmc)
+					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+						@Override
+						public void onSuccess(TurnBasedMatch turnBasedMatch) {
+							onInitiateMatch(turnBasedMatch);
+						}
+					})
+					.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
+			showSpinner();
+		}
 	}
 
 	// startMatch() happens in response to the createTurnBasedMatch()
@@ -656,6 +699,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	// callback to OnTurnBasedMatchUpdated(), which will show the game
 	// UI.
 	public void startMatch(TurnBasedMatch match) {
+		Log.d(TAG, "startMatch()");
 		mTurnData = new SkeletonTurn();
 		// Some basic turn data
 		mTurnData.data = "First turn";
@@ -664,7 +708,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 		String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
-		showSpinner();
+		//showSpinner();
 
 		mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
 				mTurnData.persist(), myParticipantId)
@@ -778,7 +822,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 		mTurnData = null;
 
-		setViewVisibility();
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 	}
 
 	private void onCancelMatch(String matchId) {
@@ -824,7 +868,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 			return;
 		}
 
-		setViewVisibility();
+		//COMMENTED OUT BECAUSE WE DONT WANT TO USE THE PREMADE UI setViewVisibility();
 	}
 
 	private InvitationCallback mInvitationCallback = new InvitationCallback() {
@@ -928,7 +972,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				break;
 			case R.id.sign_out_button:
 				signOut();
-				setViewVisibility();
+				//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 				break;
 			case R.id.GDXButton:
 				Log.d(AppSettings.tag, "GDXButton was clicked");
@@ -940,13 +984,110 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		}
 	}
 
+	// Function to start a quickmatch from libGDX
+
+	public void startQuickMatch(){
+		Log.d(AppSettings.tag, "startQuickMatch()");
+
+		/*
+		// min players, maxplayers, allowAutomatch
+		mTurnBasedMultiplayerClient.getSelectOpponentsIntent(1, 1, true).addOnSuccessListener(new OnSuccessListener<Intent>() {
+			@Override
+			public void onSuccess(Intent intent) {
+				startActivityForResult(intent, LIBGDX_QUICK_MATCH);
+			}
+		});
+		*/
+		Bundle autoMatchCriteria;
+
+		int minAutoMatchPlayers = 1;
+		int maxAutoMatchPlayers = 1;
+
+		if (minAutoMatchPlayers > 0) {
+			autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers,
+					maxAutoMatchPlayers, 0);
+		} else {
+			autoMatchCriteria = null;
+		}
+		/*
+		TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
+				.addInvitedPlayers(invitees)
+				.setAutoMatchCriteria(autoMatchCriteria).build();
+		*/
+
+		TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
+				.setAutoMatchCriteria(autoMatchCriteria).build();
+
+		// Start the match
+		mTurnBasedMultiplayerClient.createMatch(tbmc)
+				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+					@Override
+					public void onSuccess(TurnBasedMatch turnBasedMatch) {
+						onInitiateMatch(turnBasedMatch);
+					}
+				})
+				.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
+		//showSpinner();
+	}
+
+	/*
+	These are the getFunctions used by core to get information from google play games services
+	 */
+
+	// Called from core to get the signed in players displayname
 	public String getDisplayName(){
+
 		return mDisplayName;
 	}
 
+	// Called from core to get the signed in players id
 	public String getPlayerId(){
+
 		return mPlayerId;
 	}
 
+	// Called from core to know if it is a players turn
+	public boolean getIsDoingTurn(){
+		return isDoingTurn;
+	}
+
+	// Call to get displayName of opponent
+	public String getOpponentDisplayName() {
+		Log.d(TAG, "getOpponentDisplayName()");
+		if (mMatch == null) {
+			// There is no match yet
+			Log.d(TAG, "There is no match yet");
+			return null;
+		} else {
+			// Try to find opponent ID
+			Log.d(TAG, "Your playerID "+ mPlayerId);
+			String opponentId = mMatch.getParticipantId(getNextParticipantId());
+			Log.d(TAG, "Opponent playerID "+ opponentId);
+
+			ArrayList<String> allIdsInGame = mMatch.getParticipantIds();
+			Log.d(TAG, "Size of allIdsInGame: "+ String.valueOf(allIdsInGame.size()));
+			Log.d(TAG, "Result of getNextParticipantId(): "+ getNextParticipantId());
+
+			if(opponentId == null){
+				// There is no opponent yet
+				Log.d(TAG, "There is a match, but there is no opponent yet");
+				return null;
+			}
+			else{
+				// There is an opponentID, lets find the Participant object from opponentID
+				Participant opponent = mMatch.getParticipant(getNextParticipantId());
+				if(opponent == null){
+					// Something is wrong? The opponent Participant object is null?
+					Log.d(TAG, "Something is wrong? The opponent Participant object is null?");
+					return null;
+				}
+				else{
+					// We have the opponent Participant object, we can now call getDisplayName() on it
+					mOpponentDisplayName = opponent.getDisplayName();
+					return mOpponentDisplayName;
+				}
+			}
+		}
+	}
 }
 

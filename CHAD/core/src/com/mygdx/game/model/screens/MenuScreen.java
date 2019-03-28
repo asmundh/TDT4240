@@ -18,7 +18,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void update(float dt) {
-        System.out.print("Menu");
         handleInput();
     }
 
