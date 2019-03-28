@@ -972,6 +972,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 			case R.id.sign_in_button:
 				mMatch = null;
 				findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+				Log.d(AppSettings.tag, "starting signInIntent");
 				startSignInIntent();
 				break;
 			case R.id.sign_out_button:
