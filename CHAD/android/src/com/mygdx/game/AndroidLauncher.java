@@ -715,7 +715,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		//showSpinner();
 
 		mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
-				mTurnData.persist(), null)
+				mTurnData.persist(), getNextParticipantId())
 				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
 					@Override
 					public void onSuccess(TurnBasedMatch turnBasedMatch) {
@@ -787,28 +787,31 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 		switch (status) {
 			case TurnBasedMatch.MATCH_STATUS_CANCELED:
-				showWarning("Canceled!", "This game was canceled!");
+				//showWarning("Canceled!", "This game was canceled!");
+				Log.d(TAG, "Canceled! This game was canceled!");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_EXPIRED:
-				showWarning("Expired!", "This game is expired.  So sad!");
+				//showWarning("Expired!", "This game is expired.  So sad!");
+				Log.d(TAG, "Expired! This game is expired.  So sad!");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
 				//showWarning("Waiting for auto-match...",
 				//		"We're still waiting for an automatch partner.");
-				Log.d(TAG, "Waiting for auto-match... We're still waiting for an automatch partner");
+				Log.d(TAG, "We're still waiting for an automatch partner.");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_COMPLETE:
 				if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
-					showWarning("Complete!",
-							"This game is over; someone finished it, and so did you!  " +
-									"There is nothing to be done.");
+				//	showWarning("Complete!",
+				//			"This game is over; someone finished it, and so did you!  " +
+				//					"There is nothing to be done.");
+					Log.d(TAG, "This game is over; someone finished it, and so did you!  ");
 					break;
 				}
 
 				// Note that in this state, you must still call "Finish" yourself,
 				// so we allow this to continue.
-				showWarning("Complete!",
-						"This game is over; someone finished it!  You can only finish it now.");
+				//showWarning("Complete!",
+				//		"This game is over; someone finished it!  You can only finish it now.");
 		}
 		Log.d(TAG, "Match is active, checking turnStatus");
 		// OK, it's active. Check on turn status.
