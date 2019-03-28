@@ -10,19 +10,23 @@ public class PlayerSystem extends IteratingSystem {
     private ComponentMapper<PlayerComponent> pl = ComponentMapper.getFor(PlayerComponent.class);
     private PlayerComponent player = new PlayerComponent();
 
-
     public PlayerSystem(Family family) {
         super(family.all(PlayerComponent.class).get());
     }
 
     // Take last card from deck, and add to hand list
     public void pickFromDeck() {
-        player.hand.add(player.deck.get(player.deck.size() - 1));
+        player.hand.add(player.deck.remove(player.deck.size() - 1));
     }
 
     // From hand to table
     public void AddCardToTable(int index) {
-        player.cardsOnTable.add(player.hand.get(index));
+        player.cardsOnTable.add(player.hand.remove(index));
+    }
+
+    // Returns given card in table
+    public Entity getCardOnTable(int index) {
+        return player.cardsOnTable.get(index);
     }
 
     public void removeCardOnTable(int index) {
