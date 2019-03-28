@@ -7,34 +7,52 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.model.components.PlayerComponent;
 
 public class PlayerSystem extends IteratingSystem {
-    private ComponentMapper<PlayerComponent> pl = ComponentMapper.getFor(PlayerComponent.class);
-    private PlayerComponent player = new PlayerComponent();
+    private static final Family family = Family.all(PlayerComponent.class).get();
+    private ComponentMapper<PlayerComponent> pc;
 
-    public PlayerSystem(Family family) {
-        super(family.all(PlayerComponent.class).get());
+    public PlayerSystem() {
+        super(family);
+
+        pc = ComponentMapper.getFor(PlayerComponent.class);
     }
 
     // Take last card from deck, and add to hand list
-    public void pickFromDeck() {
-        player.hand.add(player.deck.remove(player.deck.size() - 1));
+    public void pickFromDeck(Entity entity) {
+        pc.get(entity).hand.add(pc.get(entity).deck.remove(pc.get(entity).deck.size() - 1));
     }
 
     // From hand to table
-    public void AddCardToTable(int index) {
-        player.cardsOnTable.add(player.hand.remove(index));
+    public void AddCardToTable(Entity entity, int index) {
+        pc.get(entity).cardsOnTable.add(pc.get(entity).hand.remove(index));
     }
 
     // Returns given card in table
-    public Entity getCardOnTable(int index) {
-        return player.cardsOnTable.get(index);
+    public Entity getCardOnTable(Entity entity , int index) {
+        return pc.get(entity).cardsOnTable.get(index);
     }
 
-    public void removeCardOnTable(int index) {
-        player.cardsOnTable.remove(index);
+    public void removeCardOnTable(Entity entity , int index) {
+        pc.get(entity).cardsOnTable.remove(index);
+    }
+
+    public String getPlayerId(Entity entity) {
+        return pc.get(entity).id;
+    }
+
+    public void SetPlayerId(Entity entity, String id) {
+        pc.get(entity).id = id;
+    }
+
+    public int getPlayerPowerPoints(Entity entity) {
+        return pc.get(entity).powerPoints;
+    }
+
+    public void setPlayerPowerPoints(Entity entity, int points) {
+        pc.get(entity).powerPoints = points;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PlayerComponent player = pl.get(entity);
+        PlayerComponent playerComp = pc.get(entity);
     }
 }
