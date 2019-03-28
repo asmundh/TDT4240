@@ -574,11 +574,11 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	// Games built-in inbox, or else the create game built-in interface.
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		Log.d(AppSettings.tag, "SkeletonActivity startet through intent");
 		if (requestCode == RC_SIGN_IN) {
 
 			Task<GoogleSignInAccount> task =
 					GoogleSignIn.getSignedInAccountFromIntent(intent);
+			Log.d(TAG, "onActivityResult - RC_SIGN_IN.");
 
 			try {
 				GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -715,7 +715,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		//showSpinner();
 
 		mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
-				mTurnData.persist(), myParticipantId)
+				mTurnData.persist(), null)
 				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
 					@Override
 					public void onSuccess(TurnBasedMatch turnBasedMatch) {
@@ -779,6 +779,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	// This is the main function that gets called when players choose a match
 	// from the inbox, or else create a match and want to start it.
 	public void updateMatch(TurnBasedMatch match) {
+		Log.d(TAG, "updateMatch()");
 		mMatch = match;
 
 		int status = match.getStatus();
@@ -792,8 +793,9 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				showWarning("Expired!", "This game is expired.  So sad!");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
-				showWarning("Waiting for auto-match...",
-						"We're still waiting for an automatch partner.");
+				//showWarning("Waiting for auto-match...",
+				//		"We're still waiting for an automatch partner.");
+				Log.d(TAG, "Waiting for auto-match... We're still waiting for an automatch partner");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_COMPLETE:
 				if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
@@ -808,7 +810,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				showWarning("Complete!",
 						"This game is over; someone finished it!  You can only finish it now.");
 		}
-
+		Log.d(TAG, "Match is active, checking turnStatus");
 		// OK, it's active. Check on turn status.
 		switch (turnStatus) {
 			case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
@@ -840,6 +842,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 	private void onInitiateMatch(TurnBasedMatch match) {
 		dismissSpinner();
+		Log.d(TAG, "onInitiateMatch()");
 
 		if (match.getData() != null) {
 			// This is a game that has already started, so I'll just start
@@ -992,6 +995,12 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	// Function to start a quickmatch from libGDX
 
 	public void startQuickMatch() {
+		if (mMatch != null) {
+			updateMatch(mMatch);
+			Log.d(TAG, "mMatch.getStatus(): "+ String.valueOf(mMatch.getStatus()));
+			mTurnBasedMultiplayerClient.takeTurn(null, null, null);
+		}
+		/*
 
 		if (mSignedIn != true) {
 			// not signed in
@@ -999,7 +1008,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 			Log.d(AppSettings.tag, "startQuickMatch()");
 
-		/*
+
 		// min players, maxplayers, allowAutomatch
 		mTurnBasedMultiplayerClient.getSelectOpponentsIntent(1, 1, true).addOnSuccessListener(new OnSuccessListener<Intent>() {
 			@Override
@@ -1007,7 +1016,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 				startActivityForResult(intent, LIBGDX_QUICK_MATCH);
 			}
 		});
-		*/
+
 			Bundle autoMatchCriteria;
 
 			int minAutoMatchPlayers = 1;
@@ -1019,11 +1028,11 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 			} else {
 				autoMatchCriteria = null;
 			}
-		/*
+
 		TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
 				.addInvitedPlayers(invitees)
 				.setAutoMatchCriteria(autoMatchCriteria).build();
-		*/
+
 
 			TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
 					.setAutoMatchCriteria(autoMatchCriteria).build();
@@ -1038,6 +1047,24 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 					})
 					.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
 			//showSpinner();
+		} */
+		else {
+			Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
+
+			TurnBasedMatchConfig turnBasedMatchConfig = TurnBasedMatchConfig.builder()
+					.setAutoMatchCriteria(autoMatchCriteria).build();
+
+			//showSpinner();
+			Log.d(AppSettings.tag, "startQuickMatch()");
+			// Start the match
+			mTurnBasedMultiplayerClient.createMatch(turnBasedMatchConfig)
+					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+						@Override
+						public void onSuccess(TurnBasedMatch turnBasedMatch) {
+							onInitiateMatch(turnBasedMatch);
+						}
+					})
+					.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
 		}
 	}
 
