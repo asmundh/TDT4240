@@ -1,5 +1,6 @@
 package com.mygdx.game.model.screens;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,6 +20,7 @@ import com.mygdx.game.model.screens.utils.Assets;
 public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
 
     private CardGame game;
+    private Engine engine;
     private SpriteBatch sb;
     private Stage stage;
 
@@ -49,7 +51,7 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         backBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
+                game.setScreen(new MenuScreen(game, engine));
             }
 
             @Override // Fires when the button is pressed down
