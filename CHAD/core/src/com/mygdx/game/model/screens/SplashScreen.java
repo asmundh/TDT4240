@@ -1,5 +1,6 @@
 package com.mygdx.game.model.screens;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
@@ -23,9 +24,11 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 public class SplashScreen extends ScreenAdapter implements ScreenInterface, Screen {
     private CardGame game;
     private Stage stage;
+    private Engine engine;
 
-    public SplashScreen(CardGame game) {
+    public SplashScreen(CardGame game, Engine engine) {
         this.game = game;
+        this.engine = engine;
         this.stage = new Stage(new FitViewport(game.getWidth(), game.getHeight()));
     }
 

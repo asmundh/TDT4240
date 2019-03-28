@@ -31,7 +31,7 @@ public class CardGame extends Game {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
     
 		//this.setScreen(new MenuScreen(this));
-		this.setScreen(new LoadingScreen(this));
+		this.setScreen(new LoadingScreen(this, getEngine()));
 
 
 	}
@@ -58,4 +58,6 @@ public class CardGame extends Game {
 	public float getHeight() {
 		return Gdx.graphics.getHeight();
 	}
+
+	public Engine getEngine() { return this.engine; }
 }

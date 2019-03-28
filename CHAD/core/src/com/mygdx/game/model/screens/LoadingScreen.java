@@ -1,5 +1,6 @@
 package com.mygdx.game.model.screens;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
@@ -19,9 +20,11 @@ public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Scr
     private float progress;
     private BitmapFont font = new BitmapFont();
     private Texture bgTex;
+    private Engine engine;
 
-    public LoadingScreen(CardGame game) {
+    public LoadingScreen(CardGame game, Engine engine) {
         this.game = game;
+        this.engine = engine;
         shapeRenderer = new ShapeRenderer();
         bgTex = new Texture("splash.png");
     }
@@ -40,7 +43,7 @@ public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Scr
         progress = MathUtils.lerp(progress, Assets.getProgress(), .1f);
         if (Assets.update() && progress >= Assets.getProgress() - 0.001f) {
             //game.setScreen(new SplashScreen(game));
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new TestScreen(game, engine));
         }
     }
 
