@@ -1,5 +1,7 @@
 package com.mygdx.game.model.systems;
 
+import javax.swing.text.html.parser.Entity;
+
 public class BoardSystem {
 
     public BoardSystem() {
@@ -9,5 +11,19 @@ public class BoardSystem {
          */
 
     }
+
+    public void drawCard(Entity entity) {
+        /*
+        TODO: add functionality for drawing a new card.
+         */
+    }
+
+    public void chooseCard(Entity entity) {
+        /*
+        TODO: add functionality for choosing a card to attack with
+         */
+    }
+
+
 
 }
