@@ -132,6 +132,7 @@ public class BoardView {
             float x = this.boardPositions[i].x;
             float y = this.boardPositions[i].y;
             this.cards.get(i).draw(batch, x, y);
+
         }
 
 

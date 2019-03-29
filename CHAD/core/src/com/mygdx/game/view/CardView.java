@@ -84,4 +84,22 @@ public class CardView {
 
     }
 
+
+    public void decreaseHealth(int amount) {
+        this.health -= amount;
+    }
+
+    public void increaseHealth(int amount) {
+        this.health += amount;
+    }
+
+    public void decreaseAttack(int amount) {
+        this.attackPower -= amount;
+    }
+
+    public void increaseAttack(int amount) {
+        this.attackPower += amount;
+    }
+
+
 }
