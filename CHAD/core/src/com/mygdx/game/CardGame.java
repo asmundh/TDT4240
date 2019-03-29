@@ -1,10 +1,12 @@
 package com.mygdx.game;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.screens.LoadingScreen;
 import com.mygdx.game.model.screens.utils.Assets;
 
@@ -15,10 +17,13 @@ public class CardGame extends Game {
 
 	public SpriteBatch batch;
 	private Assets assets;
+	public Engine engine;
 	
 	@Override
 	public void create () {
 		assets = new Assets();
+		engine = new Engine();
+
 		Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
 
 		batch = new SpriteBatch();
@@ -27,7 +32,8 @@ public class CardGame extends Game {
     
 		//this.setScreen(new MenuScreen(this));
 		this.setScreen(new LoadingScreen(this));
-		Engine engine = new Engine();
+
+
 	}
 
 	@Override

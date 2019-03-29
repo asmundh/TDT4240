@@ -10,12 +10,13 @@ import java.util.HashMap;
 public class Assets {
 
     public static String badlogic = "badlogic.jpg";
-
     public static String playBtn = "textures/playBtn.png";
-
     public static String settingBtn = "textures/settingBtn.png";
-
     public static String background = "textures/background.png";
+    public static String menuBG = "textures/menu_bg.png";
+    public static String backBtn = "textures/back.png";
+    public static String exitBtn = "textures/exit.png";
+    public static String exit_gameBtn = "textures/exit_game.png";
 
     public static String goblin = "textures/background.png";
 
@@ -52,6 +53,7 @@ public class Assets {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
+<<<<<<< HEAD
 
         assetManager.load(deck1, Skin.class);
         assetManager.load(deck2, Skin.class);
@@ -59,6 +61,12 @@ public class Assets {
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
+=======
+        assetManager.load(menuBG, Texture.class);
+        assetManager.load(backBtn, Texture.class);
+        assetManager.load(exitBtn, Texture.class);
+        assetManager.load(exit_gameBtn, Texture.class);
+>>>>>>> 2bd8398a3ead0ef1fb10986b8279623031174705
     }
 
     public static float getProgress() {
