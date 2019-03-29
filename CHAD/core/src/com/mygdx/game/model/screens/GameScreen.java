@@ -44,7 +44,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        bv.draw(batch);
 
     }
 
