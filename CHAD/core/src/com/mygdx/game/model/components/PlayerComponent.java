@@ -12,4 +12,5 @@ public class PlayerComponent implements Component {
     public List<Entity> cardsOnTable;
     public int powerPoints;
     public List<Entity> deck;
+    public int health;
 }

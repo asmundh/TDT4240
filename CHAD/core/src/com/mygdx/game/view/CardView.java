@@ -1,11 +1,16 @@
 package com.mygdx.game.view;
 
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.model.components.CardComponent;
+import com.mygdx.game.model.components.CardStatsComponent;
+import com.mygdx.game.model.components.TextureComponent;
 
 
 public class CardView {
@@ -17,7 +22,9 @@ public class CardView {
     private Texture greenRect;
     private Texture blackRect;
     private BitmapFont font;
+    private Entity cardEntity;
 
+    //TODO add to assets
     // Paths to static textures for all cards.
     private String pathToAttackIcon = "textures/attackIcon.png";
     private String pathToHealtchIcon = "textures/healthIcon.png";
@@ -32,11 +39,12 @@ public class CardView {
 
     private int attackPower;
     private int health;
-    private boolean activated;
+    private boolean selected;
 
 
 
-    public CardView(String pathToImageFile, int attackPower, int health) {
+    /*
+    public CardView(String pathToImageFile, int attackPower, int health, Entity cardEntity) {
         shapeRenderer = new ShapeRenderer();
         Maintexture = new Texture(Gdx.files.internal(pathToImageFile));
         attackIconTexture = new Texture(Gdx.files.internal(pathToAttackIcon));
@@ -44,15 +52,47 @@ public class CardView {
         greenRect = new Texture(Gdx.files.internal(pathToGreenRect));
         blackRect = new Texture(Gdx.files.internal(pathToBlackRect));
         font = new BitmapFont();
-        this.activated = false;
+        //this.activated = false;
         this.attackPower = attackPower;
         this.health = health;
+        this.cardEntity = cardEntity;
+    }
+
+
+    */
+
+    private ComponentMapper<TextureComponent> tm;
+    private ComponentMapper<CardStatsComponent> cm;
+    private ComponentMapper<CardComponent> cardComponentMapper;
+
+
+    public CardView(Entity cardEntity) {
+        this.cardEntity = cardEntity;
+
+        tm = ComponentMapper.getFor(TextureComponent.class);
+        cm = ComponentMapper.getFor(CardStatsComponent.class);
+        cardComponentMapper = ComponentMapper.getFor(CardComponent.class);
+
+
+        Maintexture = tm.get(cardEntity).texture;
+        attackPower = cm.get(cardEntity).attackPower;
+        health = cm.get(cardEntity).health;
+        selected = cardComponentMapper.get(cardEntity).selected;
+
+        shapeRenderer = new ShapeRenderer();
+        attackIconTexture = new Texture(Gdx.files.internal(pathToAttackIcon));
+        healthIconTexture = new Texture(Gdx.files.internal(pathToHealtchIcon));
+        greenRect = new Texture(Gdx.files.internal(pathToGreenRect));
+        blackRect = new Texture(Gdx.files.internal(pathToBlackRect));
+        font = new BitmapFont();
+
     }
 
     public void draw(SpriteBatch batch, float xCoord, float yCoord) {
 
-        String attackPowerString = String.valueOf(attackPower);
-        String healthString = String.valueOf(health);
+        selected = cardComponentMapper.get(this.cardEntity).selected;
+        String attackPowerString = String.valueOf(cm.get(this.cardEntity).attackPower);
+        String healthString = String.valueOf(cm.get(this.cardEntity).health);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.BROWN);
@@ -61,7 +101,7 @@ public class CardView {
 
         batch.begin();
 
-        if (activated) {
+        if (selected) {
             batch.draw(greenRect, xCoord, yCoord);
         }
         else {
@@ -85,21 +125,7 @@ public class CardView {
     }
 
 
-    public void decreaseHealth(int amount) {
-        this.health -= amount;
-    }
 
-    public void increaseHealth(int amount) {
-        this.health += amount;
-    }
-
-    public void decreaseAttack(int amount) {
-        this.attackPower -= amount;
-    }
-
-    public void increaseAttack(int amount) {
-        this.attackPower += amount;
-    }
 
 
 }

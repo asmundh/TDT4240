@@ -1,5 +1,7 @@
 package com.mygdx.game.view;
 
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CardGame;
+import com.mygdx.game.model.components.BoardComponent;
+import com.mygdx.game.model.components.PlayerComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +24,29 @@ public class BoardView {
     private Texture deck;
     private Texture background;
     private Texture enemyRect;
-    private  Texture handRect;
+    private Texture handRect;
     private ShapeRenderer shapeRenderer;
     private String pathToHealtchIcon = "textures/healthIcon.png";
     private Texture healthIconTexture;
     private BitmapFont font;
     private boolean showHand;
+    private ComponentMapper<BoardComponent> bm;
+    private ComponentMapper<PlayerComponent> pm;
+    private Entity boardEntity;
+    private int enemyHealth;
+    private Entity player;
+    private Entity enemyPlayer;
 
 
 
+    private List<Entity> friendlyCardsOnBoardEntity;
+    private List<Entity> enemyCardsOnBoardEntity;
+    private List<Entity> cardsInHandEntity;
 
-    private List<CardView> cards = new ArrayList<>();
-    private List<CardView> cardsInHand = new ArrayList<>();
+    private List<CardView> friendlyCardsOnBoard;
+    private List<CardView> enemyCardsOnBoard;
+    private List<CardView> cardsInHand;
+
 
     private Vector2[] boardPositions = {
             new Vector2((Gdx.graphics.getWidth() / 2) - (Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
@@ -57,47 +72,60 @@ public class BoardView {
 
 
 
-    public BoardView(CardGame game) {
+    public BoardView(CardGame game, Entity boardEntity) {
         this.game = game;
+        this.boardEntity = boardEntity;
         this.deck = new Texture(Gdx.files.internal("textures/cardBackside.png"));
         this.background = new Texture(Gdx.files.internal("textures/background.png"));
         this.enemyRect = new Texture(Gdx.files.internal("textures/enemy.png"));
         this.handRect = new Texture(Gdx.files.internal("textures/handRect.png"));
         this.healthIconTexture = new Texture(Gdx.files.internal(pathToHealtchIcon));
         this.font = new BitmapFont();
-        this.showHand = true;
 
 
         shapeRenderer = new ShapeRenderer();
 
+        bm = ComponentMapper.getFor(BoardComponent.class);
+        pm = ComponentMapper.getFor(PlayerComponent.class);
+
+        player = bm.get(boardEntity).playerOne;
+        enemyPlayer = bm.get(boardEntity).playerTwo;
+
+        showHand = bm.get(boardEntity).showHand;
+        enemyHealth = pm.get(boardEntity).health;
+        friendlyCardsOnBoardEntity = pm.get(player).cardsOnTable;
+        enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
+        cardsInHandEntity = pm.get(player).hand;
+
+        friendlyCardsOnBoard = new ArrayList<>();
+        enemyCardsOnBoard = new ArrayList<>();
+        cardsInHand = new ArrayList<>();
 
     }
 
-    public void addCardToBoard(CardView card) {
-        this.cards.add(card);
-    }
 
-    public void removeCardOnBoard(CardView card) {
-        this.cards.remove(card);
-    }
 
-    public void addCardToHand(CardView card) {
-        this.cardsInHand.add(card);
-    }
-
-    public void removeCardInHand(CardView card) {
-        this.cardsInHand.remove(card);
-    }
-
-    public void setShowHand(boolean bool) {
-        this.showHand = bool;
-    }
-
-    public boolean getShowHand() {
-        return this.showHand;
-    }
 
     public void draw(SpriteBatch batch) {
+
+        player = bm.get(boardEntity).playerOne;
+        enemyPlayer = bm.get(boardEntity).playerTwo;
+        showHand = bm.get(boardEntity).showHand;
+        enemyHealth = pm.get(boardEntity).health;
+        friendlyCardsOnBoardEntity = pm.get(player).cardsOnTable;
+        enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
+        cardsInHandEntity = pm.get(player).hand;
+
+        for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
+            friendlyCardsOnBoard.add(new CardView(friendlyCardsOnBoardEntity.get(i)));
+        }
+        for (int i = 0; i < enemyCardsOnBoardEntity.size(); i++) {
+            enemyCardsOnBoard.add(new CardView(enemyCardsOnBoardEntity.get(i)));
+        }
+        for (int i = 0; i < cardsInHandEntity.size(); i++) {
+            cardsInHand.add(new CardView(cardsInHandEntity.get(i)));
+        }
+
 
         batch.begin();
         batch.draw(background, 0, 0);
@@ -119,7 +147,9 @@ public class BoardView {
         batch.draw(healthIconTexture, Gdx.graphics.getWidth() / 2 - healthIconTexture.getWidth(), Gdx.graphics.getHeight() - enemyRect.getHeight() + 10);
         font.setColor(Color.BLACK);
         font.getData().setScale(2);
-        String healthString = String.valueOf(10); //hvordan få enemy health??
+
+        String healthString = String.valueOf(enemyHealth);
+
         font.draw(batch, healthString, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight() + font.getLineHeight());
         batch.end();
 
@@ -127,12 +157,17 @@ public class BoardView {
 
 
 
-        //Drawing of cards on board
-        for (int i = 0; i < this.cards.size(); i++) {
+        //Drawing of friendly cards on board
+        for (int i = 0; i < this.friendlyCardsOnBoard.size(); i++) {
             float x = this.boardPositions[i].x;
             float y = this.boardPositions[i].y;
-            this.cards.get(i).draw(batch, x, y);
-
+            this.friendlyCardsOnBoard.get(i).draw(batch, x, y);
+        }
+        //Drawing of enemy cards on board
+        for (int i = 0; i < this.enemyCardsOnBoard.size(); i++) {
+            float x = this.boardPositions[i + 4].x;
+            float y = this.boardPositions[i + 4].y;
+            this.enemyCardsOnBoard.get(i).draw(batch, x, y);
         }
 
 
