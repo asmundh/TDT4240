@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 
+import javax.smartcardio.Card;
+
 public class CardSystem {
 
     private ComponentMapper<CardPowerComponent> cpc;
@@ -79,6 +81,32 @@ public class CardSystem {
         csc.get(entity).cost = cost;
     }
 
+    public void takeDamage(Entity entity, float damage) {
+        if (getHealth(entity) - damage <= 0) {
+            setHealth(entity, 0);
+        } else if (getHealth(entity) - damage > 0) {
+            setHealth(entity, getHealth(entity) - damage);
+        }
+    }
+
+    public void dealDamage(Entity entity, float damage) {
+        takeDamage(entity, damage);
+    }
+
+
+    public void activatePower(Entity entity) {
+        switch(getPowerType(entity)) {
+            case (CardPowerComponent.SELF_DAMAGE_INCREASE):
+                int damageIncrease = getPowerSize(entity);
+                setPower(entity, damageIncrease);
+            case (CardPowerComponent.SELF_HEALTH_INCREASE):
+                float healthIncrease = getPowerSize(entity);
+                float currentHealth = getHealth(entity);
+                setHealth(entity, currentHealth + healthIncrease);
+            default:
+                return;
+        }
+    }
 
     // TODO: Method for take damage
     // TODO: Dealing damage
