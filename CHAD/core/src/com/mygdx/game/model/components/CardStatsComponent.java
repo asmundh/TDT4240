@@ -12,6 +12,5 @@ public class CardStatsComponent implements Component {
     public int attackPower;
     public int health;
     public int cost;
-    public CardPowerComponent cardPower;
     public boolean selected = false;
 }

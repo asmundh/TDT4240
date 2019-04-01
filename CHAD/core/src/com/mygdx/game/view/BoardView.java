@@ -69,11 +69,11 @@ public class BoardView {
 
     public BoardView(Entity boardEntity) {
         this.boardEntity = boardEntity;
-        this.deck = new Texture(Gdx.files.internal("textures/cardBackside.png"));
-        this.background = new Texture(Gdx.files.internal("textures/background.png"));
-        this.enemyRect = new Texture(Gdx.files.internal("textures/enemy.png"));
-        this.handRect = new Texture(Gdx.files.internal("textures/handRect.png"));
-        this.healthIconTexture = new Texture(Gdx.files.internal(pathToHealtchIcon));
+        this.deck = new Texture(Gdx.files.local("textures/cardBackside.png"));
+        this.background = new Texture(Gdx.files.local("textures/background.png"));
+        this.enemyRect = new Texture(Gdx.files.local("textures/enemy.png"));
+        this.handRect = new Texture(Gdx.files.local("textures/handRect.png"));
+        this.healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
         this.font = new BitmapFont();
 
 

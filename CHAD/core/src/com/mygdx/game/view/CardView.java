@@ -45,11 +45,11 @@ public class CardView {
     /*
     public CardView(String pathToImageFile, int attackPower, int health, Entity cardEntity) {
         shapeRenderer = new ShapeRenderer();
-        Maintexture = new Texture(Gdx.files.internal(pathToImageFile));
-        attackIconTexture = new Texture(Gdx.files.internal(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.internal(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.internal(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.internal(pathToBlackRect));
+        Maintexture = new Texture(Gdx.files.local(pathToImageFile));
+        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
+        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
+        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
+        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
         font = new BitmapFont();
         //this.activated = false;
         this.attackPower = attackPower;
@@ -77,10 +77,10 @@ public class CardView {
         selected = cm.get(cardEntity).selected;
 
         shapeRenderer = new ShapeRenderer();
-        attackIconTexture = new Texture(Gdx.files.internal(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.internal(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.internal(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.internal(pathToBlackRect));
+        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
+        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
+        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
+        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
         font = new BitmapFont();
 
     }
