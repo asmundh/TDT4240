@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 public class BoardComponent implements Component {
     public Entity playerOne;
     public Entity playerTwo;
+    public boolean showHand;
 
 }
 

@@ -9,8 +9,8 @@ import com.badlogic.ashley.core.Component;
  */
 
 public class CardStatsComponent implements Component {
-    public float power;
-    public float health;
-    public float cost;
+    public int attackPower;
+    public int health;
+    public int cost;
     public CardPowerComponent cardPower;
 }
