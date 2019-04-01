@@ -22,10 +22,11 @@ public class LoadingScreen extends ScreenAdapter implements ScreenInterface, Scr
     private BitmapFont font = new BitmapFont();
     private Texture bgTex;
 
-    public LoadingScreen(CardGame game) {
+    public LoadingScreen(CardGame game, Engine engine) {
         this.game = game;
         shapeRenderer = new ShapeRenderer();
         bgTex = new Texture("splash.png");
+        this.engine = engine;
     }
 
     @Override
