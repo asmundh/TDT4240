@@ -67,13 +67,7 @@ public class BoardView {
             new Vector2(Gdx.graphics.getWidth() / 6 + 1050, 100),
     };
 
-
-
-
-
-
-    public BoardView(CardGame game, Entity boardEntity) {
-        this.game = game;
+    public BoardView(Entity boardEntity) {
         this.boardEntity = boardEntity;
         this.deck = new Texture(Gdx.files.internal("textures/cardBackside.png"));
         this.background = new Texture(Gdx.files.internal("textures/background.png"));
@@ -92,14 +86,14 @@ public class BoardView {
         enemyPlayer = bm.get(boardEntity).playerTwo;
 
         showHand = bm.get(boardEntity).showHand;
-        enemyHealth = pm.get(boardEntity).health;
+        enemyHealth = pm.get(enemyPlayer).health;
         friendlyCardsOnBoardEntity = pm.get(player).cardsOnTable;
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
 
-        friendlyCardsOnBoard = new ArrayList<>();
-        enemyCardsOnBoard = new ArrayList<>();
-        cardsInHand = new ArrayList<>();
+        friendlyCardsOnBoard = new ArrayList<CardView>();
+        enemyCardsOnBoard = new ArrayList<CardView>();
+        cardsInHand = new ArrayList<CardView>();
 
     }
 
@@ -111,10 +105,15 @@ public class BoardView {
         player = bm.get(boardEntity).playerOne;
         enemyPlayer = bm.get(boardEntity).playerTwo;
         showHand = bm.get(boardEntity).showHand;
-        enemyHealth = pm.get(boardEntity).health;
+        enemyHealth = pm.get(enemyPlayer).health;
         friendlyCardsOnBoardEntity = pm.get(player).cardsOnTable;
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
+
+        cardsInHand.clear();
+        enemyCardsOnBoard.clear();
+        friendlyCardsOnBoard.clear();
+
 
         for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
             friendlyCardsOnBoard.add(new CardView(friendlyCardsOnBoardEntity.get(i)));
@@ -186,12 +185,6 @@ public class BoardView {
                 float yHand = this.handPositions[i].y;
                 this.cardsInHand.get(i).draw(batch, xHand, yHand);
             }
-
-
         }
-
-
-
     }
-
 }

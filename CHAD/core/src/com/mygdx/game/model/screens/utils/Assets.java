@@ -53,20 +53,17 @@ public class Assets {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
-<<<<<<< HEAD
 
-        assetManager.load(deck1, Skin.class);
-        assetManager.load(deck2, Skin.class);
+        //assetManager.load(deck1, Skin.class);
+        //assetManager.load(deck2, Skin.class);
 
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
-=======
         assetManager.load(menuBG, Texture.class);
         assetManager.load(backBtn, Texture.class);
         assetManager.load(exitBtn, Texture.class);
         assetManager.load(exit_gameBtn, Texture.class);
->>>>>>> 2bd8398a3ead0ef1fb10986b8279623031174705
     }
 
     public static float getProgress() {

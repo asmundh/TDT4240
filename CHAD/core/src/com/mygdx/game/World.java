@@ -6,9 +6,12 @@ import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
-import com.mygdx.game.model.components.PositionComponent;
 import com.mygdx.game.model.components.TextureComponent;
 import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.systems.PlayerSystem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class World  {
 
@@ -20,8 +23,6 @@ public class World  {
         this.engine = engine;
 
     }
-
-
 
     public Entity createBoard() {
         Entity boardEntity = new Entity();
@@ -39,6 +40,7 @@ public class World  {
         engine.addEntity(boardEntity);
 
         return boardEntity;
+
     }
 
     public Entity createCard(int id) {
@@ -63,7 +65,7 @@ public class World  {
                 cardStats.cardPower = cardPower;
 
                 //Texture
-                tc.texture = Assets.getTexture(Assets.playBtn);
+                tc.texture = Assets.getTexture(Assets.orc);
         }
 
         cardEntity.add(cardPower);
@@ -73,19 +75,36 @@ public class World  {
         engine.addEntity(cardEntity);
 
         return cardEntity;
+
     }
 
-    public Entity createPlayer() {
+    public List<Entity> createPlayers() {
+        List<Entity> entities = new ArrayList<Entity>();
         Entity playerEntity = new Entity();
 
         PlayerComponent playerComp = new PlayerComponent();
 
         playerEntity.add(playerComp);
 
+
         engine.addEntity(playerEntity);
+        engine.addSystem(new PlayerSystem());
 
+        engine.getSystem(PlayerSystem.class).setUpDeck(this, playerEntity, 5);
 
-        return playerEntity;
+        Entity playerEnemy = new Entity();
+
+        PlayerComponent playerCompEnemy = new PlayerComponent();
+        playerEnemy.add(playerCompEnemy);
+
+        engine.addEntity(playerEnemy);
+
+        engine.getSystem(PlayerSystem.class).setUpDeck(this, playerEnemy, 5);
+
+        entities.add(playerEntity);
+        entities.add(playerEnemy);
+
+        return entities;
     }
 
 

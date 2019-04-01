@@ -7,6 +7,7 @@ public class BoardComponent implements Component {
     public Entity playerOne;
     public Entity playerTwo;
     public boolean showHand;
+    public boolean turn;
 
 }
 

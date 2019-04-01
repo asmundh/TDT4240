@@ -65,6 +65,14 @@ public class PlayerSystem extends IteratingSystem {
         pm.get(entity).powerPoints = points;
     }
 
+    public void takeDamage(Entity entity, int damage) {
+        pm.get(entity).health = pm.get(entity).health - damage;
+    }
+
+    public int getHealth(Entity entity) {
+        return pm.get(entity).health;
+    }
+
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PlayerComponent playerComp = pm.get(entity);
