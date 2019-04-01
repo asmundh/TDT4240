@@ -64,7 +64,6 @@ public class Assets {
 
         //assetManager.load(deck1, Skin.class);
         //assetManager.load(deck2, Skin.class);
-        
 
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);

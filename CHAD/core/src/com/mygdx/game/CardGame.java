@@ -39,8 +39,8 @@ public class CardGame extends Game {
 	@Override
 	public void render () {
 		GL20 gl = Gdx.gl;
-		gl.glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
-		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//gl.glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
+		//gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.render();
 	}
