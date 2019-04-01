@@ -1,0 +1,43 @@
+{
+  "cards": [
+    {
+      "name": "Magma golem",
+      "power": 2,
+      "health": 2,
+      "cost": 1,
+      "cardPower": {
+        "powerName": "Magma burns",
+        "powerEffect": "Throw some magma at your opponent",
+        "powerSize": 2,
+        "powerType": "SELF_DAMAGE_INCREASE"
+      },
+      "sprite": "magma_golem.png"
+    },
+    {
+      "name": "Ice golem",
+      "power": 3,
+      "health": 3,
+      "cost": 2,
+      "cardPower": {
+        "powerName": "FREEZE!",
+        "powerEffect": "Hit your opponent with a chilling wind",
+        "powerSize": 2,
+        "powerType": "SELF_DAMAGE_INCREASE"
+      },
+      "sprite": "ice_golem.png"
+    },
+    {
+      "name": "Moss golem",
+      "power": 3,
+      "health": 9,
+      "cost": 5,
+      "cardPower": {
+        "powerName": "Planted feet",
+        "powerEffect": "Encourage your troops to fight harder. +1 damage increase to all allies",
+        "powerSize": 1,
+        "powerType": "GROUP_DAMAGE_INCREASE"
+      },
+      "sprite": "moss_golem.png"
+    }
+  ]
+}
