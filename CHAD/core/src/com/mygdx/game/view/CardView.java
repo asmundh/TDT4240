@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.mygdx.game.model.components.CardComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.TextureComponent;
 
@@ -46,11 +45,11 @@ public class CardView {
     /*
     public CardView(String pathToImageFile, int attackPower, int health, Entity cardEntity) {
         shapeRenderer = new ShapeRenderer();
-        Maintexture = new Texture(Gdx.files.internal(pathToImageFile));
-        attackIconTexture = new Texture(Gdx.files.internal(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.internal(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.internal(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.internal(pathToBlackRect));
+        Maintexture = new Texture(Gdx.files.local(pathToImageFile));
+        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
+        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
+        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
+        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
         font = new BitmapFont();
         //this.activated = false;
         this.attackPower = attackPower;
@@ -63,7 +62,6 @@ public class CardView {
 
     private ComponentMapper<TextureComponent> tm;
     private ComponentMapper<CardStatsComponent> cm;
-    private ComponentMapper<CardComponent> cardComponentMapper;
 
 
     public CardView(Entity cardEntity) {
@@ -71,26 +69,25 @@ public class CardView {
 
         tm = ComponentMapper.getFor(TextureComponent.class);
         cm = ComponentMapper.getFor(CardStatsComponent.class);
-        cardComponentMapper = ComponentMapper.getFor(CardComponent.class);
 
 
         Maintexture = tm.get(cardEntity).texture;
         attackPower = cm.get(cardEntity).attackPower;
         health = cm.get(cardEntity).health;
-        selected = cardComponentMapper.get(cardEntity).selected;
+        selected = cm.get(cardEntity).selected;
 
         shapeRenderer = new ShapeRenderer();
-        attackIconTexture = new Texture(Gdx.files.internal(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.internal(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.internal(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.internal(pathToBlackRect));
+        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
+        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
+        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
+        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
         font = new BitmapFont();
 
     }
 
     public void draw(SpriteBatch batch, float xCoord, float yCoord) {
 
-        selected = cardComponentMapper.get(this.cardEntity).selected;
+        selected = cm.get(this.cardEntity).selected;
         String attackPowerString = String.valueOf(cm.get(this.cardEntity).attackPower);
         String healthString = String.valueOf(cm.get(this.cardEntity).health);
 

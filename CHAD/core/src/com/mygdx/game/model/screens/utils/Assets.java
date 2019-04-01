@@ -1,6 +1,7 @@
 package com.mygdx.game.model.screens.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -9,7 +10,6 @@ import java.util.HashMap;
 
 public class Assets {
 
-    public static String badlogic = "badlogic.jpg";
     public static String playBtn = "textures/playBtn.png";
     public static String settingBtn = "textures/settingBtn.png";
     public static String background = "textures/background.png";
@@ -48,19 +48,30 @@ public class Assets {
         assetManager.dispose();
     }
 
+    public void queueAddSkin() {
+        SkinLoader.SkinParameter paramDeck1 = new SkinLoader.SkinParameter("decks/deck1.atlas");
+        SkinLoader.SkinParameter paramDeck2 = new SkinLoader.SkinParameter("decks/deck2.atlas");
+
+        assetManager.load(deck1, Skin.class, paramDeck1);
+        assetManager.load(deck2, Skin.class, paramDeck2);
+
+    }
+
     public static void load() {
-        assetManager.load(badlogic, Texture.class);
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
 
-        assetManager.load(deck1, Skin.class);
-        assetManager.load(deck2, Skin.class);
+        //assetManager.load(deck1, Skin.class);
+        //assetManager.load(deck2, Skin.class);
 
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> c8e00a28ffc0a619831b9dd1ef6ed14cf53c2e20
         assetManager.load(menuBG, Texture.class);
         assetManager.load(backBtn, Texture.class);
         assetManager.load(exitBtn, Texture.class);

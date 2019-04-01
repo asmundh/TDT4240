@@ -4,22 +4,24 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.TextureComponent;
 
 import com.badlogic.ashley.core.Entity;
+import com.mygdx.game.view.BoardView;
+
+import java.util.List;
 
 public class BoardSystem extends IteratingSystem {
 
-    private static final Family family = Family.all(BoardComponent.class, TextureComponent.class,
-                                                    CardPowerComponent.class, CardStatsComponent.class).get();
+    private static final Family family = Family.all(BoardComponent.class, TextureComponent.class).get();
     private Engine engine;
-    private ComponentMapper<BoardComponent> bc;
-    private ComponentMapper<TextureComponent> tc;
-    private ComponentMapper<CardPowerComponent> cp;
-    private ComponentMapper<CardStatsComponent> cs;
+    private ComponentMapper<BoardComponent> bm;
+    private ComponentMapper<TextureComponent> tm;
 
 
 
@@ -27,49 +29,29 @@ public class BoardSystem extends IteratingSystem {
 
         super(family);
 
-        bc = ComponentMapper.getFor(BoardComponent.class);
-        tc = ComponentMapper.getFor(TextureComponent.class);
-        cp = ComponentMapper.getFor(CardPowerComponent.class);
-        cs = ComponentMapper.getFor(CardStatsComponent.class);
+        bm = ComponentMapper.getFor(BoardComponent.class);
+        tm = ComponentMapper.getFor(TextureComponent.class);
+    }
 
+    public void addPlayer(Entity board, List<Entity> players) {
+        if (!family.matches(board)){
+            return;
+        }
+        BoardComponent bc = bm.get(board);
 
-
+        bc.playerOne = players.get(0);
+        bc.playerTwo = players.get(1);
     }
 
     @Override
     protected void processEntity(Entity entity, float dt) {
-        BoardComponent boardComp = bc.get(entity);
-        CardPowerComponent cardPow = cp.get(entity);
-        CardStatsComponent cardStat = cs.get(entity);
-
-        // lister over hva som ligger på bordet og hva som ligger på hånda.
-        //4 første er dine egne, 4 siste er de andre sine kort
-        // 5 plasser på korta i hendene.
-        // trenger liv fra motspiller
-        // oppdatere ditt eget liv
-        // Knapper
-               // Vis hånd
-                 //       Skjul hånd
-        //end turn
-        // sette playere
-        // sjekke når korta på brettet har null liv, fjernes fra lista.
-        // tegne et rektangel rundt kortet, så man vet hvilket som blir valgt. 
-
+        BoardComponent boardComp = bm.get(entity);
 
     }
 
-    public void drawCard(Entity entity) {
-        /*
-        TODO: add functionality for drawing a new card.
-         */
+    public void turnSwitcher(Entity entity) {
+        bm.get(entity).turn = !bm.get(entity).turn;
     }
-
-    public void chooseCard(Entity entity) {
-        /*
-        TODO: add functionality for choosing a card to attack with
-         */
-    }
-
 
 
 }
