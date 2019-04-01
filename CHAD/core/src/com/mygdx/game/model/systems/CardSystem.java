@@ -56,31 +56,29 @@ public class CardSystem {
         return cpc.get(entity).powerName;
     }
 
-    public float getPower(Entity entity) {
-        return csc.get(entity).power;
+    public void setPower(Entity entity, int damageIncrease) {
+        int prev = csc.get(entity).attackPower;
+        csc.get(entity).attackPower = prev + damageIncrease;
     }
 
-    public void setPower(Entity entity , float power) {
-        csc.get(entity).power = power;
-    }
 
-    public float getHealth(Entity entity) {
+    public int getHealth(Entity entity) {
         return csc.get(entity).health;
     }
 
-    public void setHealth(Entity entity ,float health) {
+    public void setHealth(Entity entity ,int health) {
         csc.get(entity).health = health;
     }
 
-    public float getCost(Entity entity) {
+    public int getCost(Entity entity) {
         return csc.get(entity).cost;
     }
 
-    public void setCost(Entity entity, float cost) {
+    public void setCost(Entity entity, int cost) {
         csc.get(entity).cost = cost;
     }
 
-    public void takeDamage(Entity entity, float damage) {
+    public void takeDamage(Entity entity, int damage) {
         if (getHealth(entity) - damage <= 0) {
             setHealth(entity, 0);
         } else if (getHealth(entity) - damage > 0) {
@@ -88,7 +86,7 @@ public class CardSystem {
         }
     }
 
-    public void dealDamage(Entity entity, float damage) {
+    public void dealDamage(Entity entity, int damage) {
         takeDamage(entity, damage);
     }
 
@@ -99,8 +97,8 @@ public class CardSystem {
                 int damageIncrease = getPowerSize(entity);
                 setPower(entity, damageIncrease);
             case (CardPowerComponent.SELF_HEALTH_INCREASE):
-                float healthIncrease = getPowerSize(entity);
-                float currentHealth = getHealth(entity);
+                int healthIncrease = getPowerSize(entity);
+                int currentHealth = getHealth(entity);
                 setHealth(entity, currentHealth + healthIncrease);
             default:
                 return;
