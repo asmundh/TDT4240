@@ -62,7 +62,6 @@ public class World  {
                 cardStats.attackPower = 2;
                 cardStats.health = 3;
                 cardStats.cost = 4;
-                cardStats.cardPower = cardPower;
 
                 //Texture
                 tc.texture = Assets.getTexture(Assets.orc);

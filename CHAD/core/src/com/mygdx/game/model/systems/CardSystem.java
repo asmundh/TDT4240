@@ -60,39 +60,16 @@ public class CardSystem extends IteratingSystem {
         return csm.get(entity).health;
     }
 
-    public void setHealth(Entity entity , int health) {
+    public void setHealth(Entity entity ,int health) {
         csm.get(entity).health = health;
     }
 
-    public float getCost(Entity entity) {
+    public int getCost(Entity entity) {
         return csm.get(entity).cost;
     }
 
     public void setCost(Entity entity, int cost) {
         csm.get(entity).cost = cost;
-        return cpc.get(entity).powerName;
-    }
-
-    public void setPower(Entity entity, int damageIncrease) {
-        int prev = csc.get(entity).attackPower;
-        csc.get(entity).attackPower = prev + damageIncrease;
-    }
-
-
-    public int getHealth(Entity entity) {
-        return csc.get(entity).health;
-    }
-
-    public void setHealth(Entity entity ,int health) {
-        csc.get(entity).health = health;
-    }
-
-    public int getCost(Entity entity) {
-        return csc.get(entity).cost;
-    }
-
-    public void setCost(Entity entity, int cost) {
-        csc.get(entity).cost = cost;
     }
 
     public void takeDamage(Entity entity, int damage) {
