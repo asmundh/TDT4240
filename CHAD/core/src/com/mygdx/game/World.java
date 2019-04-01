@@ -25,29 +25,13 @@ public class World  {
 
         BoardComponent bc = new BoardComponent();
         TextureComponent tc = new TextureComponent();
-        PositionComponent pos1 = new PositionComponent();
-        PositionComponent pos2 = new PositionComponent();
-        PositionComponent pos3 = new PositionComponent();
-        PositionComponent pos4 = new PositionComponent();
-        PositionComponent pos5 = new PositionComponent();
-        PositionComponent pos6 = new PositionComponent();
-        PositionComponent pos7 = new PositionComponent();
-        PositionComponent pos8 = new PositionComponent();
-        PositionComponent posDeck = new PositionComponent();
-        PositionComponent posHand = new PositionComponent();
+        CardPowerComponent powerCard = new CardPowerComponent();
+        CardStatsComponent statsCard = new CardStatsComponent();
 
         boardEntity.add(bc);
         boardEntity.add(tc);
-        boardEntity.add(pos1);
-        boardEntity.add(pos2);
-        boardEntity.add(pos3);
-        boardEntity.add(pos4);
-        boardEntity.add(pos5);
-        boardEntity.add(pos6);
-        boardEntity.add(pos7);
-        boardEntity.add(pos8);
-        boardEntity.add(posDeck);
-        boardEntity.add(posHand);
+        boardEntity.add(powerCard);
+        boardEntity.add(statsCard);
 
 
         engine.addEntity(boardEntity);
