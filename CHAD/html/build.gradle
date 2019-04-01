@@ -1,7 +1,7 @@
 gwt {
-    gwtVersion='2.8.0' // Should match the gwt version used for building the gwt backend
-    maxHeapSize="1G" // Default 256m is not enough for gwt compiler. GWT is HUNGRY
-    minHeapSize="1G"
+    gwtVersion = '2.8.0' // Should match the gwt version used for building the gwt backend
+    maxHeapSize = "1G" // Default 256m is not enough for gwt compiler. GWT is HUNGRY
+    minHeapSize = "1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
     modules 'com.mygdx.game.GdxDefinition'
@@ -13,13 +13,10 @@ gwt {
         disableCastChecking = true;
     }
 }
-
 import org.wisepersist.gradle.plugins.gwt.GwtSuperDev
-
 def HttpFileServer server = null
 def httpFilePort = 8080
-
-task startHttpServer () {
+task startHttpServer() {
     dependsOn draftCompileGwt
 
     String output = project.buildDir.path + "/gwt/draftOut"
@@ -40,15 +37,12 @@ task startHttpServer () {
         println "Server started in directory " + server.getContentRoot() + ", http://localhost:" + server.getPort()
     }
 }
-
-task superDev (type: GwtSuperDev) {
+task superDev(type: GwtSuperDev) {
     dependsOn startHttpServer
     doFirst {
         gwt.modules = gwt.devModules
     }
 }
-
-
 task dist(dependsOn: [clean, compileGwt]) {
     doLast {
         file("build/dist").mkdirs()
@@ -59,27 +53,24 @@ task dist(dependsOn: [clean, compileGwt]) {
         copy {
             from "webapp"
             into "build/dist"
-            }
+        }
         copy {
             from "war"
             into "build/dist"
         }
     }
 }
-
 task addSource {
     doLast {
         sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
     }
 }
-
 tasks.compileGwt.dependsOn(addSource)
 tasks.draftCompileGwt.dependsOn(addSource)
-
 sourceCompatibility = 1.6
-sourceSets.main.java.srcDirs = [ "src/" ]
-
-
+sourceSets.main.java.srcDirs = ["src/"]
 eclipse.project {
     name = appName + "-html"
+}
+dependencies {
 }

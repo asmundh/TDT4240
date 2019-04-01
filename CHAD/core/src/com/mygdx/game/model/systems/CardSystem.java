@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Entity;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 
-import javax.smartcardio.Card;
 
 public class CardSystem {
 
