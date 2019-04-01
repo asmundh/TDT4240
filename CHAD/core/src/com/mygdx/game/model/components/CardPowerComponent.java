@@ -20,5 +20,4 @@ public class CardPowerComponent implements Component {
     public static final int COST_REDUCTION = 2;
     public static final int TEAM_DAMAGE_INCREASE = 3;
     public static final int TEAM_HEALTH_INCREASE = 4;
-
 }
