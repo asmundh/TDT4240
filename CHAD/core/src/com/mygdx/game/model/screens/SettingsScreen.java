@@ -24,11 +24,12 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
     private SpriteBatch sb;
     private Stage stage;
 
-    public SettingsScreen(CardGame game) {
+    public SettingsScreen(CardGame game, Engine engine) {
         super();
         this.game = game;
         sb = game.batch;
         create();
+        this.engine = engine;
     }
 
     @Override

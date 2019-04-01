@@ -28,6 +28,8 @@ public class World  {
         CardPowerComponent powerCard = new CardPowerComponent();
         CardStatsComponent statsCard = new CardStatsComponent();
 
+
+
         boardEntity.add(bc);
         boardEntity.add(tc);
         boardEntity.add(powerCard);
