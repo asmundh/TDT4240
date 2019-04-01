@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.mygdx.game.CardGame;
+import com.mygdx.game.model.systems.BoardSystem;
+import com.mygdx.game.model.systems.CardSystem;
+import com.mygdx.game.model.systems.PlayerSystem;
 import com.mygdx.game.view.BoardView;
 import com.mygdx.game.view.CardView;
 import com.mygdx.game.World;
@@ -25,13 +28,23 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         this.engine = engine;
         this.world = new World(engine);
 
-        world.createBoard();
-        world.createCard();
-        world.createPlayer();
+        create();
+
+
+
+
     }
 
     @Override
-    public void create() {}
+    public void create() {
+        world.createBoard();
+        engine.addSystem(new BoardSystem());
+        engine.addSystem(new CardSystem());
+        engine.addSystem(new PlayerSystem());
+
+
+        world.createPlayer();
+    }
 
     @Override
     public void update(float dt) {

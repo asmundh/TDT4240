@@ -2,11 +2,12 @@ package com.mygdx.game.model.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 
 
-public class CardSystem {
+public class CardSystem extends IteratingSystem {
 
     private ComponentMapper<CardPowerComponent> cpc;
     private ComponentMapper<CardStatsComponent> csc;
@@ -105,6 +106,11 @@ public class CardSystem {
             default:
                 return;
         }
+    }
+
+    @Override
+    protected void processEntity(Entity entity, float deltaTime) {
+
     }
 
     // TODO: Method for take damage

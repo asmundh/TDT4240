@@ -16,10 +16,10 @@ public class BoardSystem extends IteratingSystem {
     private static final Family family = Family.all(BoardComponent.class, TextureComponent.class,
                                                     CardPowerComponent.class, CardStatsComponent.class).get();
     private Engine engine;
-    private ComponentMapper<BoardComponent> bc;
-    private ComponentMapper<TextureComponent> tc;
-    private ComponentMapper<CardPowerComponent> cp;
-    private ComponentMapper<CardStatsComponent> cs;
+    private ComponentMapper<BoardComponent> bm;
+    private ComponentMapper<TextureComponent> tm;
+    private ComponentMapper<CardPowerComponent> cpm;
+    private ComponentMapper<CardStatsComponent> csm;
 
 
 
@@ -27,20 +27,32 @@ public class BoardSystem extends IteratingSystem {
 
         super(family);
 
-        bc = ComponentMapper.getFor(BoardComponent.class);
-        tc = ComponentMapper.getFor(TextureComponent.class);
-        cp = ComponentMapper.getFor(CardPowerComponent.class);
-        cs = ComponentMapper.getFor(CardStatsComponent.class);
+        bm = ComponentMapper.getFor(BoardComponent.class);
+        tm = ComponentMapper.getFor(TextureComponent.class);
+        cpm = ComponentMapper.getFor(CardPowerComponent.class);
+        csm = ComponentMapper.getFor(CardStatsComponent.class);
+    }
 
-
-
+    public void addPlayer(Entity board, Entity player, int index) {
+        if (!family.matches(entity)) return;
+        BoardComponent bc = bm.get(board);
+        switch (index) {
+            case 1:
+                bc.playerOne = player;
+                break;
+            case 2:
+                bc.playerTwo = player;
+                break;
+            default:
+                System.err.println("IndexError: Player index must be 1 or 2");
+        }
     }
 
     @Override
     protected void processEntity(Entity entity, float dt) {
-        BoardComponent boardComp = bc.get(entity);
-        CardPowerComponent cardPow = cp.get(entity);
-        CardStatsComponent cardStat = cs.get(entity);
+        BoardComponent boardComp = bm.get(entity);
+        CardPowerComponent cardPow = cpm.get(entity);
+        CardStatsComponent cardStat = csm.get(entity);
 
         // lister over hva som ligger på bordet og hva som ligger på hånda.
         //4 første er dine egne, 4 siste er de andre sine kort
