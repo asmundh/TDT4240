@@ -101,6 +101,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public void handleInput() {
         if (Gdx.input.justTouched()) {
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+            pos.y = Gdx.graphics.getHeight() - pos.y;
 
             if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity)) {
                 this.handleInputHand(pos);
@@ -141,32 +142,39 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         List<Rectangle> handPos = bv.getHandPosition();
         int index = 0;
         for (Rectangle rec : handPos) {
+
             if (rec.contains(pos)) {
                 index = handPos.indexOf(rec);
                 break;
             }
-        }
-
-        Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
-        Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
-
-        if (prevClickedCard != null) {
-
-            if (engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
-                engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-                engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
-            } else {
-                engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+            else {
+                index = -1;
             }
-
-        } else {
-            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
-            engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-            // engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-            // chosenCard(cardChosen);
         }
+
+        if (index >= 0) {
+            Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
+            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+
+            if (prevClickedCard != null) {
+
+                if (engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
+                    engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                } else {
+                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                }
+
+            } else {
+                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                // engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                // chosenCard(cardChosen);
+            }
+        }
+
 
     }
 

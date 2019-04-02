@@ -87,8 +87,7 @@ public class BoardView {
         Vector2[] handPos = this.handPositions;
 
         for (Vector2 pos : handPos) {
-            Rectangle rec = new Rectangle();
-            rec.setPosition(pos.x, pos.y);
+            Rectangle rec = new Rectangle(pos.x, pos.y, 200, 250);
             handRectangles.add(rec);
         }
 
