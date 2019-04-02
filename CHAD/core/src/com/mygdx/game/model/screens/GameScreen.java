@@ -99,6 +99,10 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             pos.y = Gdx.graphics.getHeight() - pos.y;
 
+            // Depending on where the player has clicked, act accordingly.
+
+            if (bv.)
+
             if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity)) {
                 this.handleInputHand(pos);
             }

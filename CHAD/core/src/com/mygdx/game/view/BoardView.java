@@ -17,6 +17,7 @@ import com.mygdx.game.model.screens.utils.Assets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class BoardView {
@@ -78,9 +79,9 @@ public class BoardView {
             boardRectangles.add(rec);
         }
 
-
         return boardRectangles;
     }
+
 
     public List<Rectangle> getHandPosition() {
         List<Rectangle> handRectangles = new ArrayList<Rectangle>();
