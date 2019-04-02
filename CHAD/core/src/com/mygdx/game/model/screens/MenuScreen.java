@@ -3,6 +3,8 @@ package com.mygdx.game.model.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,6 +27,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     private Stage stage;
     private Texture background;
     private Engine engine;
+    private Music bgMusic;
+    private Sound btnClick;
 
     public MenuScreen(CardGame game, Engine engine){ // Constructor initializes background and runs create()
         super();
@@ -32,6 +36,12 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         sb = game.batch;
         background = Assets.getTexture(Assets.menuBG);
         this.engine = engine;
+
+        this.bgMusic = Assets.getMusic(Assets.backgroundMusic);
+        this.bgMusic.setVolume(0.3f);
+        this.bgMusic.play();
+
+        this.btnClick = Assets.getSound(Assets.btnClick);
 
         create(); // Run create on one-time operations
     }
@@ -56,6 +66,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(game, engine));
+                btnClick.play();
+                bgMusic.stop();
             }
 
             @Override // Fires when the button is pressed down
@@ -74,6 +86,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingsScreen(game, engine));
+                btnClick.play();
             }
 
             @Override // Fires when the button is pressed down
