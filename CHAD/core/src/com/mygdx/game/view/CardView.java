@@ -42,24 +42,16 @@ public class CardView {
     private boolean selected;
 
 
-
-
-
     private ComponentMapper<TextureComponent> tm;
     private ComponentMapper<CardStatsComponent> cm;
 
 
-    public CardView(Entity cardEntity) {
-        this.cardEntity = cardEntity;
+    public CardView() {
 
         tm = ComponentMapper.getFor(TextureComponent.class);
         cm = ComponentMapper.getFor(CardStatsComponent.class);
 
 
-        Maintexture = tm.get(cardEntity).texture;
-        attackPower = cm.get(cardEntity).attackPower;
-        health = cm.get(cardEntity).health;
-        selected = cm.get(cardEntity).selected;
 
         shapeRenderer = new ShapeRenderer();
         attackIconTexture = Assets.getTexture(pathToAttackIcon);

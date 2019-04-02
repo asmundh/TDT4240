@@ -43,7 +43,8 @@ public class BoardView {
     private String handRectPath = Assets.handRect;
     private String healthIconPath = Assets.pathToHealtchIcon;
 
-
+    private List<CardView> allCardViews;
+    private CardView cardView;
 
 
 
@@ -102,21 +103,29 @@ public class BoardView {
         friendlyCardsOnBoard = new ArrayList<CardView>();
         enemyCardsOnBoard = new ArrayList<CardView>();
         cardsInHand = new ArrayList<CardView>();
+        allCardViews = new ArrayList<>();
+        cardView = new CardView();
+
+
+        /*
+        for (int i = 0; i < 14; i++) {
+            allCardViews.add(new CardView());
+        }
+
 
 
 
         for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
-            CardView cv = new CardView(friendlyCardsOnBoardEntity.get(i));
-            friendlyCardsOnBoard.add(cv);
+            friendlyCardsOnBoard.add(allCardViews.get(i));
         }
         for (int i = 0; i < enemyCardsOnBoardEntity.size(); i++) {
-            CardView cv = new CardView(enemyCardsOnBoardEntity.get(i));
-            enemyCardsOnBoard.add(cv);
+            enemyCardsOnBoard.add(allCardViews.get(i + 4));
         }
         for (int i = 0; i < cardsInHandEntity.size(); i++) {
-            CardView cv = new CardView(cardsInHandEntity.get(i));
-            cardsInHand.add(cv);
+            cardsInHand.add(allCardViews.get(i + 5));
         }
+        */
+
 
 
     }
@@ -134,18 +143,18 @@ public class BoardView {
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
 
+        /*
+        friendlyCardsOnBoard.clear();
+        cardsInHand.clear();
+        enemyCardsOnBoard.clear();
 
-
-
-
-
-
-
-
-
-
-
-
+        for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
+            friendlyCardsOnBoard.add(friendlyCardsOnBoardEntity.get(i));
+        }
+        for (int i = 0; i < cardsInHandEntity.size(); i++) {
+            cardsInHand.add(cardsInHandEntity.get(i));
+        }
+        */
 
 
         batch.begin();
@@ -175,18 +184,20 @@ public class BoardView {
 
 
         //Drawing of friendly cards on board
-        for (int i = 0; i < this.friendlyCardsOnBoard.size(); i++) {
+        for (int i = 0; i < this.friendlyCardsOnBoardEntity.size(); i++) {
             float x = this.boardPositions[i].x;
             float y = this.boardPositions[i].y;
-            Entity cardEntity = friendlyCardsOnBoardEntity.get(i);
-            this.friendlyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
+            //Entity cardEntity = friendlyCardsOnBoardEntity.get(i);
+            //this.friendlyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
+            this.cardView.draw(batch, x, y, friendlyCardsOnBoardEntity.get(i));
         }
         //Drawing of enemy cards on board
-        for (int i = 0; i < this.enemyCardsOnBoard.size(); i++) {
+        for (int i = 0; i < this.enemyCardsOnBoardEntity.size(); i++) {
             float x = this.boardPositions[i + 4].x;
             float y = this.boardPositions[i + 4].y;
-            Entity cardEntity = enemyCardsOnBoardEntity.get(i);
-            this.enemyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
+            //Entity cardEntity = enemyCardsOnBoardEntity.get(i);
+            //this.enemyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
+            this.cardView.draw(batch, x, y, enemyCardsOnBoardEntity.get(i));
         }
 
 
@@ -201,11 +212,12 @@ public class BoardView {
             batch.draw(handRect, Gdx.graphics.getWidth() / 6, 50);
             batch.end();
 
-            for (int i = 0; i < this.cardsInHand.size(); i++) {
+            for (int i = 0; i < this.cardsInHandEntity.size(); i++) {
                 float xHand = this.handPositions[i].x;
                 float yHand = this.handPositions[i].y;
-                Entity cardEntity = cardsInHandEntity.get(i);
-                this.cardsInHand.get(i).draw(batch, xHand, yHand, cardEntity);
+                //Entity cardEntity = cardsInHandEntity.get(i);
+                //this.cardsInHand.get(i).draw(batch, xHand, yHand, cardEntity);
+                this.cardView.draw(batch, xHand, yHand, cardsInHandEntity.get(i));
             }
         }
     }
