@@ -42,7 +42,7 @@ public class CardView {
 
 
 
-    /*
+/*
     public CardView(String pathToImageFile, int attackPower, int health, Entity cardEntity) {
         shapeRenderer = new ShapeRenderer();
         Maintexture = new Texture(Gdx.files.local(pathToImageFile));
@@ -56,9 +56,9 @@ public class CardView {
         this.health = health;
         this.cardEntity = cardEntity;
     }
+*/
 
 
-    */
 
     private ComponentMapper<TextureComponent> tm;
     private ComponentMapper<CardStatsComponent> cm;
@@ -120,9 +120,5 @@ public class CardView {
 
 
     }
-
-
-
-
 
 }
