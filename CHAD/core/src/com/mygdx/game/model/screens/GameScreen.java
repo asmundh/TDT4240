@@ -45,8 +45,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         this.world = new World(engine);
 
         create();
-
-
     }
 
     @Override
@@ -65,8 +63,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
 
         bv = new BoardView(boardEntity);
-
-
 
     }
 
@@ -122,7 +118,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 index = boardPos.indexOf(rec);
                 break;
             }
-
         }
 
         Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
@@ -174,7 +169,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 // chosenCard(cardChosen);
             }
         }
-
 
     }
 
