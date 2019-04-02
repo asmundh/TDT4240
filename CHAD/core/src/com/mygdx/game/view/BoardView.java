@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
@@ -18,7 +19,6 @@ import java.util.List;
 
 
 public class BoardView {
-
 
     private CardGame game;
     private Texture deck;
@@ -59,11 +59,32 @@ public class BoardView {
             new Vector2((Gdx.graphics.getWidth() / 2) + 0.5f*(Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2)),
     };
 
-    public static Vector2 getBoardPosition(int cardNumber) {
-        return BoardView.boardPositions[cardNumber];
+    public List<Rectangle> getBoardPosition() {
+        List<Rectangle> boardRectangles = new ArrayList<Rectangle>();
+        Vector2[] boardPos = this.boardPositions;
+
+        for (Vector2 pos : boardPos) {
+            Rectangle rec = new Rectangle();
+            rec.setPosition(pos.x, pos.y);
+            boardRectangles.add(rec);
+        }
+
+
+        return boardRectangles;
     }
 
+    public List<Rectangle> getHandPosition() {
+        List<Rectangle> handRectangles = new ArrayList<Rectangle>();
+        Vector2[] handPos = this.handPositions;
 
+        for (Vector2 pos : handPos) {
+            Rectangle rec = new Rectangle();
+            rec.setPosition(pos.x, pos.y);
+            handRectangles.add(rec);
+        }
+
+        return handRectangles;
+    }
 
     private Vector2[] handPositions = {
             new Vector2(Gdx.graphics.getWidth() / 6 + 50, 100),
@@ -164,16 +185,17 @@ public class BoardView {
 
         //Drawing of friendly cards on board
         for (int i = 0; i < this.friendlyCardsOnBoard.size(); i++) {
-            float x = getBoardPosition(i).x;
-            float y = getBoardPosition(i).y;
+            float x = getBoardPosition().get(i).x;
+            float y = getBoardPosition().get(i).y;
             this.friendlyCardsOnBoard.get(i).draw(batch, x, y);
         }
         //Drawing of enemy cards on board
         for (int i = 0; i < this.enemyCardsOnBoard.size(); i++) {
-            float x = getBoardPosition(i + 4).x;
-            float y = getBoardPosition(i + 4).y;
+            float x = getBoardPosition().get(i + 4).x;
+            float y = getBoardPosition().get(i + 4).y;
             this.enemyCardsOnBoard.get(i).draw(batch, x, y);
         }
+
 
 
         if (showHand) {

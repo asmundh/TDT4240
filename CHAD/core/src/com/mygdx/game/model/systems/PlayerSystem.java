@@ -17,6 +17,10 @@ public class PlayerSystem extends IteratingSystem {
         pm = ComponentMapper.getFor(PlayerComponent.class);
     }
 
+    public Entity getCardFromHand(Entity player, int index) {
+        return pm.get(player).hand.get(index);
+
+    }
 
 
     // Used to initiilize the deck

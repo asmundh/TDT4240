@@ -33,7 +33,7 @@ public class World  {
 
         // TODO fjerne denne, gjør den bedre : Testdata
         tc.texture  = Assets.getTexture(Assets.background);
-        bc.showHand = false;
+        bc.showHand = true;
 
         boardEntity.add(bc);
         boardEntity.add(tc);
