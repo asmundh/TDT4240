@@ -9,6 +9,12 @@
     <string name="done">Done</string>
     <string name="leave">Leave</string>
     <string name="gdx">GDX</string>
+    <string name="TakeTurn">Take turn</string>
+    <string name="CheckMatchStatus">CheckMatchStatus</string>
+    <string name="CheckTurnStatus">CheckTurnStatus</string>
+    <string name="LoadMatchButton">LoadMatch</string>
+    <string name="DismissMatchButton">Dismiss Match</string>
+    <string name="CreateNewMatchButton">Create New Match</string>
     <string name="cancel">Cancel</string>
     <string name="finish">Finish</string>
     <string name="welcome_to_our_skeleton_app_">Welcome to our skeleton app!</string>

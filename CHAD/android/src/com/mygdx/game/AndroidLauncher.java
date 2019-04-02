@@ -21,6 +21,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesCallbackStatusCodes;
 import com.google.android.gms.games.GamesClient;
@@ -33,6 +35,7 @@ import com.google.android.gms.games.multiplayer.InvitationCallback;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
+import com.google.android.gms.games.multiplayer.turnbased.LoadMatchesResponse;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchUpdateCallback;
@@ -44,7 +47,7 @@ import com.google.android.gms.tasks.Task;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class AndroidLauncher extends AndroidApplication implements View.OnClickListener{
+public class AndroidLauncher extends PatchedAndroidApplication implements View.OnClickListener {
 
 	public static final String TAG = "SkeletonActivity";
 
@@ -55,6 +58,9 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 	// Client used to interact with the TurnBasedMultiplayer system.
 	private TurnBasedMultiplayerClient mTurnBasedMultiplayerClient = null;
+
+	// Callback for matchupdates
+	private TurnBasedMatchUpdateCallback mTurnBasedMatchUpdateCallback = null;
 
 	// Flag to see if signed in
 	private boolean mSignedIn;
@@ -98,6 +104,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+		config.useImmersiveMode = false;
 
 		// Create the androidInterface object that we will pass to CardGame in order to pass data between core and android
 		AndroidclassBasicAndroidInterface androidInterface = new AndroidclassBasicAndroidInterface(this);
@@ -124,10 +131,17 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		signInView.findViewById(R.id.sign_out_button).setOnClickListener(this);
 		signInView.findViewById(R.id.sign_in_button).setOnClickListener(this);
 		signInView.findViewById(R.id.GDXButton2).setOnClickListener(this);
+		signInView.findViewById(R.id.TakeTurnButton).setOnClickListener(this);
+		signInView.findViewById(R.id.CheckMatchStatus).setOnClickListener(this);
+		signInView.findViewById(R.id.CheckTurnStatus).setOnClickListener(this);
+		signInView.findViewById(R.id.LoadMatchButton).setOnClickListener(this);
+		signInView.findViewById(R.id.DismissMatchButton).setOnClickListener(this);
+		signInView.findViewById(R.id.CreateNewMatch).setOnClickListener(this);
 
 		// Add views to layout
 		mLayout.addView(signInView);
 		mLayout.addView(gameView);
+		mLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
 		// Set the contentview to the layout
 		setContentView(mLayout);
@@ -149,6 +163,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	@Override
 	protected void onPause() {
 		super.onPause();
+		Log.d(AppSettings.tag, "onPause()");
 
 		// Unregister the invitation callbacks; they will be re-registered via
 		// onResume->signInSilently->onConnected.
@@ -158,6 +173,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 		if (mTurnBasedMultiplayerClient != null) {
 			mTurnBasedMultiplayerClient.unregisterTurnBasedMatchUpdateCallback(mMatchUpdateCallback);
+			Log.d(AppSettings.tag, "mMatchUpdateCallBack unregistered from mTurnBasedMultiplayerClient");
 		}
 	}
 
@@ -165,6 +181,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	private String mPlayerId;
 
 	private void onConnected(GoogleSignInAccount googleSignInAccount) {
+
 		Log.d(TAG, "onConnected(): connected to Google APIs");
 
 		mTurnBasedMultiplayerClient = Games.getTurnBasedMultiplayerClient(this, googleSignInAccount);
@@ -179,6 +196,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 								mDisplayName = player.getDisplayName();
 								Log.d(AppSettings.tag, "Displayname: " + mDisplayName);
 								mPlayerId = player.getPlayerId();
+								gameView.setVisibility(View.VISIBLE);
 								//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 							}
 						}
@@ -197,6 +215,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 							TurnBasedMatch match = hint.getParcelable(Multiplayer.EXTRA_TURN_BASED_MATCH);
 
 							if (match != null) {
+								Log.d(AppSettings.tag, "Found a match after connecting!");
 								updateMatch(match);
 							}
 						}
@@ -356,6 +375,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		// Create the next turn
 		mTurnData.turnCounter += 1;
 		mTurnData.data = mDataView.getText().toString();
+		mTurnData.data = "Some new Turn data!";
 
 		mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
 				mTurnData.persist(), nextParticipantId)
@@ -531,6 +551,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	 *                  why the exception happened
 	 */
 	private void handleException(Exception exception, String details) {
+		Log.d(TAG, "handling exception");
 		int status = 0;
 
 		if (exception instanceof TurnBasedMultiplayerClient.MatchOutOfDateApiException) {
@@ -549,8 +570,10 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		}
 
 		if (exception instanceof ApiException) {
+			Log.d(TAG, "ApiException!");
 			ApiException apiException = (ApiException) exception;
 			status = apiException.getStatusCode();
+			Log.d(TAG, "Statuscode: " + status);
 		}
 
 		if (!checkStatusCode(status)) {
@@ -751,8 +774,10 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	public String getNextParticipantId() {
 
 		String myParticipantId = mMatch.getParticipantId(mPlayerId);
+		Log.d(AppSettings.tag, "My partcipantID: " + myParticipantId);
 
 		ArrayList<String> participantIds = mMatch.getParticipantIds();
+		Log.d(AppSettings.tag, "Participant IDs: "+ String.valueOf(participantIds));
 
 		int desiredIndex = -1;
 
@@ -781,6 +806,12 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 	public void updateMatch(TurnBasedMatch match) {
 		Log.d(TAG, "updateMatch()");
 		mMatch = match;
+		Log.d(AppSettings.tag, "match.getData() in updateMatch(): " + match.getData());
+		Log.d(AppSettings.tag, "match.getStatus() in updateMatch(): " +match.getStatus());
+		Log.d(AppSettings.tag, "match.getTurnStatus() in updateMatch(): " +match.getTurnStatus());
+		Log.d(AppSettings.tag, "match.getMatchId() in updateMatch(): " +match.getMatchId());
+
+		mTurnBasedMultiplayerClient.loadMatch(match.getMatchId());
 
 		int status = match.getStatus();
 		int turnStatus = match.getTurnStatus();
@@ -817,18 +848,21 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		// OK, it's active. Check on turn status.
 		switch (turnStatus) {
 			case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
+				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_my_turn");
 				mTurnData = SkeletonTurn.unpersist(mMatch.getData());
 				setGameplayUI();
 				return;
 			case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
+				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_their_turn");
 				// Should return results.
 				showWarning("Alas...", "It's not your turn.");
 				break;
 			case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
+				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_invited");
 				showWarning("Good inititative!",
 						"Still waiting for invitations.\n\nBe patient!");
 		}
-
+		Log.d(AppSettings.tag, "setting mTurnData to null");
 		mTurnData = null;
 
 		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
@@ -848,7 +882,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		Log.d(TAG, "onInitiateMatch()");
 
 		if (match.getData() != null) {
-			// This is a game that has already started, so I'll just start
+			// This is a game that has been initialized already
 			updateMatch(match);
 			return;
 		}
@@ -865,6 +899,7 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 
 
 	public void onUpdateMatch(TurnBasedMatch match) {
+		Log.d(AppSettings.tag, "onUpdateMatch()");
 		dismissSpinner();
 
 		if (match.canRematch()) {
@@ -872,8 +907,10 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		}
 
 		isDoingTurn = (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
+		Log.d(AppSettings.tag, "changed isDoingTurn to match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN");
 
 		if (isDoingTurn) {
+			Log.d(AppSettings.tag, "isDoingTurn is true, so updateMatch(match) will be called");
 			updateMatch(match);
 			return;
 		}
@@ -899,10 +936,13 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 		}
 	};
 
+
 	private TurnBasedMatchUpdateCallback mMatchUpdateCallback = new TurnBasedMatchUpdateCallback() {
 		@Override
 		public void onTurnBasedMatchReceived(@NonNull TurnBasedMatch turnBasedMatch) {
+			Log.d(AppSettings.tag, "onTurnBasedMatchReceived():A Match was updated");
 			Toast.makeText(AndroidLauncher.this, "A match was updated.", Toast.LENGTH_LONG).show();
+			updateMatch(turnBasedMatch);
 		}
 
 		@Override
@@ -992,83 +1032,234 @@ public class AndroidLauncher extends AndroidApplication implements View.OnClickL
 			case R.id.GDXButton2:
 				Log.d(AppSettings.tag, "GDXButton was clicked");
 				changeView();
+				break;
+			case R.id.TakeTurnButton:
+				Log.d(AppSettings.tag, "Take turn button was clicked");
+				takeTurn();
+				break;
+			case R.id.LoadMatchButton:
+				Log.d(AppSettings.tag, "Load Match button was clicked");
+				loadMatch();
+				break;
+			case R.id.DismissMatchButton:
+				Log.d(AppSettings.tag, "Dismiss Match button was clicked");
+				dismissMatch();
+				break;
+			case R.id.CreateNewMatch:
+				Log.d(AppSettings.tag, "Create New Match button was clicked");
+				createNewMatch();
+				break;
+			case R.id.CheckMatchStatus:
+				Log.d(AppSettings.tag, "Check Match Status was clicked:");
+				mTurnBasedMultiplayerClient.getInboxIntent()
+						.addOnSuccessListener(new OnSuccessListener<Intent>() {
+							@Override
+							public void onSuccess(Intent intent) {
+								startActivityForResult(intent, RC_LOOK_AT_MATCHES);
+							}
+						})
+						.addOnFailureListener(createFailureListener(getString(R.string.error_get_inbox_intent)));
+				checkMatchStatus();
+				break;
+			case R.id.CheckTurnStatus:
+				Log.d(AppSettings.tag, "Check Turn Status was Clicked:");
+				checkTurnStatus();
+				break;
 		}
 	}
 
-	// Function to start a quickmatch from libGDX
-
-	public void startQuickMatch() {
-		if (mMatch != null) {
-			updateMatch(mMatch);
-			Log.d(TAG, "mMatch.getStatus(): "+ String.valueOf(mMatch.getStatus()));
-			mTurnBasedMultiplayerClient.takeTurn(null, null, null);
+	// Create a new match
+	public void createNewMatch(){
+		// check if gamesclient is not null
+		if(mTurnBasedMultiplayerClient != null){
+			Log.d(AppSettings.tag, "createNewMatch(): mTurnBasedMultiplayerClient is not null");
 		}
-		/*
+		Log.d(AppSettings.tag, "Creating a new match!");
+		Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
 
-		if (mSignedIn != true) {
-			// not signed in
-		} else {
-
-			Log.d(AppSettings.tag, "startQuickMatch()");
-
-
-		// min players, maxplayers, allowAutomatch
-		mTurnBasedMultiplayerClient.getSelectOpponentsIntent(1, 1, true).addOnSuccessListener(new OnSuccessListener<Intent>() {
-			@Override
-			public void onSuccess(Intent intent) {
-				startActivityForResult(intent, LIBGDX_QUICK_MATCH);
-			}
-		});
-
-			Bundle autoMatchCriteria;
-
-			int minAutoMatchPlayers = 1;
-			int maxAutoMatchPlayers = 1;
-
-			if (minAutoMatchPlayers > 0) {
-				autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers,
-						maxAutoMatchPlayers, 0);
-			} else {
-				autoMatchCriteria = null;
-			}
-
-		TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
-				.addInvitedPlayers(invitees)
+		TurnBasedMatchConfig turnBasedMatchConfig = TurnBasedMatchConfig.builder()
 				.setAutoMatchCriteria(autoMatchCriteria).build();
 
+		Log.d(AppSettings.tag, "Config finished, trying create match through client...");
 
-			TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
-					.setAutoMatchCriteria(autoMatchCriteria).build();
+		//showSpinner();
+		// Start the match
+		mTurnBasedMultiplayerClient.createMatch(turnBasedMatchConfig)
+				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+					@Override
+					public void onSuccess(TurnBasedMatch turnBasedMatch) {
+						Log.d(AppSettings.tag, "success from create match from client...");
+						Log.d(AppSettings.tag, "Trying to onInitiateMatch(turnBasedMatch");
+						onInitiateMatch(turnBasedMatch);
+						Log.d(AppSettings.tag, "Created a new match!");
+					}
+				})
+				.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
+	}
 
-			// Start the match
-			mTurnBasedMultiplayerClient.createMatch(tbmc)
-					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-						@Override
-						public void onSuccess(TurnBasedMatch turnBasedMatch) {
-							onInitiateMatch(turnBasedMatch);
-						}
-					})
-					.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
-			//showSpinner();
-		} */
-		else {
-			Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
-
-			TurnBasedMatchConfig turnBasedMatchConfig = TurnBasedMatchConfig.builder()
-					.setAutoMatchCriteria(autoMatchCriteria).build();
-
-			//showSpinner();
-			Log.d(AppSettings.tag, "startQuickMatch()");
-			// Start the match
-			mTurnBasedMultiplayerClient.createMatch(turnBasedMatchConfig)
-					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-						@Override
-						public void onSuccess(TurnBasedMatch turnBasedMatch) {
-							onInitiateMatch(turnBasedMatch);
-						}
-					})
-					.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
+	// Dismiss mMatch
+	public void dismissMatch(){
+		// Check if there is a mMatch first
+		if(mMatch != null) {
+			// There is a match
+			Log.d(AppSettings.tag, "Dismissing match");
+			mTurnBasedMultiplayerClient.dismissMatch(mMatch.getMatchId());
 		}
+		else{
+			Log.d(AppSettings.tag, "There was no mMatch to dismiss");
+		}
+	}
+
+	//CheckMatchStatus for testing
+	public void checkMatchStatus(){
+		Log.d(AppSettings.tag, "checkMatchStatus():");
+		if(mTurnBasedMultiplayerClient != null){
+			if(mMatch != null) {
+				Log.d(AppSettings.tag, String.valueOf(mMatch.getStatus()));
+			}
+			else{
+				Log.d(AppSettings.tag, "mMatch = null");
+			}
+		}
+	}
+
+	//CheckTurnStatus for testing
+	public void checkTurnStatus(){
+		Log.d(AppSettings.tag, "checkTurnStatus():");
+		if(mTurnBasedMultiplayerClient != null){
+			if(mMatch != null) {
+				Log.d(AppSettings.tag, String.valueOf(mMatch.getTurnStatus()));
+			}
+			else{
+				Log.d(AppSettings.tag, "mMatch = null");
+			}
+		}
+	}
+
+	// Function to take a turn (For testing)
+	public void takeTurn() {
+
+		showSpinner();
+
+		String nextParticipantId = getNextParticipantId();
+		// Create the next turn
+		mTurnData.turnCounter += 1;
+		// mTurnData.data = mDataView.getText().toString(); commented out because we dont use the textView
+		mTurnData.data = mDisplayName;
+
+		mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
+				mTurnData.persist(), nextParticipantId)
+				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+					@Override
+					public void onSuccess(TurnBasedMatch turnBasedMatch) {
+						Log.d(AppSettings.tag, "Successfully uploaded turn going to call onUpdateMatch)");
+						onUpdateMatch(turnBasedMatch);
+					}
+				})
+				.addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
+
+		mTurnData = null;
+	}
+
+
+	// Function to start a quickmatch from libGDX
+
+	public void startQuickMatch(){
+		// Check if logged in
+		if(mGoogleSignInAccount != null) {
+			// Attempting to register turnBasedMatchUpdateCallback
+			Log.d(AppSettings.tag, "Registering TurnbasedMatchUpdateCallback");
+			mTurnBasedMultiplayerClient.registerTurnBasedMatchUpdateCallback(mMatchUpdateCallback);
+			// First  check if we have a mTurnBasedMultiplayerClient
+			if (mTurnBasedMultiplayerClient != null) {
+				Log.d(AppSettings.tag, "mMatch is: " + mMatch);
+				// First figure out if there exists any matches that involves the logged in user.
+				int[] mMatchStatuses = new int[2];
+				mMatchStatuses[0] = TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN;
+				mMatchStatuses[1] = TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN;
+				mTurnBasedMultiplayerClient.loadMatchesByStatus(mMatchStatuses).addOnSuccessListener(new OnSuccessListener<AnnotatedData<LoadMatchesResponse>>() {
+					@Override
+					public void onSuccess(AnnotatedData<LoadMatchesResponse> loadMatchesResponseAnnotatedData) {
+						Log.d(AppSettings.tag, "Loaded this many My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
+						Log.d(AppSettings.tag, "Loaded this many Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
+						if (loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0) {
+							// there is one OR MORE matches where it is my turn
+							mMatch = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
+						} else if (loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() > 0) {
+							// there is one OR MORE matches where it is not my turn
+							mMatch = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
+						} // WE IGNORE COMPLETED MATCHES IN THIS METHOD - MIGHT HAVE TO INVOLVE THEM SOMEHOW?
+					}
+				}).addOnFailureListener(new OnFailureListener() {
+					@Override
+					public void onFailure(@NonNull Exception e) {
+						Log.d(AppSettings.tag, "There was an error loading matches.");
+					}
+				});
+			}
+
+			// IF there are no matches existing, create a new match with auto-match enabled. From now on this function should never create a new match
+		}
+	}
+
+
+	/*public void startQuickMatch() {
+			if(mTurnBasedMultiplayerClient != null){
+				if (mMatch != null) {
+					updateMatch(mMatch);
+					Log.d(TAG, "mMatch.getStatus(): "+ String.valueOf(mMatch.getStatus()));
+					//mTurnBasedMultiplayerClient.takeTurn(null, null, null);
+				}
+
+				else {
+					Log.d(AppSettings.tag, "Creating a new match!");
+					Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
+
+					TurnBasedMatchConfig turnBasedMatchConfig = TurnBasedMatchConfig.builder()
+							.setAutoMatchCriteria(autoMatchCriteria).build();
+
+					//showSpinner();
+					Log.d(AppSettings.tag, "startQuickMatch()");
+					// Start the match
+					mTurnBasedMultiplayerClient.createMatch(turnBasedMatchConfig)
+							.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+								@Override
+								public void onSuccess(TurnBasedMatch turnBasedMatch) {
+									onInitiateMatch(turnBasedMatch);
+								}
+							})
+							.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
+				}
+			}
+	} */
+
+	// loadMatchButton attempt to load a match
+	public void loadMatch(){
+		int[] mMatchStatuses = new int[2];
+		mMatchStatuses[0] = TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN;
+		mMatchStatuses[1] = TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN;
+		mTurnBasedMultiplayerClient.loadMatchesByStatus(mMatchStatuses).addOnSuccessListener(new OnSuccessListener<AnnotatedData<LoadMatchesResponse>>() {
+			@Override
+			public void onSuccess(AnnotatedData<LoadMatchesResponse> loadMatchesResponseAnnotatedData) {
+				Log.d(AppSettings.tag, "Loaded My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
+				Log.d(AppSettings.tag, "Loaded Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
+				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0){
+					// there is one OR MORE matches where it is my turn
+					mMatch = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
+					updateMatch(mMatch);
+				}
+				else if (loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() > 0){
+					// there is one OR MORE matches where it is not my turn
+					mMatch = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
+					updateMatch(mMatch);
+				}
+			}
+		}).addOnFailureListener(new OnFailureListener() {
+			@Override
+			public void onFailure(@NonNull Exception e) {
+				Log.d(AppSettings.tag, "There was an error loading matches.");
+			}
+		});
 	}
 
 	/*
