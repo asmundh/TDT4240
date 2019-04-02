@@ -25,9 +25,11 @@ public class PlayerSystem extends IteratingSystem {
 
     // Used to initiilize the deck
     public void setUpDeck(World world, Entity player, int numOfCards){
-        for(int i = 0; i < numOfCards; i++){
+        for(int i = 0; i < numOfCards - 1; i++){
             addCardToDeck(player, world.createCard(1));
         }
+        addCardToDeck(player, world.createCard(2));
+
     }
 
     public void addCardToDeck(Entity player, Entity card){

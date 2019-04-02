@@ -98,63 +98,44 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public void handleInput() {
         if (Gdx.input.justTouched()) {
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-            System.out.println("Pos");
-            System.out.println(pos);
-            int index = 0;
 
             if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity)) {
-                List<Rectangle> boardPos = bv.getBoardPosition();
-                for (Rectangle rec : boardPos) {
-                    System.out.println("Rectangle");
-                    System.out.println(rec);
-                    if (rec.contains(pos)) {
+                this.handleInputHand(pos);
+            }
 
-                        System.out.println(rec);
-                        index = boardPos.indexOf(rec);
-                        break;
-                    }
-                    //this.handleInputHand(pos);
-                }
-                Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
-                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
-
-                if (prevClickedCard != null && engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
-                    engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-                }
-
-                else {
-                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                    chosenCard(cardChosen);
-                }
-
-
-                /*else{
+            else {
                 this.handleInputTable(pos);
-            }*/
             }
         }
     }
 
-
     public void handleInputTable(Vector2 pos) {
         int index = 0;
-        System.out.println(pos);
         List<Rectangle> boardPos = bv.getBoardPosition();
+        System.out.println("Pos" + pos);
         for (Rectangle rec : boardPos) {
             if (rec.contains(pos)) {
-                System.out.println(rec);
                 index = boardPos.indexOf(rec);
                 break;
             }
+        }
 
+        Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
+        Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
 
+        if (prevClickedCard != null && engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
+            engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+        }
+
+        else {
+            engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+            chosenCard(cardChosen);
         }
     }
 
     public void handleInputHand(Vector2 pos) {
         List<Rectangle> handPos = bv.getHandPosition();
         int index = 0;
-
         for (Rectangle rec : handPos) {
             if (rec.contains(pos)) {
                 index = handPos.indexOf(rec);

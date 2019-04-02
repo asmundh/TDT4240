@@ -130,7 +130,7 @@ public class BoardView {
         friendlyCardsOnBoard = new ArrayList<CardView>();
         enemyCardsOnBoard = new ArrayList<CardView>();
         cardsInHand = new ArrayList<CardView>();
-        allCardViews = new ArrayList<>();
+        allCardViews = new ArrayList<CardView>();
         cardView = new CardView();
 
 
@@ -211,18 +211,6 @@ public class BoardView {
 
 
         //Drawing of friendly cards on board
-<<<<<<< HEAD
-        for (int i = 0; i < this.friendlyCardsOnBoard.size(); i++) {
-            float x = getBoardPosition().get(i).x;
-            float y = getBoardPosition().get(i).y;
-            this.friendlyCardsOnBoard.get(i).draw(batch, x, y);
-        }
-        //Drawing of enemy cards on board
-        for (int i = 0; i < this.enemyCardsOnBoard.size(); i++) {
-            float x = getBoardPosition().get(i + 4).x;
-            float y = getBoardPosition().get(i + 4).y;
-            this.enemyCardsOnBoard.get(i).draw(batch, x, y);
-=======
         for (int i = 0; i < this.friendlyCardsOnBoardEntity.size(); i++) {
             float x = this.boardPositions[i].x;
             float y = this.boardPositions[i].y;
@@ -237,7 +225,6 @@ public class BoardView {
             //Entity cardEntity = enemyCardsOnBoardEntity.get(i);
             //this.enemyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
             this.cardView.draw(batch, x, y, enemyCardsOnBoardEntity.get(i));
->>>>>>> 26601669f0e18bdde8819f20a2f2daff90de777b
         }
 
 
