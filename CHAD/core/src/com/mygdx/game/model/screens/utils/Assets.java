@@ -10,6 +10,13 @@ import java.util.HashMap;
 
 public class Assets {
 
+    public static String gameOverText = "textures/game_over.png";
+    public static String tutorialBtn = "textures/tutorialBtn.png";
+    public static String end_turnBtn = "textures/end_turnBtn.png";
+    public static String card_back = "textures/card_back.png";
+    public static String game_screen_bg = "textures/game_screen_bg.png";
+    public static String replayBtn = "textures/replayBtn.png";
+    public static String menuBtn = "textures/menuBtn.png";
     public static String playBtn = "textures/playBtn.png";
     public static String settingBtn = "textures/settingBtn.png";
     public static String background = "textures/background.png";
@@ -58,6 +65,13 @@ public class Assets {
     }
 
     public static void load() {
+        assetManager.load(gameOverText, Texture.class);
+        assetManager.load(tutorialBtn, Texture.class);
+        assetManager.load(end_turnBtn, Texture.class);
+        assetManager.load(card_back, Texture.class);
+        assetManager.load(game_screen_bg, Texture.class);
+        assetManager.load(replayBtn, Texture.class);
+        assetManager.load(menuBtn, Texture.class);
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
