@@ -25,9 +25,11 @@ public class PlayerSystem extends IteratingSystem {
 
     // Used to initiilize the deck
     public void setUpDeck(World world, Entity player, int numOfCards){
-        for(int i = 0; i < numOfCards; i++){
+        for(int i = 0; i < numOfCards - 1; i++){
             addCardToDeck(player, world.createCard(1));
         }
+        addCardToDeck(player, world.createCard(2));
+
     }
 
     public void addCardToDeck(Entity player, Entity card){
@@ -37,6 +39,10 @@ public class PlayerSystem extends IteratingSystem {
     // Take last card from deck, and add to hand list
     public void pickFromDeck(Entity entity) {
         pm.get(entity).hand.add(pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1));
+    }
+
+    public void addCardToHand(Entity entity, Entity card) {
+        pm.get(entity).hand.add(card);
     }
 
     // From hand to table
@@ -53,8 +59,8 @@ public class PlayerSystem extends IteratingSystem {
         return pm.get(entity).cardsOnTable.get(index);
     }
 
-    public void removeCardOnTable(Entity entity , int index) {
-        pm.get(entity).cardsOnTable.remove(index);
+    public Entity removeCardOnTable(Entity entity , int index) {
+        return pm.get(entity).cardsOnTable.remove(index);
     }
 
     public String getPlayerId(Entity entity) {

@@ -93,35 +93,53 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     @Override
+    public void dispose () {
+        super.dispose();
+    }
+
+    @Override
     public void handleInput() {
         if (Gdx.input.justTouched()) {
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 
-
             if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity)) {
                 this.handleInputHand(pos);
-            } else {
+            }
+
+            else {
                 this.handleInputTable(pos);
             }
         }
     }
 
-
     public void handleInputTable(Vector2 pos) {
         int index = 0;
         List<Rectangle> boardPos = bv.getBoardPosition();
+        System.out.println("Pos" + pos);
         for (Rectangle rec : boardPos) {
             if (rec.contains(pos)) {
                 index = boardPos.indexOf(rec);
                 break;
             }
+
+        }
+
+        Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
+        Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+
+        if (prevClickedCard != null && engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
+            engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+        }
+
+        else {
+            engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+            chosenCard(cardChosen);
         }
     }
 
     public void handleInputHand(Vector2 pos) {
         List<Rectangle> handPos = bv.getHandPosition();
         int index = 0;
-
         for (Rectangle rec : handPos) {
             if (rec.contains(pos)) {
                 index = handPos.indexOf(rec);
@@ -144,10 +162,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             }
 
         } else {
-            if (prevClickedCard == null) {
-                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
-                engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-            }
+            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+            engine.getSystem(CardSystem.class).updateSelected(cardChosen);
             // engine.getSystem(CardSystem.class).updateSelected(cardChosen);
             // chosenCard(cardChosen);
         }
