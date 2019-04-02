@@ -18,6 +18,16 @@ public class Assets {
     public static String exitBtn = "textures/exit.png";
     public static String exit_gameBtn = "textures/exit_game.png";
 
+    public static String pathToAttackIcon = "textures/attackIcon.png";
+    public static String pathToHealtchIcon = "textures/healthIcon.png";
+    public static String pathToGreenRect = "textures/greenRect.png";
+    public static String pathToBlackRect = "textures/blackRect.png";
+
+    public static String deck = "textures/cardBackside.png";
+    public static String boardBackground = "textures/background.png";
+    public static String enemyRect = "textures/enemy.png";
+    public static String handRect = "textures/handRect.png";
+
     public static String goblin = "textures/background.png";
 
     public static String orc = "textures/cards/goblin.png";
@@ -61,6 +71,17 @@ public class Assets {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
+
+        assetManager.load(pathToAttackIcon, Texture.class);
+        assetManager.load(pathToHealtchIcon, Texture.class);
+        assetManager.load(pathToGreenRect, Texture.class);
+        assetManager.load(pathToBlackRect, Texture.class);
+
+        assetManager.load(deck, Texture.class);
+        assetManager.load(boardBackground, Texture.class);
+        assetManager.load(enemyRect, Texture.class);
+        assetManager.load(handRect, Texture.class);
+
 
         //assetManager.load(deck1, Skin.class);
         //assetManager.load(deck2, Skin.class);

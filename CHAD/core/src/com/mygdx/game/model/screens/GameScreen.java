@@ -90,6 +90,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     @Override
+    public void dispose () {
+        super.dispose();
+    }
+
+    @Override
     public void handleInput() {
         if (Gdx.input.justTouched()) {
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
