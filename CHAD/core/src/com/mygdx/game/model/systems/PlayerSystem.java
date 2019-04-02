@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.World;
+import com.mygdx.game.model.components.CardPowerComponent;
+import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
 
 public class PlayerSystem extends IteratingSystem {
@@ -27,8 +29,14 @@ public class PlayerSystem extends IteratingSystem {
     public void setUpDeck(World world, Entity player, int numOfCards){
         for(int i = 0; i < numOfCards - 1; i++){
             addCardToDeck(player, world.createCard(1));
+
         }
         addCardToDeck(player, world.createCard(2));
+
+        for (int i = 0; i < numOfCards; i++) {
+            Entity card = player.getComponent(PlayerComponent.class).deck.get(i);
+            //System.out.println(card.getComponent(CardStatsComponent.class).attackPower);
+        }
 
     }
 
@@ -38,7 +46,9 @@ public class PlayerSystem extends IteratingSystem {
 
     // Take last card from deck, and add to hand list
     public void pickFromDeck(Entity entity) {
-        pm.get(entity).hand.add(pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1));
+        Entity card = pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1);
+        pm.get(entity).hand.add(card);
+        //pm.get(entity).hand.add(pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1));
     }
 
     public void addCardToHand(Entity entity, Entity card) {
