@@ -35,6 +35,10 @@ public class PlayerSystem extends IteratingSystem {
         pm.get(entity).hand.add(pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1));
     }
 
+    public void addCardToHand(Entity entity, Entity card) {
+        pm.get(entity).hand.add(card);
+    }
+
     // From hand to table
     public void AddCardToTable(Entity entity, int index) {
         pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
@@ -45,8 +49,8 @@ public class PlayerSystem extends IteratingSystem {
         return pm.get(entity).cardsOnTable.get(index);
     }
 
-    public void removeCardOnTable(Entity entity , int index) {
-        pm.get(entity).cardsOnTable.remove(index);
+    public Entity removeCardOnTable(Entity entity , int index) {
+        return pm.get(entity).cardsOnTable.remove(index);
     }
 
     public String getPlayerId(Entity entity) {
