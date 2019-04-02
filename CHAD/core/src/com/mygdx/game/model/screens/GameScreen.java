@@ -107,9 +107,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
             // Depending on where the player has clicked, act accordingly.
 
-            if (bv.)
+            if (bv.getShowHandButtonRect().contains(pos)){
+                engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
 
-            if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity)) {
+            }
+
+            else if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity) == true) {
                 this.handleInputHand(pos);
             }
 
@@ -145,6 +148,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(CardSystem.class).updateSelected(cardChosen);
             chosenCard(cardChosen);
         }
+
+
     }
 
     public void handleInputHand(Vector2 pos) {

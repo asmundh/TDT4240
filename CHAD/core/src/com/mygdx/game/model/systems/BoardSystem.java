@@ -43,10 +43,13 @@ public class BoardSystem extends IteratingSystem {
         bc.playerTwo = players.get(1);
     }
 
-    public boolean getShowHand(Entity entity) {
-        return bm.get(entity).showHand;
+    public boolean getShowHand(Entity boardEntity) {
+        return bm.get(boardEntity).showHand;
     }
 
+    public void changeShowHand(Entity boardEntity) {
+        bm.get(boardEntity).showHand = !bm.get(boardEntity).showHand;
+    }
 
 
     @Override
