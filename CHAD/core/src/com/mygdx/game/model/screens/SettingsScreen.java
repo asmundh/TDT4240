@@ -3,6 +3,7 @@ package com.mygdx.game.model.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -22,7 +23,9 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
     private CardGame game;
     private Engine engine;
     private SpriteBatch sb;
+
     private Stage settings;
+    private Sound btnClick;
 
     public SettingsScreen(CardGame game, Engine engine) {
         super();
@@ -30,6 +33,8 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         sb = game.batch;
         create();
         this.engine = engine;
+
+        this.btnClick = Assets.getSound(Assets.btnClick);
     }
 
     @Override
@@ -53,6 +58,7 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MenuScreen(game, engine));
+                btnClick.play();
             }
 
             @Override // Fires when the button is pressed down
@@ -70,6 +76,7 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         exitBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
+                btnClick.play();
                 Gdx.app.exit();
                 System.exit(0);
             }

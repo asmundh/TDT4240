@@ -45,8 +45,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         this.world = new World(engine);
 
         create();
-
-
     }
 
     @Override
@@ -65,8 +63,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
 
         bv = new BoardView(boardEntity);
-
-
 
     }
 
@@ -121,7 +117,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 index = boardPos.indexOf(rec);
                 break;
             }
-
         }
 
         Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
@@ -167,7 +162,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             // engine.getSystem(CardSystem.class).updateSelected(cardChosen);
             // chosenCard(cardChosen);
         }
-
     }
 
     //makes the card glow, has to click one more time to confirm.
