@@ -9,13 +9,17 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.PlayerComponent;
+import com.mygdx.game.model.screens.utils.Assets;
 import com.mygdx.game.model.systems.BoardSystem;
 import com.mygdx.game.model.systems.CardSystem;
 import com.mygdx.game.model.systems.PlayerSystem;
@@ -64,6 +68,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         bv = new BoardView(boardEntity);
 
+
+
     }
 
     @Override
@@ -110,6 +116,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             else {
                 this.handleInputTable(pos);
             }
+
+
+
         }
     }
 

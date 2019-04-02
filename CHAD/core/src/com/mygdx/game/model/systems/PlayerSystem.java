@@ -57,7 +57,9 @@ public class PlayerSystem extends IteratingSystem {
 
     // From hand to table
     public void AddCardToTable(Entity entity, int index) {
-        pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
+        if (pm.get(entity).cardsOnTable.size() < 4) {
+            pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
+        }
     }
 
     public void addRectangleToCard(Entity entity, int index) {
