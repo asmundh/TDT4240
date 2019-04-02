@@ -5,18 +5,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.components.BoardComponent;
-import com.mygdx.game.model.components.PlayerComponent;
+import com.mygdx.game.World;
 import com.mygdx.game.model.systems.BoardSystem;
 import com.mygdx.game.model.systems.CardSystem;
 import com.mygdx.game.model.systems.PlayerSystem;
 import com.mygdx.game.view.BoardView;
-import com.mygdx.game.view.CardView;
-import com.mygdx.game.World;
 
 import java.util.List;
 
@@ -26,6 +20,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     private World world;
     private Engine engine;
     private BoardView bv;
+    private List<Entity> players;
 
   
     protected GameScreen(CardGame game, Engine engine) {
@@ -41,7 +36,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void create() {
-        List<Entity> players = world.createPlayers();
+        players = world.createPlayers();
         Entity boardEntity = world.createBoard();
 
 
@@ -70,10 +65,21 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void draw() {
-
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        bv.draw(game.batch);
+
+        // Winning: player 1
+        if (engine.getSystem(PlayerSystem.class).getHealth(players.get(0)) == 0) {
+            game.setScreen(new GameOverScreen(game, engine, 1));
+        }
+
+        // Winning: player 2
+        else if(engine.getSystem(PlayerSystem.class).getHealth(players.get(1)) == 0) {
+            game.setScreen(new GameOverScreen(game, engine, 0));
+        }
+
+        else {
+            bv.draw(game.batch);
+        }
 //        Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     }
@@ -86,9 +92,5 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void handleInput() {
-        if(Gdx.input.isTouched()){
-            game.setScreen(new MenuScreen(game, engine));
-        }
-
     }
 }
