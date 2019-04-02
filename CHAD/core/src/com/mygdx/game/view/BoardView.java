@@ -234,6 +234,8 @@ public class BoardView {
 
 
 
+
+
         if (showHand) {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -248,7 +250,7 @@ public class BoardView {
             batch.begin();
             batch.draw(handRect, Gdx.graphics.getWidth() / 6, 50);
             font.setColor(Color.WHITE);
-            font.draw(batch, "Show / hide hand", 50, 200);
+            font.draw(batch, "Hide hand", 90, 200);
             batch.end();
 
 
@@ -260,6 +262,17 @@ public class BoardView {
                 //this.cardsInHand.get(i).draw(batch, xHand, yHand, cardEntity);
                 this.cardView.draw(batch, xHand, yHand, cardsInHandEntity.get(i));
             }
+        }
+        else {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.BLACK);
+            shapeRenderer.rect(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
+            shapeRenderer.end();
+
+            batch.begin();
+            font.setColor(Color.WHITE);
+            font.draw(batch, "Show hand", 90, 200);
+            batch.end();
         }
     }
 }
