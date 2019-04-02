@@ -34,7 +34,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
     private TextArea textBox2;
     private TextArea textBox3;
 
-    private int tutCounter;
+    private int tutCounter; // Keeps track of which tutorial box to display
 
     public TutorialScreen(CardGame game, Engine engine){ // Constructor initializes background and runs create()
         super();
@@ -51,22 +51,27 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         stage = new Stage(new ScreenViewport()); // Create stage used by buttons
         Gdx.input.setInputProcessor(stage); // Set inputs to be handled by the stage
 
-        // Initialize a  button using texture from Assets, first is up-texture, second is down. Set the size, make is transformable and set the origin to the middle
+        // Initialize a  button using texture from Assets, make is transformable and set the origin to the middle
+        // TODO: Implement correct asset for button
         final Button backBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.backBtn))));
         backBtn.setTransform(true);
         backBtn.setSize(241, 87);
         backBtn.setOrigin(backBtn.getWidth()/2, backBtn.getHeight()/2);
 
+        // Create back and forward buttons for the tutorial
+        // TODO: Implement correct asset for button
         stepForwardBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.backBtn))));
         stepForwardBtn.setTransform(true);
-        stepForwardBtn.setSize(100, 100);
+        stepForwardBtn.setSize(200, 200);
         stepForwardBtn.setOrigin(stepForwardBtn.getWidth()/2, stepForwardBtn.getHeight()/2);
 
+        // TODO: Implement correct asset for button
         stepBackBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.backBtn))));
         stepBackBtn.setTransform(true);
-        stepBackBtn.setSize(100, 100);
+        stepBackBtn.setSize(200, 200);
         stepBackBtn.setOrigin(stepBackBtn.getWidth()/2, stepBackBtn.getHeight()/2);
 
+        // Input functionality for buttons
         backBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
@@ -85,7 +90,6 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
                 backBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
             }
         });
-
         stepBackBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
@@ -106,7 +110,6 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
                 stepBackBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
             }
         });
-
         stepForwardBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
@@ -128,8 +131,8 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         });
 
         backBtn.setPosition(50, game.getHeight() - stepBackBtn.getHeight() - 50);
-        stepBackBtn.setPosition(game.getWidth()-300, 50);
-        stepForwardBtn.setPosition(game.getWidth()- 150, 50);
+        stepBackBtn.setPosition(game.getWidth()-450, 50);
+        stepForwardBtn.setPosition(game.getWidth()- 200, 50);
 
         createTutorialBoxes();
 
@@ -141,12 +144,13 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     private void createTutorialBoxes(){
-        Skin skin = new Skin(Gdx.files.local("skin/uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         skin.getFont("font").getData().setScale(2.0f,2.0f);
+
         textBox1 = new TextArea("VElkommen til dette spill? Hva gjør man. Følg med!", skin);
         textBox1.setSize(400f, 200f);
         textBox1.setPosition(100f, 100f);
-        textBox1.setDisabled(true);
+        textBox1.setDisabled(true); // Disables input into box
         textBox1.setVisible(false);
 
         textBox2 = new TextArea("Kortet her er dine korts :O", skin);
@@ -166,7 +170,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         stage.addActor(textBox3);
     }
 
-    private void showTutorialStep(){
+    private void showTutorialStep(){ // Method for handeling which part of the tutorial to display
         switch (tutCounter){
             case -1:
                 tutCounter = 0;
@@ -176,7 +180,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
                 textBox2.setVisible(false);
                 stepBackBtn.setVisible(false);
                 break;
-            case 1:
+            case 1: // In general each case needs to hide previous and next box, and show current
                 stepBackBtn.setVisible(true);
                 textBox1.setVisible(false);
                 textBox2.setVisible(true);
@@ -194,13 +198,13 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     @Override
-    public void update(float dt) { // Only thing we're checking for is if user presses button
+    public void update(float dt) {
         handleInput();
         stage.act(Gdx.graphics.getDeltaTime());
     }
 
     @Override
-    public void draw() { // Draws sprite batch
+    public void draw() {
         GL20 gl = Gdx.gl;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
