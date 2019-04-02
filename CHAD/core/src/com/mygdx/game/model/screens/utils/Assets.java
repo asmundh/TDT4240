@@ -64,15 +64,6 @@ public class Assets {
         assetManager.dispose();
     }
 
-    public void queueAddSkin() {
-        SkinLoader.SkinParameter paramDeck1 = new SkinLoader.SkinParameter("decks/deck1.atlas");
-        SkinLoader.SkinParameter paramDeck2 = new SkinLoader.SkinParameter("decks/deck2.atlas");
-
-        assetManager.load(deck1, Skin.class, paramDeck1);
-        assetManager.load(deck2, Skin.class, paramDeck2);
-
-    }
-
     public static void load() {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
@@ -96,10 +87,7 @@ public class Assets {
             assetManager.load(cards.get(card), Texture.class);
         }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> d3aede67980b89c7672571cc715fc46ef6377f57
         assetManager.load(menuBG, Texture.class);
         assetManager.load(backBtn, Texture.class);
         assetManager.load(exitBtn, Texture.class);
