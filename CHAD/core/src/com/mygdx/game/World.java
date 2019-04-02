@@ -68,17 +68,21 @@ public class World  {
                 //Texture
                 tc.texture = Assets.getTexture(Assets.orc);
 
+                break;
+
             case 2:
                 cardPower.powerName = "Test2Effekt";
                 cardPower.powerEffectText = "Description2";
                 cardPower.powerSize = 3;
                 cardPower.powerType = 1;
 
-                cardStats.attackPower = 4;
+                cardStats.attackPower = 400;
                 cardStats.health = 2;
                 cardStats.cost = 1;
 
                 tc.texture = Assets.getTexture(Assets.orc);
+
+                break;
         }
 
         cardEntity.add(cardPower);
