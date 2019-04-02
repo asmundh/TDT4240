@@ -118,6 +118,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 index = boardPos.indexOf(rec);
                 break;
             }
+
         }
 
         Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
@@ -160,6 +161,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 } else {
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
                 }
 
             } else {
@@ -168,6 +170,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 // engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                 // chosenCard(cardChosen);
             }
+        }
+        else {
+            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+            engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
         }
 
     }
