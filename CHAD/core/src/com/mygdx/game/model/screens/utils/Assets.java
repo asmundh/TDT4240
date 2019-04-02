@@ -68,10 +68,7 @@ public class Assets {
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
-<<<<<<< HEAD
 
-=======
->>>>>>> c8e00a28ffc0a619831b9dd1ef6ed14cf53c2e20
         assetManager.load(menuBG, Texture.class);
         assetManager.load(backBtn, Texture.class);
         assetManager.load(exitBtn, Texture.class);

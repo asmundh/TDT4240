@@ -43,6 +43,8 @@ public class BoardSystem extends IteratingSystem {
         bc.playerTwo = players.get(1);
     }
 
+
+
     @Override
     protected void processEntity(Entity entity, float dt) {
         BoardComponent boardComp = bm.get(entity);

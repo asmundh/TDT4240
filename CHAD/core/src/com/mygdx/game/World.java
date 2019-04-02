@@ -6,6 +6,7 @@ import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
+import com.mygdx.game.model.components.RectangleComponent;
 import com.mygdx.game.model.components.TextureComponent;
 import com.mygdx.game.model.screens.utils.Assets;
 import com.mygdx.game.model.systems.PlayerSystem;
@@ -32,7 +33,7 @@ public class World  {
 
         // TODO fjerne denne, gjør den bedre : Testdata
         tc.texture  = Assets.getTexture(Assets.background);
-        bc.showHand = true;
+        bc.showHand = false;
 
         boardEntity.add(bc);
         boardEntity.add(tc);
@@ -49,6 +50,7 @@ public class World  {
         CardPowerComponent cardPower = new CardPowerComponent();
         CardStatsComponent cardStats = new CardStatsComponent();
         TextureComponent tc = new TextureComponent();
+        RectangleComponent rc = new RectangleComponent();
 
         switch (id){
             case 1:
@@ -70,6 +72,7 @@ public class World  {
         cardEntity.add(cardPower);
         cardEntity.add(cardStats);
         cardEntity.add(tc);
+        cardEntity.add(rc);
 
         engine.addEntity(cardEntity);
 

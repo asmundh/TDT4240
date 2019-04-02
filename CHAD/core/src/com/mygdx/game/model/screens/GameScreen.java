@@ -87,7 +87,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void handleInput() {
         if(Gdx.input.isTouched()){
-            game.setScreen(new MenuScreen(game, engine));
+            // game.setScreen(new MenuScreen(game, engine));
+
         }
 
     }

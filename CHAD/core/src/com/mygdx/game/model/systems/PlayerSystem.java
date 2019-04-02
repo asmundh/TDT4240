@@ -40,6 +40,10 @@ public class PlayerSystem extends IteratingSystem {
         pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
     }
 
+    public void addRectangleToCard(Entity entity, int index) {
+        
+    }
+
     // Returns given card in table
     public Entity getCardOnTable(Entity entity , int index) {
         return pm.get(entity).cardsOnTable.get(index);

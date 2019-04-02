@@ -48,7 +48,7 @@ public class BoardView {
     private List<CardView> cardsInHand;
 
 
-    private Vector2[] boardPositions = {
+    private static Vector2[] boardPositions = {
             new Vector2((Gdx.graphics.getWidth() / 2) - (Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
             new Vector2((Gdx.graphics.getWidth() / 2) - 0.5f*(Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
             new Vector2((Gdx.graphics.getWidth() / 2), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
@@ -58,6 +58,12 @@ public class BoardView {
             new Vector2((Gdx.graphics.getWidth() / 2), Gdx.graphics.getHeight() / 2),
             new Vector2((Gdx.graphics.getWidth() / 2) + 0.5f*(Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2)),
     };
+
+    public static Vector2 getBoardPosition(int cardNumber) {
+        return BoardView.boardPositions[cardNumber];
+    }
+
+
 
     private Vector2[] handPositions = {
             new Vector2(Gdx.graphics.getWidth() / 6 + 50, 100),
@@ -158,14 +164,14 @@ public class BoardView {
 
         //Drawing of friendly cards on board
         for (int i = 0; i < this.friendlyCardsOnBoard.size(); i++) {
-            float x = this.boardPositions[i].x;
-            float y = this.boardPositions[i].y;
+            float x = getBoardPosition(i).x;
+            float y = getBoardPosition(i).y;
             this.friendlyCardsOnBoard.get(i).draw(batch, x, y);
         }
         //Drawing of enemy cards on board
         for (int i = 0; i < this.enemyCardsOnBoard.size(); i++) {
-            float x = this.boardPositions[i + 4].x;
-            float y = this.boardPositions[i + 4].y;
+            float x = getBoardPosition(i + 4).x;
+            float y = getBoardPosition(i + 4).y;
             this.enemyCardsOnBoard.get(i).draw(batch, x, y);
         }
 
