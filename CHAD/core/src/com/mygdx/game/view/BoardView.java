@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.PlayerComponent;
+import com.mygdx.game.model.screens.utils.Assets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ public class BoardView {
     private Texture enemyRect;
     private Texture handRect;
     private ShapeRenderer shapeRenderer;
-    private String pathToHealtchIcon = "textures/healthIcon.png";
     private Texture healthIconTexture;
     private BitmapFont font;
     private boolean showHand;
@@ -36,6 +36,14 @@ public class BoardView {
     private int enemyHealth;
     private Entity player;
     private Entity enemyPlayer;
+
+    private String deckPath = Assets.deck;
+    private String boardBackgroundPath = Assets.boardBackground;
+    private String enemyRectPath = Assets.enemyRect;
+    private String handRectPath = Assets.handRect;
+    private String healthIconPath = Assets.pathToHealtchIcon;
+
+
 
 
 
@@ -69,11 +77,11 @@ public class BoardView {
 
     public BoardView(Entity boardEntity) {
         this.boardEntity = boardEntity;
-        this.deck = new Texture(Gdx.files.local("textures/cardBackside.png"));
-        this.background = new Texture(Gdx.files.local("textures/background.png"));
-        this.enemyRect = new Texture(Gdx.files.local("textures/enemy.png"));
-        this.handRect = new Texture(Gdx.files.local("textures/handRect.png"));
-        this.healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
+        this.deck = Assets.getTexture(deckPath);
+        this.background = Assets.getTexture(boardBackgroundPath);
+        this.enemyRect = Assets.getTexture(enemyRectPath);
+        this.handRect = Assets.getTexture(handRectPath);
+        this.healthIconTexture = Assets.getTexture(healthIconPath);
         this.font = new BitmapFont();
 
 
@@ -95,6 +103,22 @@ public class BoardView {
         enemyCardsOnBoard = new ArrayList<CardView>();
         cardsInHand = new ArrayList<CardView>();
 
+
+
+        for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
+            CardView cv = new CardView(friendlyCardsOnBoardEntity.get(i));
+            friendlyCardsOnBoard.add(cv);
+        }
+        for (int i = 0; i < enemyCardsOnBoardEntity.size(); i++) {
+            CardView cv = new CardView(enemyCardsOnBoardEntity.get(i));
+            enemyCardsOnBoard.add(cv);
+        }
+        for (int i = 0; i < cardsInHandEntity.size(); i++) {
+            CardView cv = new CardView(cardsInHandEntity.get(i));
+            cardsInHand.add(cv);
+        }
+
+
     }
 
 
@@ -110,30 +134,25 @@ public class BoardView {
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
 
-        cardsInHand.clear();
-        enemyCardsOnBoard.clear();
-        friendlyCardsOnBoard.clear();
 
 
-        for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
-            friendlyCardsOnBoard.add(new CardView(friendlyCardsOnBoardEntity.get(i)));
-        }
-        for (int i = 0; i < enemyCardsOnBoardEntity.size(); i++) {
-            enemyCardsOnBoard.add(new CardView(enemyCardsOnBoardEntity.get(i)));
-        }
-        for (int i = 0; i < cardsInHandEntity.size(); i++) {
-            cardsInHand.add(new CardView(cardsInHandEntity.get(i)));
-        }
+
+
+
+
+
+
+
+
+
+
 
 
         batch.begin();
         batch.draw(background, 0, 0);
-        batch.end();
 
         //Drawing of deck
-        batch.begin();
         batch.draw(deck,10,  Gdx.graphics.getHeight() / 2 - deck.getHeight() / 2);
-        batch.end();
 
         //Drawing of enemy
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -141,7 +160,6 @@ public class BoardView {
         shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight(), enemyRect.getWidth(), enemyRect.getHeight());
         shapeRenderer.end();
 
-        batch.begin();
         batch.draw(enemyRect, Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight());
         batch.draw(healthIconTexture, Gdx.graphics.getWidth() / 2 - healthIconTexture.getWidth(), Gdx.graphics.getHeight() - enemyRect.getHeight() + 10);
         font.setColor(Color.BLACK);
@@ -160,13 +178,15 @@ public class BoardView {
         for (int i = 0; i < this.friendlyCardsOnBoard.size(); i++) {
             float x = this.boardPositions[i].x;
             float y = this.boardPositions[i].y;
-            this.friendlyCardsOnBoard.get(i).draw(batch, x, y);
+            Entity cardEntity = friendlyCardsOnBoardEntity.get(i);
+            this.friendlyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
         }
         //Drawing of enemy cards on board
         for (int i = 0; i < this.enemyCardsOnBoard.size(); i++) {
             float x = this.boardPositions[i + 4].x;
             float y = this.boardPositions[i + 4].y;
-            this.enemyCardsOnBoard.get(i).draw(batch, x, y);
+            Entity cardEntity = enemyCardsOnBoardEntity.get(i);
+            this.enemyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
         }
 
 
@@ -176,6 +196,7 @@ public class BoardView {
             shapeRenderer.setColor(Color.LIGHT_GRAY);
             shapeRenderer.rect(Gdx.graphics.getWidth() / 6, 50, Gdx.graphics.getWidth() / 1.5f, Gdx.graphics.getHeight() / 3);
             shapeRenderer.end();
+
             batch.begin();
             batch.draw(handRect, Gdx.graphics.getWidth() / 6, 50);
             batch.end();
@@ -183,7 +204,8 @@ public class BoardView {
             for (int i = 0; i < this.cardsInHand.size(); i++) {
                 float xHand = this.handPositions[i].x;
                 float yHand = this.handPositions[i].y;
-                this.cardsInHand.get(i).draw(batch, xHand, yHand);
+                Entity cardEntity = cardsInHandEntity.get(i);
+                this.cardsInHand.get(i).draw(batch, xHand, yHand, cardEntity);
             }
         }
     }

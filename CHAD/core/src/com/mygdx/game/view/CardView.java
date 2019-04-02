@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.TextureComponent;
+import com.mygdx.game.model.screens.utils.Assets;
 
 
 public class CardView {
@@ -23,12 +24,12 @@ public class CardView {
     private BitmapFont font;
     private Entity cardEntity;
 
-    //TODO add to assets
     // Paths to static textures for all cards.
-    private String pathToAttackIcon = "textures/attackIcon.png";
-    private String pathToHealtchIcon = "textures/healthIcon.png";
-    private String pathToGreenRect = "textures/greenRect.png";
-    private String pathToBlackRect = "textures/blackRect.png";
+    private String pathToAttackIcon = Assets.pathToAttackIcon;
+    private String pathToHealtchIcon = Assets.pathToHealtchIcon;
+    private String pathToGreenRect = Assets.pathToGreenRect;
+    private String pathToBlackRect = Assets.pathToBlackRect;
+
 
 
     //Fixed size for cards
@@ -42,23 +43,7 @@ public class CardView {
 
 
 
-    /*
-    public CardView(String pathToImageFile, int attackPower, int health, Entity cardEntity) {
-        shapeRenderer = new ShapeRenderer();
-        Maintexture = new Texture(Gdx.files.local(pathToImageFile));
-        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
-        font = new BitmapFont();
-        //this.activated = false;
-        this.attackPower = attackPower;
-        this.health = health;
-        this.cardEntity = cardEntity;
-    }
 
-
-    */
 
     private ComponentMapper<TextureComponent> tm;
     private ComponentMapper<CardStatsComponent> cm;
@@ -77,24 +62,28 @@ public class CardView {
         selected = cm.get(cardEntity).selected;
 
         shapeRenderer = new ShapeRenderer();
-        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
+        attackIconTexture = Assets.getTexture(pathToAttackIcon);
+        healthIconTexture = Assets.getTexture(pathToHealtchIcon);
+        greenRect = Assets.getTexture(pathToGreenRect);
+        blackRect = Assets.getTexture(pathToBlackRect);
         font = new BitmapFont();
 
     }
 
-    public void draw(SpriteBatch batch, float xCoord, float yCoord) {
 
-        selected = cm.get(this.cardEntity).selected;
-        String attackPowerString = String.valueOf(cm.get(this.cardEntity).attackPower);
-        String healthString = String.valueOf(cm.get(this.cardEntity).health);
+
+    public void draw(SpriteBatch batch, float xCoord, float yCoord, Entity cardEntity) {
+
+        selected = cm.get(cardEntity).selected;
+        String attackPowerString = String.valueOf(cm.get(cardEntity).attackPower);
+        String healthString = String.valueOf(cm.get(cardEntity).health);
+        Maintexture = tm.get(cardEntity).texture;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.BROWN);
         shapeRenderer.rect(xCoord, yCoord, cardWidth, cardHeight);
         shapeRenderer.end();
+
 
         batch.begin();
 
@@ -115,8 +104,8 @@ public class CardView {
 
         font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
         font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
-
         batch.end();
+
 
 
     }
