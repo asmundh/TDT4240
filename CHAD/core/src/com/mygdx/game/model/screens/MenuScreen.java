@@ -43,14 +43,17 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         // Initialize a  button using texture from Assets, first is up-texture, second is down. Set the size, make is transformable and set the origin to the middle
         final Button playBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.playBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.playBtn))));
         playBtn.setTransform(true);
-        playBtn.setSize(483, 174);
         playBtn.setOrigin(playBtn.getWidth()/2, playBtn.getHeight()/2);
 
         // Initialize a  button using texture from Assets. Set the size, make is transformable and set the origin to the middle
         final Button setBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))));
         setBtn.setTransform(true);
-        setBtn.setSize(619, 174);
         setBtn.setOrigin(setBtn.getWidth()/2, setBtn.getHeight()/2);
+
+        // Initialize a  button using texture from Assets. Set the size, make is transformable and set the origin to the middle
+        final Button tutBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))));
+        tutBtn.setTransform(true);
+        tutBtn.setOrigin(tutBtn.getWidth()/2, tutBtn.getHeight()/2);
 
         playBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
@@ -88,13 +91,36 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
                 setBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
             }
         });
+        tutBtn.addListener(new ClickListener() {
+            @Override // Fires when the user lets go of the button
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new TutorialScreen(game, engine));
+            }
+
+            @Override // Fires when the button is pressed down
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                tutBtn.addAction(Actions.scaleTo(0.95f, 0.95f, 0.1f));
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override // Fires when the button is released
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                tutBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
+            }
+        });
+
+        int buttonHeight = 116;
 
         Table menuTable = new Table(); // Table containing the buttons on the screen
         menuTable.add(playBtn).pad(10);
-        menuTable.getCell(playBtn).height(174).width(483);
+        menuTable.getCell(playBtn).height(buttonHeight).width(322);
         menuTable.row();
-        menuTable.add(setBtn);
-        menuTable.getCell(setBtn).height(174).width(619);
+        menuTable.add(setBtn).pad(10);
+        menuTable.getCell(setBtn).height(buttonHeight).width(413);
+        menuTable.row();
+        menuTable.add(tutBtn);
+        menuTable.getCell(tutBtn).height(buttonHeight).width(413);
         menuTable.setFillParent(true);
         menuTable.moveBy(0,-200);
 
