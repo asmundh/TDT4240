@@ -112,7 +112,10 @@ public class CardSystem extends IteratingSystem {
     }
 
     public void updateSelected(Entity entity) {
-        csm.get(entity).selected = !csm.get(entity).selected;
+        if (entity != null) {
+            csm.get(entity).selected = !csm.get(entity).selected;
+
+        }
     }
 
 }
