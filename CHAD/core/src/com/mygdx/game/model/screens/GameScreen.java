@@ -27,7 +27,6 @@ import com.mygdx.game.view.BoardView;
 import com.mygdx.game.view.CardView;
 import com.mygdx.game.World;
 
-import org.omg.CORBA.Current;
 
 import java.util.List;
 
