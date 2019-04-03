@@ -10,6 +10,10 @@ import java.util.HashMap;
 
 public class Assets {
 
+    public static String yesBtn = "textures/yes_btn.png";
+    public static String noBtn = "textures/no_btn.png";
+    public static String stepBackBtn = "textures/stepBackBtn.png";
+    public static String stepForwardBtn = "textures/stepForwardBtn.png";
     public static String gameOverText = "textures/game_over.png";
     public static String tutorialBtn = "textures/tutorialBtn.png";
     public static String end_turnBtn = "textures/end_turnBtn.png";
@@ -65,6 +69,10 @@ public class Assets {
     }
 
     public static void load() {
+        assetManager.load(yesBtn, Texture.class);
+        assetManager.load(noBtn, Texture.class);
+        assetManager.load(stepBackBtn, Texture.class);
+        assetManager.load(stepForwardBtn, Texture.class);
         assetManager.load(gameOverText, Texture.class);
         assetManager.load(tutorialBtn, Texture.class);
         assetManager.load(end_turnBtn, Texture.class);
