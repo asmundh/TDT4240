@@ -23,7 +23,8 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
     private CardGame game;
     private Engine engine;
     private SpriteBatch sb;
-    private Stage stage;
+
+    private Stage settings;
     private Sound btnClick;
 
     public SettingsScreen(CardGame game, Engine engine) {
@@ -38,8 +39,8 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void create() {
-        stage = new Stage(new ScreenViewport()); // Create stage used by buttons
-        Gdx.input.setInputProcessor(stage); // Set inputs to be handled by the stage
+        settings = new Stage(new ScreenViewport()); // Create stage used by buttons
+        Gdx.input.setInputProcessor(settings); // Set inputs to be handled by the stage
 
         // Initialize a  button using texture from Assets, first is up-texture, second is down. Set the size, make is transformable and set the origin to the middle
         final Button backBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.backBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.backBtn))));
@@ -102,14 +103,14 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         menuTable.setFillParent(true);
         menuTable.moveBy(0,0);
 
-        stage.addActor(menuTable); // Add the table containing the buttons to the stage
+        settings.addActor(menuTable); // Add the table containing the buttons to the stage
 
     }
 
     @Override
     public void update(float dt) {
         handleInput();
-        stage.act(Gdx.graphics.getDeltaTime());
+        settings.act(Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -122,7 +123,7 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         //sb.draw(background, 0,0, CardGame.WIDTH, CardGame.HEIGHT);
         sb.end();
 
-        stage.draw(); // Draw elements to Stage
+        settings.draw(); // Draw elements to Stage
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.CardPowerComponent;
@@ -19,7 +20,6 @@ import java.util.List;
 public class BoardSystem extends IteratingSystem {
 
     private static final Family family = Family.all(BoardComponent.class, TextureComponent.class).get();
-    private Engine engine;
     private ComponentMapper<BoardComponent> bm;
     private ComponentMapper<TextureComponent> tm;
 
@@ -43,6 +43,15 @@ public class BoardSystem extends IteratingSystem {
         bc.playerTwo = players.get(1);
     }
 
+    public boolean getShowHand(Entity boardEntity) {
+        return bm.get(boardEntity).showHand;
+    }
+
+    public void changeShowHand(Entity boardEntity) {
+        bm.get(boardEntity).showHand = !bm.get(boardEntity).showHand;
+    }
+
+
     @Override
     protected void processEntity(Entity entity, float dt) {
         BoardComponent boardComp = bm.get(entity);
@@ -51,6 +60,16 @@ public class BoardSystem extends IteratingSystem {
 
     public void turnSwitcher(Entity entity) {
         bm.get(entity).turn = !bm.get(entity).turn;
+    }
+
+
+    public void cardChosen(Entity board, Entity lastClickedCard) {
+        bm.get(board).lastCardClicked = lastClickedCard;
+    }
+
+    public Entity getClickedCard(Entity board) {
+        return bm.get(board).lastCardClicked;
+
     }
 
 

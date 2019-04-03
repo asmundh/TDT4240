@@ -65,7 +65,6 @@ public class Assets {
     }
 
 
-
     public static void load() {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
@@ -88,6 +87,7 @@ public class Assets {
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
+
 
         assetManager.load(menuBG, Texture.class);
         assetManager.load(backBtn, Texture.class);

@@ -3,20 +3,30 @@ package com.mygdx.game.model.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.PlayerComponent;
+import com.mygdx.game.model.screens.utils.Assets;
 import com.mygdx.game.model.systems.BoardSystem;
 import com.mygdx.game.model.systems.CardSystem;
 import com.mygdx.game.model.systems.PlayerSystem;
 import com.mygdx.game.view.BoardView;
 import com.mygdx.game.view.CardView;
 import com.mygdx.game.World;
+
 
 import java.util.List;
 
@@ -26,6 +36,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     private World world;
     private Engine engine;
     private BoardView bv;
+    private List<Entity> players;
+    private Entity boardEntity;
+    private Stage playing;
 
   
     protected GameScreen(CardGame game, Engine engine) {
@@ -35,16 +48,13 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         this.world = new World(engine);
 
         create();
-
-
     }
 
     @Override
     public void create() {
-        List<Entity> players = world.createPlayers();
-        Entity boardEntity = world.createBoard();
-
-
+        players = world.createPlayers();
+        boardEntity = world.createBoard();
+        Gdx.input.setInputProcessor(playing);
         engine.addSystem(new PlayerSystem());
         engine.addSystem(new CardSystem());
         engine.addSystem(new BoardSystem());
@@ -74,7 +84,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         bv.draw(game.batch);
-//        Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     }
 
@@ -91,9 +100,116 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void handleInput() {
-        if(Gdx.input.isTouched()){
-            game.setScreen(new MenuScreen(game, engine));
+        if (Gdx.input.justTouched()) {
+            Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+            pos.y = Gdx.graphics.getHeight() - pos.y;
+
+            // Depending on where the player has clicked, act accordingly.
+
+            if (bv.getShowHandButtonRect().contains(pos)){
+                // Hides the hand when the button is clicked.
+                engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+                if (prevClickedCard == null) {
+                    return;
+                }
+                else {
+                    // Unclicks the previously clicked card on the hand
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                }
+            }
+
+            else if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity) == true) {
+                this.handleInputHand(pos);
+            }
+
+            else {
+                this.handleInputTable(pos);
+            }
+
+
+
         }
+    }
+
+    public void handleInputTable(Vector2 pos) {
+        int index = -1;
+        List<Rectangle> boardPos = bv.getBoardPosition();
+        System.out.println("Pos" + pos);
+        for (Rectangle rec : boardPos) {
+            if (rec.contains(pos)) {
+                index = boardPos.indexOf(rec);
+                break;
+            }
+        }
+        if (index == -1) {
+            return;
+        }
+
+        Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
+        engine.getSystem(CardSystem.class).updateSelected(cardClicked);
+
+        /*
+        TODO: Fix so you can only click cards on the table.
+         */
+
+        /*
+        if (prevClickedCard != null && engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
+            engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+        } else {
+            engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+            chosenCard(cardChosen);
+        }
+        */
+    }
+
+
+    public void handleInputHand(Vector2 pos) {
+        List<Rectangle> handPos = bv.getHandPosition();
+        int index = 0;
+        for (Rectangle rec : handPos) {
+
+            if (rec.contains(pos)) {
+                index = handPos.indexOf(rec);
+                break;
+            }
+            else { index = -1; }
+        }
+
+        if (index >= 0) {
+            Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
+            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+
+            if (prevClickedCard != null) {
+                if (engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
+                    engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                } else {
+                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                }
+            } else {
+                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                // engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                // chosenCard(cardChosen);
+            }
+        }
+        else {
+            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+            engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+        }
+
+    }
+
+    //makes the card glow, has to click one more time to confirm.
+    public void chosenCard(Entity cardChosen) {
+        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
 
     }
 }

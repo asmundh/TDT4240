@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
@@ -16,10 +17,10 @@ import com.mygdx.game.model.screens.utils.Assets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class BoardView {
-
 
     private CardGame game;
     private Texture deck;
@@ -45,7 +46,7 @@ public class BoardView {
 
     private List<CardView> allCardViews;
     private CardView cardView;
-
+    private Vector2 showHandButtonPos;
 
 
     private List<Entity> friendlyCardsOnBoardEntity;
@@ -57,7 +58,7 @@ public class BoardView {
     private List<CardView> cardsInHand;
 
 
-    private Vector2[] boardPositions = {
+    private static Vector2[] boardPositions = {
             new Vector2((Gdx.graphics.getWidth() / 2) - (Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
             new Vector2((Gdx.graphics.getWidth() / 2) - 0.5f*(Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
             new Vector2((Gdx.graphics.getWidth() / 2), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
@@ -67,6 +68,36 @@ public class BoardView {
             new Vector2((Gdx.graphics.getWidth() / 2), Gdx.graphics.getHeight() / 2),
             new Vector2((Gdx.graphics.getWidth() / 2) + 0.5f*(Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2)),
     };
+
+    public List<Rectangle> getBoardPosition() {
+        List<Rectangle> boardRectangles = new ArrayList<Rectangle>();
+        Vector2[] boardPos = this.boardPositions;
+
+        for (Vector2 pos : boardPos) {
+            Rectangle rec = new Rectangle();
+            rec.setPosition(pos.x, pos.y);
+            boardRectangles.add(rec);
+        }
+
+        return boardRectangles;
+    }
+
+
+    public List<Rectangle> getHandPosition() {
+        List<Rectangle> handRectangles = new ArrayList<Rectangle>();
+        Vector2[] handPos = this.handPositions;
+
+        for (Vector2 pos : handPos) {
+            Rectangle rec = new Rectangle(pos.x, pos.y, 200, 250);
+            handRectangles.add(rec);
+        }
+
+        return handRectangles;
+    }
+
+    public Rectangle getShowHandButtonRect() {
+        return new Rectangle(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
+    }
 
     private Vector2[] handPositions = {
             new Vector2(Gdx.graphics.getWidth() / 6 + 50, 100),
@@ -103,8 +134,10 @@ public class BoardView {
         friendlyCardsOnBoard = new ArrayList<CardView>();
         enemyCardsOnBoard = new ArrayList<CardView>();
         cardsInHand = new ArrayList<CardView>();
-        allCardViews = new ArrayList<>();
+        allCardViews = new ArrayList<CardView>();
         cardView = new CardView();
+
+        showHandButtonPos = new Vector2(50, 150);
 
 
         /*
@@ -201,16 +234,27 @@ public class BoardView {
         }
 
 
+
+
+
         if (showHand) {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Color.LIGHT_GRAY);
             shapeRenderer.rect(Gdx.graphics.getWidth() / 6, 50, Gdx.graphics.getWidth() / 1.5f, Gdx.graphics.getHeight() / 3);
+            shapeRenderer.setColor(Color.BLACK);
+            shapeRenderer.rect(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
             shapeRenderer.end();
+
+
 
             batch.begin();
             batch.draw(handRect, Gdx.graphics.getWidth() / 6, 50);
+            font.setColor(Color.WHITE);
+            font.draw(batch, "Hide hand", 90, 200);
             batch.end();
+
+
 
             for (int i = 0; i < this.cardsInHandEntity.size(); i++) {
                 float xHand = this.handPositions[i].x;
@@ -219,6 +263,17 @@ public class BoardView {
                 //this.cardsInHand.get(i).draw(batch, xHand, yHand, cardEntity);
                 this.cardView.draw(batch, xHand, yHand, cardsInHandEntity.get(i));
             }
+        }
+        else {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.BLACK);
+            shapeRenderer.rect(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
+            shapeRenderer.end();
+
+            batch.begin();
+            font.setColor(Color.WHITE);
+            font.draw(batch, "Show hand", 90, 200);
+            batch.end();
         }
     }
 }

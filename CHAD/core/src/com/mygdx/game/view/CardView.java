@@ -42,6 +42,24 @@ public class CardView {
     private boolean selected;
 
 
+
+/*
+    public CardView(String pathToImageFile, int attackPower, int health, Entity cardEntity) {
+        shapeRenderer = new ShapeRenderer();
+        Maintexture = new Texture(Gdx.files.local(pathToImageFile));
+        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
+        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
+        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
+        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
+        font = new BitmapFont();
+        //this.activated = false;
+        this.attackPower = attackPower;
+        this.health = health;
+        this.cardEntity = cardEntity;
+    }
+*/
+
+
     private ComponentMapper<TextureComponent> tm;
     private ComponentMapper<CardStatsComponent> cm;
 
@@ -101,9 +119,5 @@ public class CardView {
 
 
     }
-
-
-
-
 
 }
