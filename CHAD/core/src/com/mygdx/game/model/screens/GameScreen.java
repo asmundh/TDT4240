@@ -108,8 +108,17 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             // Depending on where the player has clicked, act accordingly.
 
             if (bv.getShowHandButtonRect().contains(pos)){
+                // Hides the hand when the button is clicked.
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
-
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+                if (prevClickedCard == null) {
+                    return;
+                }
+                else {
+                    // Unclicks the previously clicked card on the hand
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                }
             }
 
             else if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity) == true) {
@@ -126,7 +135,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void handleInputTable(Vector2 pos) {
-        int index = 0;
+        int index = -1;
         List<Rectangle> boardPos = bv.getBoardPosition();
         System.out.println("Pos" + pos);
         for (Rectangle rec : boardPos) {
@@ -134,23 +143,28 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 index = boardPos.indexOf(rec);
                 break;
             }
-
+        }
+        if (index == -1) {
+            return;
         }
 
-        Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
-        Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+        Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
+        engine.getSystem(CardSystem.class).updateSelected(cardClicked);
 
+        /*
+        TODO: Fix so you can only click cards on the table.
+         */
+
+        /*
         if (prevClickedCard != null && engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
             engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-        }
-
-        else {
+        } else {
             engine.getSystem(CardSystem.class).updateSelected(cardChosen);
             chosenCard(cardChosen);
         }
-
-
+        */
     }
+
 
     public void handleInputHand(Vector2 pos) {
         List<Rectangle> handPos = bv.getHandPosition();
@@ -161,9 +175,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 index = handPos.indexOf(rec);
                 break;
             }
-            else {
-                index = -1;
-            }
+            else { index = -1; }
         }
 
         if (index >= 0) {
@@ -196,9 +208,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     //makes the card glow, has to click one more time to confirm.
-    public void chosenCard(Entity entity) {
-        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, entity);
-        engine.getSystem(CardSystem.class).updateSelected(entity);
+    public void chosenCard(Entity cardChosen) {
+        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
 
     }
 }

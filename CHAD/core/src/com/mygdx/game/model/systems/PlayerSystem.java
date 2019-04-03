@@ -67,8 +67,8 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     // Returns given card in table
-    public Entity getCardOnTable(Entity entity , int index) {
-        return pm.get(entity).cardsOnTable.get(index);
+    public Entity getCardOnTable(Entity playerEntity , int index) {
+        return pm.get(playerEntity).cardsOnTable.get(index);
     }
 
     public Entity removeCardOnTable(Entity entity , int index) {
