@@ -143,6 +143,18 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                 }
             }
+            else if (bv.getEnemyRectangle().contains(pos)) {
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
+
+                if (prevClickedCard == null) {
+                    return;
+                } else {
+                    engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                }
+            }
+
 
             else if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity) == true) {
                 this.handleInputHand(pos);
@@ -203,18 +215,14 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
 
         else if (index >= 4 && prevClickedCard != null) { // Enemy cards. prevClickedCard will not be null if we have already clicked a friendly card
+
             Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(1), index - 4);
-            System.out.println("hehiehiehie");
             engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card after attack
 
             engine.getSystem(CardSystem.class).dealDamage(prevClickedCard, cardClicked); // prevClicked is attacking card, cardClicked is the card being attacked.
             engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
 
         }
-
-
-
-
 
     }
 
