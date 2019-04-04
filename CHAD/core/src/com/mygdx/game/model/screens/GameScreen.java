@@ -152,6 +152,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(CardSystem.class).setHasAttacked(prevClickedCard, true);
                 }
             }
 
@@ -201,12 +202,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         if (index < 4 && index >= 0) { // Friendly cards
             Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
-
-            if (prevClickedCard != null) {
+            boolean hasAttacked = engine.getSystem(CardSystem.class).hasAttackedThisRound(cardClicked);
+            if (prevClickedCard != null && !hasAttacked) {
                 engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card
                 engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Selects current clicked card
                 engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
-            } else if (prevClickedCard == null) {
+            } else if (prevClickedCard == null && !hasAttacked) {
                 System.out.println("prev er null");
                 engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Deselects prev clicked card
                 engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
@@ -220,7 +221,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card after attack
 
             engine.getSystem(CardSystem.class).dealDamage(prevClickedCard, cardClicked); // prevClicked is attacking card, cardClicked is the card being attacked.
-            engine.getSystem(CardSystem.class).dealDamage(cardClicked, prevClickedCard); // The attacked card attacks back. Ref issue #61
+            engine.getSystem(CardSystem.class).retaliate(cardClicked, prevClickedCard); // The attacked card attacks back. Ref issue #61
             engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
 
         }
