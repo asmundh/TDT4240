@@ -95,6 +95,12 @@ public class CardSystem extends IteratingSystem {
     public void dealDamage(Entity attackingEntity, Entity entityBeingAttacked) {
         int damageToDeal = this.getAttackPower(attackingEntity);
         takeDamage(entityBeingAttacked, damageToDeal);
+        csm.get(attackingEntity).hasAttackedThisRound = true;
+    }
+
+    public void retaliate(Entity attackingEntity, Entity entityBeingAttacked) {
+        int damageToDeal = this.getAttackPower(attackingEntity);
+        takeDamage(entityBeingAttacked, damageToDeal);
     }
 
     public void activatePower(Entity entity) {
@@ -108,6 +114,13 @@ public class CardSystem extends IteratingSystem {
             default:
                 return;
         }
+    }
+
+    public boolean hasAttackedThisRound(Entity cardEntity) {
+        return csm.get(cardEntity).hasAttackedThisRound;
+    }
+    public void setHasAttacked(Entity cardEntity, boolean value) {
+        csm.get(cardEntity).hasAttackedThisRound = value;
     }
 
     @Override
