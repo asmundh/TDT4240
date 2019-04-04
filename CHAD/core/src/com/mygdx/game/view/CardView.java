@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -40,6 +41,7 @@ public class CardView {
     private int attackPower;
     private int health;
     private boolean selected;
+    private boolean sleeping;
 
 
 
@@ -87,34 +89,78 @@ public class CardView {
         selected = cm.get(cardEntity).selected;
         String attackPowerString = String.valueOf(cm.get(cardEntity).attackPower);
         String healthString = String.valueOf(cm.get(cardEntity).health);
+        sleeping = cm.get(cardEntity).sleeping;
         Maintexture = tm.get(cardEntity).texture;
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.BROWN);
-        shapeRenderer.rect(xCoord, yCoord, cardWidth, cardHeight);
-        shapeRenderer.end();
 
+        if (sleeping) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.BROWN);
+            shapeRenderer.rect(xCoord, yCoord, cardWidth, cardHeight);
+            shapeRenderer.end();
+            batch.begin();
 
-        batch.begin();
+            if (selected) {
+                batch.draw(greenRect, xCoord, yCoord);
+            }
+            else {
+                batch.draw(blackRect, xCoord, yCoord);
+            }
 
-        if (selected) {
-            batch.draw(greenRect, xCoord, yCoord);
+            batch.draw(Maintexture, xCoord, yCoord);
+
+            batch.draw(attackIconTexture, xCoord, yCoord + cardHeight - attackIconTexture.getHeight() * 1.2f);
+            batch.draw(healthIconTexture, xCoord + cardWidth - 1.8f * healthIconTexture.getWidth(), yCoord + cardHeight - healthIconTexture.getHeight());
+
+            font.setColor(Color.BLACK);
+            font.getData().setScale(2);
+
+            font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
+            font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
+            batch.end();
+
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(new Color(255, 255, 255, 0.5f));
+            shapeRenderer.rect(xCoord, yCoord, cardWidth, cardHeight);
+            shapeRenderer.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
+
+            batch.begin();
+            font.draw(batch, "Sleeping", xCoord + cardWidth/2 - fontOffset, yCoord + cardHeight/2);
+            batch.end();
+
+        } else {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.BROWN);
+            shapeRenderer.rect(xCoord, yCoord, cardWidth, cardHeight);
+            shapeRenderer.end();
+            batch.begin();
+
+            if (selected) {
+                batch.draw(greenRect, xCoord, yCoord);
+            }
+            else {
+                batch.draw(blackRect, xCoord, yCoord);
+            }
+
+            batch.draw(Maintexture, xCoord, yCoord);
+
+            batch.draw(attackIconTexture, xCoord, yCoord + cardHeight - attackIconTexture.getHeight() * 1.2f);
+            batch.draw(healthIconTexture, xCoord + cardWidth - 1.8f * healthIconTexture.getWidth(), yCoord + cardHeight - healthIconTexture.getHeight());
+
+            font.setColor(Color.BLACK);
+            font.getData().setScale(2);
+
+            font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
+            font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
+            batch.end();
         }
-        else {
-            batch.draw(blackRect, xCoord, yCoord);
-        }
 
-        batch.draw(Maintexture, xCoord, yCoord);
 
-        batch.draw(attackIconTexture, xCoord, yCoord + cardHeight - attackIconTexture.getHeight() * 1.2f);
-        batch.draw(healthIconTexture, xCoord + cardWidth - 1.8f * healthIconTexture.getWidth(), yCoord + cardHeight - healthIconTexture.getHeight());
 
-        font.setColor(Color.BLACK);
-        font.getData().setScale(2);
 
-        font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
-        font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
-        batch.end();
 
 
 
