@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 
+
 public class BoardView {
 
     private CardGame game;
@@ -74,8 +75,7 @@ public class BoardView {
         Vector2[] boardPos = this.boardPositions;
 
         for (Vector2 pos : boardPos) {
-            Rectangle rec = new Rectangle();
-            rec.setPosition(pos.x, pos.y);
+            Rectangle rec = new Rectangle(pos.x, pos.y, CardView.cardWidth, CardView.cardHeight);
             boardRectangles.add(rec);
         }
 

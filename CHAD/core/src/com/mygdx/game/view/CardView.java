@@ -33,8 +33,8 @@ public class CardView {
 
 
     //Fixed size for cards
-    private int cardWidth = 200;
-    private int cardHeight = 250;
+    public static final int cardWidth = 200;
+    public static final int cardHeight = 250;
     private int fontOffset = 35;
 
     private int attackPower;
