@@ -95,7 +95,7 @@ public class CardSystem extends IteratingSystem {
     public void dealDamage(Entity attackingEntity, Entity entityBeingAttacked) {
         int damageToDeal = this.getAttackPower(attackingEntity);
         takeDamage(entityBeingAttacked, damageToDeal);
-        csm.get(attackingEntity).hasAttackedThisRound = true;
+        csm.get(attackingEntity).sleeping = true;
     }
 
     public void retaliate(Entity attackingEntity, Entity entityBeingAttacked) {
@@ -116,11 +116,11 @@ public class CardSystem extends IteratingSystem {
         }
     }
 
-    public boolean hasAttackedThisRound(Entity cardEntity) {
-        return csm.get(cardEntity).hasAttackedThisRound;
+    public boolean isSleeping(Entity cardEntity) {
+        return csm.get(cardEntity).sleeping;
     }
-    public void setHasAttacked(Entity cardEntity, boolean value) {
-        csm.get(cardEntity).hasAttackedThisRound = value;
+    public void setSleeping(Entity cardEntity, boolean value) {
+        csm.get(cardEntity).sleeping = value;
     }
 
     @Override

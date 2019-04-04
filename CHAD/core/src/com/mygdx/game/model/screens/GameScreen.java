@@ -152,7 +152,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
-                    engine.getSystem(CardSystem.class).setHasAttacked(prevClickedCard, true);
+                    engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
                 }
             }
 
@@ -202,12 +202,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         if (index < 4 && index >= 0) { // Friendly cards
             Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
-            boolean hasAttacked = engine.getSystem(CardSystem.class).hasAttackedThisRound(cardClicked);
-            if (prevClickedCard != null && !hasAttacked) {
+            boolean sleeping = engine.getSystem(CardSystem.class).isSleeping(cardClicked);
+            if (prevClickedCard != null && !sleeping) {
                 engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card
                 engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Selects current clicked card
                 engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
-            } else if (prevClickedCard == null && !hasAttacked) {
+            } else if (prevClickedCard == null && !sleeping) {
                 System.out.println("prev er null");
                 engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Deselects prev clicked card
                 engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
