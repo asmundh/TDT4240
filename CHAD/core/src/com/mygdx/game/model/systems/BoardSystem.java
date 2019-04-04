@@ -15,6 +15,7 @@ import com.mygdx.game.model.components.TextureComponent;
 import com.badlogic.ashley.core.Entity;
 import com.mygdx.game.view.BoardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BoardSystem extends IteratingSystem {
@@ -49,6 +50,13 @@ public class BoardSystem extends IteratingSystem {
 
     public void changeShowHand(Entity boardEntity) {
         bm.get(boardEntity).showHand = !bm.get(boardEntity).showHand;
+    }
+
+    public List<Entity> getPlayers(Entity boardEntity) {
+        List<Entity> players = new ArrayList<>();
+        players.add(bm.get(boardEntity).playerOne);
+        players.add(bm.get(boardEntity).playerTwo);
+        return players;
     }
 
 

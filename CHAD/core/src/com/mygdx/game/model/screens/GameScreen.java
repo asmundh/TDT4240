@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
@@ -28,6 +29,7 @@ import com.mygdx.game.view.CardView;
 import com.mygdx.game.World;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter implements ScreenInterface {
@@ -64,7 +66,10 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0));
             engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(1));
         }
-        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 4);
+        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
+        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
+        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
+
 
 
         bv = new BoardView(boardEntity);
@@ -75,8 +80,10 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void update(float dt) {
+
         handleInput();
         engine.update(dt);
+
 
     }
 
@@ -98,6 +105,21 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void dispose () {
         super.dispose();
+    }
+
+    public void searchAndDestroyDeadCards() {
+        for (Entity player : engine.getSystem(BoardSystem.class).getPlayers(boardEntity)) {
+            ArrayList<Integer> cardsToRemove = new ArrayList<>();
+            for (Entity card : engine.getSystem(PlayerSystem.class).getCardsOnTable(player)) {
+                if (engine.getSystem(CardSystem.class).getHealth(card) == 0) {
+                    cardsToRemove.add(engine.getSystem(PlayerSystem.class).getCardsOnTable(player).indexOf(card));
+                }
+            }
+            for (int i : cardsToRemove) {
+                engine.getSystem(PlayerSystem.class).removeCardOnTable(player, i);
+            }
+        }
+
     }
 
     @Override
@@ -130,8 +152,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 this.handleInputTable(pos);
             }
 
-
-
+            searchAndDestroyDeadCards();
         }
     }
 
@@ -188,7 +209,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
             engine.getSystem(CardSystem.class).dealDamage(prevClickedCard, cardClicked); // prevClicked is attacking card, cardClicked is the card being attacked.
             engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+
         }
+
 
 
 

@@ -80,8 +80,8 @@ public class PlayerSystem extends IteratingSystem {
         return pm.get(playerEntity).cardsOnTable.get(index);
     }
 
-    public Entity removeCardOnTable(Entity entity , int index) {
-        return pm.get(entity).cardsOnTable.remove(index);
+    public Entity removeCardOnTable(Entity playerEntity , int index) {
+        return pm.get(playerEntity).cardsOnTable.remove(index);
     }
 
     public String getPlayerId(Entity entity) {
