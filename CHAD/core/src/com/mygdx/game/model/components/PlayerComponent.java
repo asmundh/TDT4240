@@ -13,5 +13,5 @@ public class PlayerComponent implements Component {
     public List<Entity> cardsOnTable = new ArrayList<Entity>();
     public int powerPoints;
     public List<Entity> deck = new ArrayList<Entity>();
-    public int health = 100;
+    public int health = 30;
 }
