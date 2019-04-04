@@ -204,9 +204,14 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
             boolean sleeping = engine.getSystem(CardSystem.class).isSleeping(cardClicked);
             if (prevClickedCard != null && !sleeping) {
-                engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card
-                engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Selects current clicked card
-                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
+                if (prevClickedCard == cardClicked) {
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    engine.getSystem(CardSystem.class).updateSelected(cardClicked);
+                } else {
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card
+                    engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Selects current clicked card
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
+                }
             } else if (prevClickedCard == null && !sleeping) {
                 System.out.println("prev er null");
                 engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Deselects prev clicked card
