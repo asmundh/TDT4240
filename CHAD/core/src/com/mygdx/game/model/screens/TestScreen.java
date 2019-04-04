@@ -32,6 +32,14 @@ public class TestScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void handleInput() {
         if(Gdx.input.isTouched()) {
+            if(game.androidInterface.getGameData() == "Potato"){
+                System.out.println("sendGameData(Carrot)");
+                game.androidInterface.sendGameData("Carrot");
+            }
+            else{
+                System.out.println("sendGameData(Potato)");
+                game.androidInterface.sendGameData("Potato");
+            }
 
 
             //game.getScreen().dispose();

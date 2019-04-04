@@ -32,11 +32,38 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
         return mAndroidLauncher.getIsDoingTurn();
     }
 
+    public String getGameData(){
+        return mAndroidLauncher.getGameData();
+    }
+
+    public String getGameDataFromCore(){
+        return mAndroidLauncher.getGameDataFromCore();
+    }
+
     public void startQuickMatch(){
+
         mAndroidLauncher.startQuickMatch();
     }
 
     public String getOpponentDisplayName(){
+
         return mAndroidLauncher.getOpponentDisplayName();
+    }
+
+    public void sendGameData(String gameData){
+        mAndroidLauncher.receiveGameData(gameData);
+    }
+
+    public void endTurn(){
+        mAndroidLauncher.takeTurn();
+    }
+
+    public boolean endMatch(){
+        return mAndroidLauncher.endMatch();
+    }
+
+    public void sendGameDataAndEndTurn(String gameData){
+        mAndroidLauncher.receiveGameData(gameData);
+        mAndroidLauncher.takeTurn();
     }
 }

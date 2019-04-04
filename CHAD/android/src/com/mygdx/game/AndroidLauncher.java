@@ -99,12 +99,14 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	private String mOpponentDisplayName = null;
 
+	private String gameDataFromCore = null;
+
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.useImmersiveMode = false;
+		config.useImmersiveMode = false; // Not sure if this one is needed.
 
 		// Create the androidInterface object that we will pass to CardGame in order to pass data between core and android
 		AndroidclassBasicAndroidInterface androidInterface = new AndroidclassBasicAndroidInterface(this);
@@ -137,6 +139,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		signInView.findViewById(R.id.LoadMatchButton).setOnClickListener(this);
 		signInView.findViewById(R.id.DismissMatchButton).setOnClickListener(this);
 		signInView.findViewById(R.id.CreateNewMatch).setOnClickListener(this);
+		signInView.findViewById(R.id.FinishMatch).setOnClickListener(this);
 
 		// Add views to layout
 		mLayout.addView(signInView);
@@ -811,10 +814,17 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		Log.d(AppSettings.tag, "match.getTurnStatus() in updateMatch(): " +match.getTurnStatus());
 		Log.d(AppSettings.tag, "match.getMatchId() in updateMatch(): " +match.getMatchId());
 
-		mTurnBasedMultiplayerClient.loadMatch(match.getMatchId());
+		//mTurnBasedMultiplayerClient.loadMatch(match.getMatchId());
+
+		// set gameData to matchData
+
 
 		int status = match.getStatus();
 		int turnStatus = match.getTurnStatus();
+
+		if(status == TurnBasedMatch.MATCH_STATUS_COMPLETE){
+			Log.d(AppSettings.tag, "Match is completed! Someone ended it.");
+		}
 
 		switch (status) {
 			case TurnBasedMatch.MATCH_STATUS_CANCELED:
@@ -831,13 +841,13 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				Log.d(TAG, "We're still waiting for an automatch partner.");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_COMPLETE:
-				if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
-				//	showWarning("Complete!",
-				//			"This game is over; someone finished it, and so did you!  " +
-				//					"There is nothing to be done.");
+				 showWarning("Complete!",
+				"This game is over; someone finished it, and so did you!  " +
+				"There is nothing to be done. This game will get dismissed now.");
 					Log.d(TAG, "This game is over; someone finished it, and so did you!  ");
-					break;
-				}
+					Log.d(AppSettings.tag, "Dismissing the game since it is completed");
+					mTurnBasedMultiplayerClient.dismissMatch(match.getMatchId());
+					return;
 
 				// Note that in this state, you must still call "Finish" yourself,
 				// so we allow this to continue.
@@ -1049,6 +1059,10 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				Log.d(AppSettings.tag, "Create New Match button was clicked");
 				createNewMatch();
 				break;
+			case R.id.FinishMatch:
+				Log.d(AppSettings.tag, "Finish Match button was clicked");
+				endMatch();
+				break;
 			case R.id.CheckMatchStatus:
 				Log.d(AppSettings.tag, "Check Match Status was clicked:");
 				mTurnBasedMultiplayerClient.getInboxIntent()
@@ -1138,27 +1152,35 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// Function to take a turn (For testing)
 	public void takeTurn() {
+		if(isDoingTurn) {
 
-		showSpinner();
+			showSpinner();
 
-		String nextParticipantId = getNextParticipantId();
-		// Create the next turn
-		mTurnData.turnCounter += 1;
-		// mTurnData.data = mDataView.getText().toString(); commented out because we dont use the textView
-		mTurnData.data = mDisplayName;
+			String nextParticipantId = getNextParticipantId();
+			// Create the next turn
+			mTurnData.turnCounter += 1;
+			// mTurnData.data = mDataView.getText().toString(); commented out because we dont use the textView
+			// mTurnData.data = mDisplayName;
+			// Set turn data to be equal to gameDataFromCore
+			mTurnData.data = gameDataFromCore;
 
-		mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
-				mTurnData.persist(), nextParticipantId)
-				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-					@Override
-					public void onSuccess(TurnBasedMatch turnBasedMatch) {
-						Log.d(AppSettings.tag, "Successfully uploaded turn going to call onUpdateMatch)");
-						onUpdateMatch(turnBasedMatch);
-					}
-				})
-				.addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
+			mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
+					mTurnData.persist(), nextParticipantId)
+					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+						@Override
+						public void onSuccess(TurnBasedMatch turnBasedMatch) {
+							Log.d(AppSettings.tag, "Successfully uploaded turn going to call onUpdateMatch)");
+							onUpdateMatch(turnBasedMatch);
+						}
+					})
+					.addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
 
-		mTurnData = null;
+			mTurnData = null;
+		}
+		else{
+			Log.d(AppSettings.tag, "It is not your turn!");
+			showWarning("STOP!", "It is not your turn!");
+		}
 	}
 
 
@@ -1235,14 +1257,16 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// loadMatchButton attempt to load a match
 	public void loadMatch(){
-		int[] mMatchStatuses = new int[2];
+		int[] mMatchStatuses = new int[3];
 		mMatchStatuses[0] = TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN;
 		mMatchStatuses[1] = TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN;
+		mMatchStatuses[2] = TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE;
 		mTurnBasedMultiplayerClient.loadMatchesByStatus(mMatchStatuses).addOnSuccessListener(new OnSuccessListener<AnnotatedData<LoadMatchesResponse>>() {
 			@Override
 			public void onSuccess(AnnotatedData<LoadMatchesResponse> loadMatchesResponseAnnotatedData) {
 				Log.d(AppSettings.tag, "Loaded My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
 				Log.d(AppSettings.tag, "Loaded Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
+				Log.d(AppSettings.tag, "Loaded completed matches: " + loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount());
 				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0){
 					// there is one OR MORE matches where it is my turn
 					mMatch = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
@@ -1253,6 +1277,18 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 					mMatch = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
 					updateMatch(mMatch);
 				}
+				if (loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount() > 0){
+					// there is one OR MORE matches that is completed, will loop through all and delete them
+					// Amount of matches
+					int amountToLoop = loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount();
+					Log.d(AppSettings.tag, "getcompletedMatches().getCount() = " + amountToLoop);
+					for(int i = 0; i < amountToLoop; i++){
+						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountToLoop) + " matches that are completed. Dismissing them all.");
+						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getCompletedMatches().get(i);
+						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
+					}
+				}
 			}
 		}).addOnFailureListener(new OnFailureListener() {
 			@Override
@@ -1260,6 +1296,32 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				Log.d(AppSettings.tag, "There was an error loading matches.");
 			}
 		});
+	}
+
+	// Function used to end the current match, return true if ended, return false if not
+	public boolean endMatch(){
+		// Attempt to end the match
+		try {
+			mTurnBasedMultiplayerClient.finishMatch(mMatch.getMatchId())
+					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+						@Override
+						public void onSuccess(TurnBasedMatch turnBasedMatch) {
+							onUpdateMatch(turnBasedMatch);
+						}
+					})
+					.addOnFailureListener(createFailureListener("There was a problem finishing the match!"));
+			if(mMatch.getStatus() == TurnBasedMatch.MATCH_STATUS_COMPLETE){
+				return true;
+			}
+			else{
+				Log.d(AppSettings.tag, "Something went wrong trying to end/finish the game");
+				return false;
+			}
+		}
+		catch (Exception e){
+			Log.d(AppSettings.tag, "Something went wrong when trying to end/finish the game");
+			return false;
+		}
 	}
 
 	/*
@@ -1278,6 +1340,26 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		return mPlayerId;
 	}
 
+	// returns the last data core send to this androidlauncher
+	public String getGameDataFromCore(){
+
+		return gameDataFromCore;
+	}
+	// returns the latest data this androidlauncher has received from matchupdates
+	public String getGameData(){
+		if(mTurnData != null){
+			return mTurnData.data;
+		}
+		else{
+			Log.d(AppSettings.tag, "getGameData(): the mTurnData was null, returning null to core");
+			return null;
+		}
+	}
+
+	public void receiveGameData(String gameData){
+		gameDataFromCore = gameData;
+	}
+
 	// Called from core to know if it is a players turn
 	public boolean getIsDoingTurn(){
 		return isDoingTurn;
@@ -1293,7 +1375,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		} else {
 			// Try to find opponent ID
 			Log.d(TAG, "Your playerID "+ mPlayerId);
-			String opponentId = mMatch.getParticipantId(getNextParticipantId());
+			String opponentId = mMatch.getDescriptionParticipantId();
 			Log.d(TAG, "Opponent playerID "+ opponentId);
 
 			ArrayList<String> allIdsInGame = mMatch.getParticipantIds();

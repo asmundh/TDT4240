@@ -83,6 +83,13 @@
                 android:text="@string/CreateNewMatchButton"
                 android:textAppearance="@style/HelpText.Heading"
                 tools:ignore="ButtonStyle" />
+            <Button
+                android:id="@+id/FinishMatch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/FinishMatchButton"
+                android:textAppearance="@style/HelpText.Heading"
+                tools:ignore="ButtonStyle" />
 
         </LinearLayout>
     </ScrollView>
