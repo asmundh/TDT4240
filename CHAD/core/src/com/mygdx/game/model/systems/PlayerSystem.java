@@ -84,6 +84,14 @@ public class PlayerSystem extends IteratingSystem {
         
     }
 
+    public void payForCard(Entity playerEntity, int cost) {
+        pm.get(playerEntity).manaPoints -= cost;
+    }
+
+    public int getManaPoints(Entity playerEntity) {
+        return pm.get(playerEntity).manaPoints;
+    }
+
     // Returns given card in table
     public Entity getCardOnTable(Entity playerEntity , int index) {
         return pm.get(playerEntity).cardsOnTable.get(index);

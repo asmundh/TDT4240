@@ -144,6 +144,8 @@ public class BoardView {
         showHandButtonPos = new Vector2(50, 150);
 
 
+
+
         /*
         for (int i = 0; i < 14; i++) {
             allCardViews.add(new CardView());
@@ -179,6 +181,7 @@ public class BoardView {
         friendlyCardsOnBoardEntity = pm.get(player).cardsOnTable;
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
+        int manapoints = pm.get(player).manaPoints;
 
         /*
         friendlyCardsOnBoard.clear();
@@ -286,5 +289,11 @@ public class BoardView {
             font.draw(batch, "Show hand", 90, 200);
             batch.end();
         }
+
+        //drawing of mana points
+        batch.begin();
+        font.setColor(Color.BLUE);
+        font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 200);
+        batch.end();
     }
 }
