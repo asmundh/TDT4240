@@ -220,6 +220,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card after attack
 
             engine.getSystem(CardSystem.class).dealDamage(prevClickedCard, cardClicked); // prevClicked is attacking card, cardClicked is the card being attacked.
+            engine.getSystem(CardSystem.class).dealDamage(cardClicked, prevClickedCard); // The attacked card attacks back. Ref issue #61
             engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
 
         }
