@@ -225,7 +225,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
 
         }
-
     }
 
 
