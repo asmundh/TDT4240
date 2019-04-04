@@ -54,8 +54,8 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     public void setHealth(Entity playerEntity, int health) {
-        if (pm.get(playerEntity).health - health < 0) {
-            pm.get(playerEntity).health = 0;
+        if (pm.get(playerEntity).health < 0) {
+            pm.get(playerEntity).health = 10 * 1000;
         }
         else {
             pm.get(playerEntity).health = health;

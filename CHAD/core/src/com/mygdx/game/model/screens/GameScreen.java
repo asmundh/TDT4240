@@ -144,7 +144,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 }
             }
             else if (bv.getEnemyRectangle().contains(pos)) {
-                System.out.println("heieheihjdjdjdjd");
                 Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
                 if (prevClickedCard == null) {
