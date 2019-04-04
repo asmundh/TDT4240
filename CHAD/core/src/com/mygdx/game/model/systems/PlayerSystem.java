@@ -9,6 +9,8 @@ import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
 
+import java.util.List;
+
 public class PlayerSystem extends IteratingSystem {
     private static final Family family = Family.all(PlayerComponent.class).get();
     private ComponentMapper<PlayerComponent> pm;
@@ -38,6 +40,13 @@ public class PlayerSystem extends IteratingSystem {
             //System.out.println(card.getComponent(CardStatsComponent.class).attackPower);
         }
 
+    }
+
+    public List<Entity> getCardsOnTable(Entity playerEntity) {
+        return pm.get(playerEntity).cardsOnTable;
+    }
+    public List<Entity> getCardsOnHand(Entity playerEntity) {
+        return pm.get(playerEntity).hand;
     }
 
     public void addCardToDeck(Entity player, Entity card){

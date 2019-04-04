@@ -62,8 +62,10 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         for (int i = 0; i < 5; i++) {
             engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0));
-            //engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(1));
+            engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(1));
         }
+        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 4);
+
 
         bv = new BoardView(boardEntity);
 
@@ -109,7 +111,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             if (bv.getShowHandButtonRect().contains(pos)){
                 // Hides the hand when the button is clicked.
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
-                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
                 if (prevClickedCard == null) {
                     return;
                 }
@@ -137,56 +139,90 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         int index = -1;
         List<Rectangle> boardPos = bv.getBoardPosition();
         System.out.println("Pos" + pos);
-        for (Rectangle rec : boardPos) {
+
+        for (int i = 0; i < engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size(); i++) {
+            Rectangle rec = boardPos.get(i);
             if (rec.contains(pos)) {
                 index = boardPos.indexOf(rec);
+                System.out.println("Hit" + index);
                 break;
             }
         }
-        if (index == -1) {
+        for (int i = 4; i < engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(1)).size() + 4; i++) {
+            Rectangle rec = boardPos.get(i);
+            if (rec.contains(pos)) {
+                index = boardPos.indexOf(rec);
+                System.out.println("Hit" + index);
+                break;
+            }
+        }
+
+        if (index == -1) { // Deselects a card
+            Entity prevChosenCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
+            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+            engine.getSystem(CardSystem.class).updateSelected(prevChosenCard);
             return;
         }
 
-        Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
-        engine.getSystem(CardSystem.class).updateSelected(cardClicked);
+        Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
-        /*
-        TODO: Fix so you can only click cards on the table.
-         */
+        if (index < 4 && index >= 0) { // Friendly cards
+            Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
 
-        /*
-        if (prevClickedCard != null && engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
-            engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-        } else {
-            engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-            chosenCard(cardChosen);
+            if (prevClickedCard != null) {
+                engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card
+                engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Selects current clicked card
+                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
+            } else if (prevClickedCard == null) {
+                System.out.println("prev er null");
+                engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Deselects prev clicked card
+                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardClicked);
+
+            }
         }
-        */
+
+        else if (index >= 4 && prevClickedCard != null) { // Enemy cards. prevClickedCard will not be null if we have already clicked a friendly card
+            Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(1), index - 4);
+            System.out.println("hehiehiehie");
+            engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card after attack
+
+            engine.getSystem(CardSystem.class).dealDamage(prevClickedCard, cardClicked); // prevClicked is attacking card, cardClicked is the card being attacked.
+            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+        }
+
+
+
+
     }
 
 
     public void handleInputHand(Vector2 pos) {
         List<Rectangle> handPos = bv.getHandPosition();
-        int index = 0;
-        for (Rectangle rec : handPos) {
+        int index = -1;
 
+        for (int i = 0; i < engine.getSystem(PlayerSystem.class).getCardsOnHand(players.get(0)).size(); i++) {
+            Rectangle rec = handPos.get(i);
             if (rec.contains(pos)) {
                 index = handPos.indexOf(rec);
+                System.out.println("Hit" + index);
                 break;
             }
-            else { index = -1; }
+        }
+
+        if(index == -1) {
+            return;
         }
 
         if (index >= 0) {
             Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
-            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
             if (prevClickedCard != null) {
-                if (engine.getSystem(BoardSystem.class).getClickedCard(boardEntity) == cardChosen) {
+                if (prevClickedCard == cardChosen) { // Confirm card and add to table
                     engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
-                } else {
+                } else { // New card chosen
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
@@ -199,7 +235,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             }
         }
         else {
-            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getClickedCard(boardEntity);
+            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
             engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
             engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
         }

@@ -63,11 +63,11 @@ public class BoardSystem extends IteratingSystem {
     }
 
 
-    public void cardChosen(Entity board, Entity lastClickedCard) {
-        bm.get(board).lastCardClicked = lastClickedCard;
+    public void cardChosen(Entity board, Entity lastCardClicked) {
+        bm.get(board).lastCardClicked = lastCardClicked;
     }
 
-    public Entity getClickedCard(Entity board) {
+    public Entity getPreviouslyClickedCard(Entity board) {
         return bm.get(board).lastCardClicked;
 
     }
