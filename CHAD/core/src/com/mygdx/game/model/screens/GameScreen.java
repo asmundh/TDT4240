@@ -28,6 +28,7 @@ import com.mygdx.game.view.CardView;
 import com.mygdx.game.World;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter implements ScreenInterface {
@@ -77,6 +78,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public void update(float dt) {
         handleInput();
         engine.update(dt);
+        searchAndDestroyDeadCards();
+
 
     }
 
@@ -98,6 +101,17 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void dispose () {
         super.dispose();
+    }
+
+    public void searchAndDestroyDeadCards() {
+        for (Entity player : engine.getSystem(BoardSystem.class).getPlayers(boardEntity)) {
+            for (Entity card : engine.getSystem(PlayerSystem.class).getCardsOnTable(player)) {
+                if (engine.getSystem(CardSystem.class).getHealth(card) == 0) {
+                    engine.getSystem(PlayerSystem.class).removeCardOnTable(player, engine.getSystem(PlayerSystem.class).getCardsOnTable(player).indexOf(card));
+                }
+            }
+        }
+
     }
 
     @Override

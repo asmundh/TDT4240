@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.World;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.RectangleComponent;
@@ -80,6 +81,7 @@ public class CardSystem extends IteratingSystem {
         System.out.println("took damage");
         if (getHealth(entity) - damage <= 0) {
             setHealth(entity, 0);
+
         }
         else {
             setHealth(entity, getHealth(entity) - damage);
