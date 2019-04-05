@@ -15,6 +15,7 @@ public interface AndroidInterface {
     public String getMessage();
 
     // Used to change the view in en AndroidLauncher (between libGDX and my own GPGS button setup, only for tesintg
+    // Use this for developer view of androidlauncher, shows the buttons for communicating with GPGS
     public void changeView();
 
     // Returns the logged in player's userID (not username, but actual id, long string of numbers and letters)
