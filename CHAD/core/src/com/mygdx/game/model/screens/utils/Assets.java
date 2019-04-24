@@ -48,7 +48,6 @@ public class Assets {
         put("moss_golem", "textures/cards/moss_golem.png");
     }};
 
-
     private static AssetManager assetManager;
 
     public Assets() {
