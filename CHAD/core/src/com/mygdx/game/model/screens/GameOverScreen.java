@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,6 +30,7 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
     private Entity winningPlayer;
     private Entity losingPlayer;
     private BitmapFont font;
+    private Sound btnClick;
 
     public GameOverScreen(CardGame game, Engine engine, Entity winningPlayer, Entity losingPlayer) {
         super();
@@ -38,6 +40,8 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
         sb = game.batch;
         create();
         this.engine = engine;
+
+        this.btnClick = Assets.getSound(Assets.btnClick);
     }
 
     @Override
@@ -89,6 +93,7 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MenuScreen(game, engine));
+                btnClick.play();
             }
 
             @Override // Fires when the button is pressed down
@@ -107,6 +112,7 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
         exitBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
+                btnClick.play();
                 Gdx.app.exit();
                 System.exit(0);
             }
