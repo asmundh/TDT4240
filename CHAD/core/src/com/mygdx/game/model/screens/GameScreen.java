@@ -135,6 +135,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
                 Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
                 if (prevClickedCard == null) {
+                    // Now showing the hand
                     return;
                 }
                 else {
@@ -255,10 +256,14 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
             if (prevClickedCard != null) {
-                if (prevClickedCard == cardChosen) { // Confirm card and add to table
+                if (prevClickedCard == cardChosen) {
+                    // Confirm card and add to table
                     engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+
+                    // make it so it cant sleep card on hand.
+                    engine.getSystem(CardSystem.class).deployCard(cardChosen);
                 } else { // New card chosen
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
