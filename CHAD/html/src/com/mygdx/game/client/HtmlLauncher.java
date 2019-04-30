@@ -3,6 +3,7 @@ package com.mygdx.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
+import com.mygdx.game.AndroidInterface;
 import com.mygdx.game.CardGame;
 
 public class HtmlLauncher extends GwtApplication {
@@ -46,6 +47,11 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new CardGame();
+                return new CardGame(new AndroidInterface() {
+                        @Override
+                        public String getMessage() {
+                                return null;
+                        }
+                });
         }
 }

@@ -73,6 +73,9 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
         implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
+        implementation "com.google.android.gms:play-services-games:17.0.0"
+        implementation "com.google.android.gms:play-services-auth:16.0.1"
+
         
     }
 }

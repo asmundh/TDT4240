@@ -2,5 +2,37 @@
 <resources>
 
     <string name="app_name">CHAD</string>
-
+    <string name="hello_world">Hello world!</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="match_instructions">Type in a new word for the data in this game, then hit done.</string>
+    <string name="quick_match">Quick match</string>
+    <string name="done">Done</string>
+    <string name="leave">Leave</string>
+    <string name="gdx">GDX</string>
+    <string name="TakeTurn">Take turn</string>
+    <string name="CheckMatchStatus">CheckMatchStatus</string>
+    <string name="CheckTurnStatus">CheckTurnStatus</string>
+    <string name="LoadMatchButton">LoadMatch</string>
+    <string name="DismissMatchButton">Dismiss Match</string>
+    <string name="CreateNewMatchButton">Create New Match</string>
+    <string name="FinishMatchButton">Finish match</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
+    <string name="welcome_to_our_skeleton_app_">Welcome to our skeleton app!</string>
+    <string name="check_games">Check games</string>
+    <string name="start_match">Start Match</string>
+    <string name="turn_counter">Turn counter</string>
+    <string name="signin_other_error">There was an issue with sign in.  Please try again later.</string>
+    <string name="status_exception_error">%1$s (status %2$d). %3$s.</string>
+    <string name="error_get_inbox_intent">There was a problem getting the inbox intent!</string>
+    <string name="error_get_select_opponents">There was a problem getting the select opponents intent!</string>
+    <string name="turn_label">Turn %1$d</string>
+    <string name="status_multiplayer_error_not_trusted_tester">Only allow trusted testers.</string>
+    <string name="match_error_already_rematched">This rematch has already been started!</string>
+    <string name="network_error_operation_failed">There was a network error. The operation failed.</string>
+    <string name="internal_error">Internal error</string>
+    <string name="match_error_locally_modified">This match has locally modified data. This operation cannot be done.</string>
+    <string name="match_error_inactive_match">This match is inactive</string>
+    <string name="unexpected_status">Did not have a string defined for this status</string>
 </resources>
+

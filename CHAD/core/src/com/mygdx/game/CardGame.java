@@ -18,6 +18,11 @@ public class CardGame extends Game {
 	public SpriteBatch batch;
 	private Assets assets;
 	public Engine engine;
+	public AndroidInterface androidInterface;
+
+	public CardGame(AndroidInterface androidInterface){
+		this.androidInterface = androidInterface;
+	}
 	
 	@Override
 	public void create () {
@@ -33,7 +38,6 @@ public class CardGame extends Game {
 		//this.setScreen(new MenuScreen(this));
 		this.setScreen(new LoadingScreen(this, engine));
 
-
 	}
 
 	@Override
@@ -43,6 +47,7 @@ public class CardGame extends Game {
 		//gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.render();
+		// System.out.println(this.androidInterface.getMessage()); ONLY USED TO TEST INTERFACE
 	}
 	
 	@Override
