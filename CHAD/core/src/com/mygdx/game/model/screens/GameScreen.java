@@ -33,7 +33,6 @@ import com.mygdx.game.World;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.smartcardio.Card;
 
 public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
