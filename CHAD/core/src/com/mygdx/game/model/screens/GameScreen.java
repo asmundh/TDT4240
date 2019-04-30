@@ -132,6 +132,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
     }
 
+    public void startNewTurn() {
+        wakeAllCards();
+        engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
+
+    }
+
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched()) {
@@ -178,6 +184,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 wakeAllCards();
 
                 engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10);
+
+                //testing:
+                startNewTurn();
             }
 
 
