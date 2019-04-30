@@ -95,6 +95,10 @@ public class BoardView {
         return handRectangles;
     }
 
+    public Rectangle getEnemyRectangle() {
+        return new Rectangle(Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight(), enemyRect.getWidth(), enemyRect.getHeight());
+    }
+
     public Rectangle getShowHandButtonRect() {
         return new Rectangle(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
     }
@@ -192,24 +196,31 @@ public class BoardView {
 
         batch.begin();
         batch.draw(background, 0, 0);
+        batch.end();
 
         //Drawing of deck
+        batch.begin();
         batch.draw(deck,10,  Gdx.graphics.getHeight() / 2 - deck.getHeight() / 2);
+        batch.end();
 
         //Drawing of enemy
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.DARK_GRAY);
         shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight(), enemyRect.getWidth(), enemyRect.getHeight());
         shapeRenderer.end();
 
-        batch.draw(enemyRect, Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight());
-        batch.draw(healthIconTexture, Gdx.graphics.getWidth() / 2 - healthIconTexture.getWidth(), Gdx.graphics.getHeight() - enemyRect.getHeight() + 10);
-        font.setColor(Color.BLACK);
+        batch.begin();
+        batch.draw(healthIconTexture, Gdx.graphics.getWidth() / 2 - healthIconTexture.getWidth(), Gdx.graphics.getHeight() - font.getLineHeight() / 2);
+        batch.end();
+
+        batch.begin();
+        font.setColor(Color.GREEN);
         font.getData().setScale(2);
 
         String healthString = String.valueOf(enemyHealth);
 
-        font.draw(batch, healthString, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight() + font.getLineHeight());
+        font.draw(batch, healthString, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
         batch.end();
 
 

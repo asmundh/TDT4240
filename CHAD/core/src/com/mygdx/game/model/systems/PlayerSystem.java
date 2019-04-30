@@ -53,6 +53,15 @@ public class PlayerSystem extends IteratingSystem {
         pm.get(player).deck.add(card);
     }
 
+    public void setHealth(Entity playerEntity, int health) {
+        if (pm.get(playerEntity).health < 0) {
+            pm.get(playerEntity).health = 10 * 1000;
+        }
+        else {
+            pm.get(playerEntity).health = health;
+        }
+    }
+
     // Take last card from deck, and add to hand list
     public void pickFromDeck(Entity entity) {
         Entity card = pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1);
@@ -80,8 +89,8 @@ public class PlayerSystem extends IteratingSystem {
         return pm.get(playerEntity).cardsOnTable.get(index);
     }
 
-    public Entity removeCardOnTable(Entity entity , int index) {
-        return pm.get(entity).cardsOnTable.remove(index);
+    public Entity removeCardOnTable(Entity playerEntity , int index) {
+        return pm.get(playerEntity).cardsOnTable.remove(index);
     }
 
     public String getPlayerId(Entity entity) {
@@ -100,8 +109,13 @@ public class PlayerSystem extends IteratingSystem {
         pm.get(entity).powerPoints = points;
     }
 
-    public void takeDamage(Entity entity, int damage) {
-        pm.get(entity).health = pm.get(entity).health - damage;
+    public void takeDamage(Entity playerEntity, int damage) {
+        if (pm.get(playerEntity).health - damage < 0) {
+            pm.get(playerEntity).health = 0;
+        }
+        else {
+            pm.get(playerEntity).health -= damage;
+        }
     }
 
     public int getHealth(Entity entity) {
