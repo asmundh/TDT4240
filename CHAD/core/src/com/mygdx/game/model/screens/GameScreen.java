@@ -73,9 +73,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
         bv = new BoardView(boardEntity);
-
-
-
     }
 
     @Override
@@ -258,12 +255,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             if (prevClickedCard != null) {
                 if (prevClickedCard == cardChosen) {
                     // Confirm card and add to table
-                    engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+                    boolean addToTable =  engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
-
-                    // make it so it cant sleep card on hand.
-                    engine.getSystem(CardSystem.class).deployCard(cardChosen);
+                    if (addToTable) {
+                        engine.getSystem(CardSystem.class).deployCard(cardChosen);
+                    }
                 } else { // New card chosen
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
