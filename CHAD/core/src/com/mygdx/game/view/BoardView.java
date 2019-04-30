@@ -38,6 +38,7 @@ public class BoardView {
     private int enemyHealth;
     private Entity player;
     private Entity enemyPlayer;
+    private int health; //your own health
 
     private String deckPath = Assets.deck;
     private String boardBackgroundPath = Assets.boardBackground;
@@ -186,10 +187,12 @@ public class BoardView {
         enemyPlayer = bm.get(boardEntity).playerTwo;
         showHand = bm.get(boardEntity).showHand;
         enemyHealth = pm.get(enemyPlayer).health;
+        health = pm.get(player).health;
         friendlyCardsOnBoardEntity = pm.get(player).cardsOnTable;
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
         int manapoints = pm.get(player).manaPoints;
+
 
         /*
         friendlyCardsOnBoard.clear();
@@ -303,6 +306,13 @@ public class BoardView {
         font.setColor(Color.BLUE);
         font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 200);
         batch.end();
+
+        //drawing of own health
+        batch.begin();
+        font.setColor(Color.RED);
+        font.draw(batch, "Your Health: " + String.valueOf(health), Gdx.graphics.getWidth()*0.85f, 300);
+        batch.end();
+
 
         //Drawing of End Turn button
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
