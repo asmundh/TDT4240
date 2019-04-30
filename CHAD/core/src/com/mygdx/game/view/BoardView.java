@@ -303,13 +303,13 @@ public class BoardView {
 
         //drawing of mana points
         batch.begin();
-        font.setColor(Color.BLUE);
+        font.setColor(Color.CYAN);
         font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 200);
         batch.end();
 
         //drawing of own health
         batch.begin();
-        font.setColor(Color.RED);
+        font.setColor(Color.GREEN);
         font.draw(batch, "Your Health: " + String.valueOf(health), Gdx.graphics.getWidth()*0.85f, 300);
         batch.end();
 

@@ -119,7 +119,7 @@ public class CardView {
 
             font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
             font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
-            font.setColor(Color.BLUE);
+            font.setColor(Color.CYAN);
             font.draw(batch, String.valueOf(cost), xCoord + 0.5f*fontOffset, yCoord + font.getLineHeight());
             batch.end();
 
@@ -160,7 +160,7 @@ public class CardView {
 
             font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
             font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
-            font.setColor(Color.BLUE);
+            font.setColor(Color.CYAN);
             font.draw(batch, String.valueOf(cost), xCoord + 0.5f*fontOffset, yCoord + font.getLineHeight());
             batch.end();
         }
