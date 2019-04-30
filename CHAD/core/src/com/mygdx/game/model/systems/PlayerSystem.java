@@ -74,9 +74,12 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     // From hand to table
-    public void AddCardToTable(Entity entity, int index) {
+    public boolean AddCardToTable(Entity entity, int index) {
         if (pm.get(entity).cardsOnTable.size() < 4) {
             pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
+            return true;
+        } else {
+            return false;
         }
     }
 
