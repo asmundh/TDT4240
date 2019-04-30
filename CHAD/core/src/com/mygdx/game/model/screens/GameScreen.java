@@ -131,21 +131,21 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             // Depending on where the player has clicked, act accordingly.
 
             if (bv.getShowHandButtonRect().contains(pos)){
-                // Hides the hand when the button is clicked.
+                // Hides the hand when the button is clicked. Button for showing and hiding hand
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
                 Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
                 if (prevClickedCard == null) {
                     return;
                 }
                 else {
-                    // Unclicks the previously clicked card on the hand
+                    // Unclicks the previously clicked card on the hand. If prev clicked card is green, make it not green and then make new card green.
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                 }
             }
             else if (bv.getEnemyRectangle().contains(pos)) {
+                // Attack enemy card if we have selected a card.
                 Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
-
                 if (prevClickedCard == null) {
                     return;
                 } else {
