@@ -95,6 +95,10 @@ public class PlayerSystem extends IteratingSystem {
         return pm.get(playerEntity).manaPoints;
     }
 
+    public void setManaPoints(Entity playerEntity, int manaPoints) {
+        pm.get(playerEntity).manaPoints = manaPoints;
+    }
+
     // Returns given card in table
     public Entity getCardOnTable(Entity playerEntity , int index) {
         return pm.get(playerEntity).cardsOnTable.get(index);
