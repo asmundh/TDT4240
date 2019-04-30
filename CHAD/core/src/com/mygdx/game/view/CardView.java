@@ -132,6 +132,7 @@ public class CardView {
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
             batch.begin();
+            font.setColor(Color.BLACK);
             font.draw(batch, "Sleeping", xCoord + cardWidth/2 - fontOffset, yCoord + cardHeight/2);
             batch.end();
 
