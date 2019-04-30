@@ -8,16 +8,74 @@ import com.mygdx.game.CardGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-<<<<<<< HEAD
 		config.title = CardGame.TITLE;
-		new LwjglApplication(new CardGame(), config);
-=======
+		//new LwjglApplication(new CardGame(), config);
 		new LwjglApplication(new CardGame(new AndroidInterface() {
 			@Override
 			public String getMessage() {
 				return null;
 			}
+
+			@Override
+			public void changeView() {
+
+			}
+
+			@Override
+			public String getPlayerId() {
+				return null;
+			}
+
+			@Override
+			public String getDisplayName() {
+				return null;
+			}
+
+			@Override
+			public boolean getIsDoingTurn() {
+				return false;
+			}
+
+			@Override
+			public void startQuickMatch() {
+
+			}
+
+			@Override
+			public String getOpponentDisplayName() {
+				return null;
+			}
+
+			@Override
+			public String getGameData() {
+				return null;
+			}
+
+			@Override
+			public String getGameDataFromCore() {
+				return null;
+			}
+
+			@Override
+			public void sendGameData(String gameData) {
+
+			}
+
+			@Override
+			public void endTurn() {
+
+			}
+
+			@Override
+			public boolean endMatch() {
+				return false;
+			}
+
+			@Override
+			public void sendGameDataAndEndTurn(String gameData) {
+
+			}
 		}), config);
->>>>>>> 5cd8f0f72736de97826c381961c64f447cc3305d
-	}
+  }
+
 }
