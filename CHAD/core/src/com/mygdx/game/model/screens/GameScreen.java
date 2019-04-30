@@ -120,6 +120,17 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     }
 
+    public void wakeAllCards() {
+        for (Entity player : engine.getSystem(BoardSystem.class).getPlayers(boardEntity)) {
+            for (Entity card : engine.getSystem(PlayerSystem.class).getCardsOnTable(player)) {
+                if (engine.getSystem(CardSystem.class).isSleeping(card)) {
+                    engine.getSystem(CardSystem.class).setSleeping(card, false);
+                }
+            }
+
+        }
+    }
+
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched()) {
@@ -153,6 +164,19 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
                     engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
                 }
+            }
+            else if (bv.getEndTurnButtonRect().contains(pos)) {
+                //End turn
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
+                if (prevClickedCard == null) {
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                } else {
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                }
+                wakeAllCards();
+
+                engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10);
             }
 
 

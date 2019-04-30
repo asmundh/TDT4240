@@ -48,6 +48,7 @@ public class BoardView {
     private List<CardView> allCardViews;
     private CardView cardView;
     private Vector2 showHandButtonPos;
+    private Vector2 endTurnButtonPos;
 
 
     private List<Entity> friendlyCardsOnBoardEntity;
@@ -103,6 +104,10 @@ public class BoardView {
         return new Rectangle(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
     }
 
+    public Rectangle getEndTurnButtonRect() {
+        return new Rectangle(endTurnButtonPos.x, endTurnButtonPos.y, 225, 80);
+    }
+
     private Vector2[] handPositions = {
             new Vector2(Gdx.graphics.getWidth() / 6 + 50, 100),
             new Vector2(Gdx.graphics.getWidth() / 6 + 300, 100),
@@ -142,6 +147,9 @@ public class BoardView {
         cardView = new CardView();
 
         showHandButtonPos = new Vector2(50, 150);
+
+        endTurnButtonPos = new Vector2(Gdx.graphics.getWidth() - 250, Gdx.graphics.getHeight() / 2);
+
 
 
 
@@ -294,6 +302,16 @@ public class BoardView {
         batch.begin();
         font.setColor(Color.BLUE);
         font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 200);
+        batch.end();
+
+        //Drawing of End Turn button
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(endTurnButtonPos.x, endTurnButtonPos.y, 225, 80);
+        shapeRenderer.end();
+        batch.begin();
+        font.setColor(Color.WHITE);
+        font.draw(batch, "End Turn", endTurnButtonPos.x + 50, endTurnButtonPos.y + 60);
         batch.end();
     }
 }
