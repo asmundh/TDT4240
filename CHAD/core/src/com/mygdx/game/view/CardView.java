@@ -40,6 +40,7 @@ public class CardView {
 
     private int attackPower;
     private int health;
+    private int cost;
     private boolean selected;
     private boolean sleeping;
 
@@ -91,6 +92,7 @@ public class CardView {
         String healthString = String.valueOf(cm.get(cardEntity).health);
         sleeping = cm.get(cardEntity).sleeping;
         Maintexture = tm.get(cardEntity).texture;
+        cost = cm.get(cardEntity).cost;
 
 
         if (sleeping) {
@@ -117,6 +119,8 @@ public class CardView {
 
             font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
             font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
+            font.setColor(Color.BLUE);
+            font.draw(batch, String.valueOf(cost), xCoord + 0.5f*fontOffset, yCoord + font.getLineHeight());
             batch.end();
 
             Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -128,6 +132,7 @@ public class CardView {
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
             batch.begin();
+            font.setColor(Color.BLACK);
             font.draw(batch, "Sleeping", xCoord + cardWidth/2 - fontOffset, yCoord + cardHeight/2);
             batch.end();
 
@@ -155,6 +160,8 @@ public class CardView {
 
             font.draw(batch, attackPowerString, xCoord + fontOffset, yCoord + cardHeight * 0.9f);
             font.draw(batch, healthString, xCoord + cardWidth - fontOffset, yCoord + cardHeight * 0.9f);
+            font.setColor(Color.BLUE);
+            font.draw(batch, String.valueOf(cost), xCoord + 0.5f*fontOffset, yCoord + font.getLineHeight());
             batch.end();
         }
 

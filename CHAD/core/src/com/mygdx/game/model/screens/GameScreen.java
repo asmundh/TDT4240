@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
+import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
 import com.mygdx.game.model.screens.utils.Assets;
 import com.mygdx.game.model.systems.BoardSystem;
@@ -253,14 +254,19 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
             if (prevClickedCard != null) {
-                if (prevClickedCard == cardChosen) {
-                    // Confirm card and add to table
-                    boolean addToTable =  engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
-                    if (addToTable) {
-                        engine.getSystem(CardSystem.class).deployCard(cardChosen);
+                if (prevClickedCard == cardChosen) { // Confirm card and add to table
+                    if (engine.getSystem(PlayerSystem.class).getManaPoints(players.get(0)) >= engine.getSystem(CardSystem.class).getCost(cardChosen)) { //player has enough mana for card
+                        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                        engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardChosen));
                     }
+                    else { //player does not have enough mana for card
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    }
+
+
                 } else { // New card chosen
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
