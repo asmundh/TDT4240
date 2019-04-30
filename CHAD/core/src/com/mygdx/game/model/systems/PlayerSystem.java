@@ -9,6 +9,8 @@ import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
 
+import java.util.List;
+
 public class PlayerSystem extends IteratingSystem {
     private static final Family family = Family.all(PlayerComponent.class).get();
     private ComponentMapper<PlayerComponent> pm;
@@ -40,6 +42,13 @@ public class PlayerSystem extends IteratingSystem {
 
     }
 
+    public List<Entity> getCardsOnTable(Entity playerEntity) {
+        return pm.get(playerEntity).cardsOnTable;
+    }
+    public List<Entity> getCardsOnHand(Entity playerEntity) {
+        return pm.get(playerEntity).hand;
+    }
+
     public void addCardToDeck(Entity player, Entity card){
         pm.get(player).deck.add(card);
     }
@@ -57,7 +66,9 @@ public class PlayerSystem extends IteratingSystem {
 
     // From hand to table
     public void AddCardToTable(Entity entity, int index) {
-        pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
+        if (pm.get(entity).cardsOnTable.size() < 4) {
+            pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
+        }
     }
 
     public void addRectangleToCard(Entity entity, int index) {
@@ -65,8 +76,8 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     // Returns given card in table
-    public Entity getCardOnTable(Entity entity , int index) {
-        return pm.get(entity).cardsOnTable.get(index);
+    public Entity getCardOnTable(Entity playerEntity , int index) {
+        return pm.get(playerEntity).cardsOnTable.get(index);
     }
 
     public Entity removeCardOnTable(Entity entity , int index) {

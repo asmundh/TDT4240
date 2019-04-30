@@ -77,6 +77,7 @@ public class CardSystem extends IteratingSystem {
     }
 
     public void takeDamage(Entity entity, int damage) {
+        System.out.println("took damage");
         if (getHealth(entity) - damage <= 0) {
             setHealth(entity, 0);
         }
@@ -85,8 +86,13 @@ public class CardSystem extends IteratingSystem {
         }
     }
 
-    public void dealDamage(Entity entity, int damage) {
-        takeDamage(entity, damage);
+    public int getAttackPower(Entity attackingEntity) {
+        return csm.get(attackingEntity).attackPower;
+    }
+
+    public void dealDamage(Entity attackingEntity, Entity entityBeingAttacked) {
+        int damageToDeal = this.getAttackPower(attackingEntity);
+        takeDamage(entityBeingAttacked, damageToDeal);
     }
 
     public void activatePower(Entity entity) {

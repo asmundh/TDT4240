@@ -65,7 +65,6 @@ public class Assets {
     }
 
 
-
     public static void load() {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
