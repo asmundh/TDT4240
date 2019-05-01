@@ -72,6 +72,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
         engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
 
+        engine.getSystem(PlayerSystem.class).setPlayerName(players.get(0), "lmao");
+        engine.getSystem(PlayerSystem.class).setPlayerName(players.get(1), "rofl");
 
 
         bv = new BoardView(boardEntity);

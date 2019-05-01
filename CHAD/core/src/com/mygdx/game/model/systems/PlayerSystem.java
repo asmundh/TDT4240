@@ -145,6 +145,10 @@ public class PlayerSystem extends IteratingSystem {
         return pm.get(entity).name;
     }
 
+    public void setPlayerName(Entity playerEntity, String name) {
+        pm.get(playerEntity).name = name;
+    }
+
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PlayerComponent playerComp = pm.get(entity);
