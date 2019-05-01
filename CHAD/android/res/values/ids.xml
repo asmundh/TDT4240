@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+    <!-- app_id -->
+    <string name="app_id" translatable="false">630861206082</string>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">com.mygdx.game</string>
+    <!-- leaderboard someLeaderboard -->
+    <string name="leaderboard_someleaderboard" translatable="false">CgkIuvHsuf0OEAIQAg</string>
+    <!-- google play services version -->
+    <!--<integer name="google_play_services_version" translatable="false">HER SKAL DET STÅ NOE?</integer> -->
+</resources>
