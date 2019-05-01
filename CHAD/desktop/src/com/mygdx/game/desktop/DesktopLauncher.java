@@ -81,6 +81,11 @@ public class DesktopLauncher {
 				return true;
 			}
 
+			@Override
+			public void manualSignIn() {
+
+			}
+
 		}), config);
   }
 
