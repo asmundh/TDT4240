@@ -65,4 +65,7 @@ public interface AndroidInterface {
     to doublecheck that the sent data from sendGameData was properly received before calling endTurn()
     */
     public void sendGameDataAndEndTurn(String gameData);
+
+    // Used to figure out if the user is signed in or not
+    public boolean getIsSignedIn();
 }
