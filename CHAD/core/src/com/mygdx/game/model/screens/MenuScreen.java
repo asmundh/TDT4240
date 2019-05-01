@@ -31,9 +31,10 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     private Engine engine;
     private Music bgMusic;
     private Sound btnClick;
-    private String userName = "mats";
+    private String userName;
     private BitmapFont font;
     private boolean isSignedIn = false;
+    private boolean foundMatch = false; // flag used to display loading/looking for match
 
 
     public MenuScreen(CardGame game, Engine engine){ // Constructor initializes background and runs create()
@@ -79,8 +80,10 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
         playBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
+            // Once button is clicked, the game should start looking for a match and display information
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game, engine));
+                game.androidInterface.createNewMatch();
+                System.out.println("Now looking for game...");
                 btnClick.play();
                 bgMusic.stop();
             }
@@ -161,6 +164,18 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void update(float dt) { // Only thing we're checking for is if user presses button
+        // check if we have found an opponent
+        if(game.androidInterface.getFoundOpponent()){
+            System.out.println("Found opponent!");
+            // this returned true, that means we have found a match
+            foundMatch = true;
+        }
+
+        // if a match is found, then the game changes to GameScreen
+        if(foundMatch) {
+            game.setScreen(new GameScreen(game, engine));
+        }
+
         handleInput();
         stage.act(Gdx.graphics.getDeltaTime());
     }

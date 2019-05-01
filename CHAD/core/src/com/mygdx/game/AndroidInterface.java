@@ -71,4 +71,10 @@ public interface AndroidInterface {
 
     // Used to manually sign in, is hooked up to the signInBtn in menuScreen
     public void manualSignIn();
+
+    // Used to create a new match
+    public void createNewMatch();
+
+    // Used to check if our match has an opponent (if false, we are still searching)
+    public boolean getFoundOpponent();
 }

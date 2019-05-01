@@ -42,6 +42,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     private List<Entity> players;
     private Entity boardEntity;
     private Stage playing;
+
+    private String userName = null;
+    private String opponentUserName = null;
   
     protected GameScreen(CardGame game, Engine engine) {
         this.game = game;
@@ -74,7 +77,14 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
 
+
         bv = new BoardView(boardEntity);
+
+        // Initiate player-names
+        this.userName = this.game.androidInterface.getDisplayName();
+        this.opponentUserName = this.game.androidInterface.getOpponentDisplayName();
+        engine.getSystem(PlayerSystem.class).setPlayerName(players.get(0), userName);
+        engine.getSystem(PlayerSystem.class).setPlayerName(players.get(1), opponentUserName);
     }
 
     @Override
