@@ -103,6 +103,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public void update(float dt) {
         handleInput();
         engine.update(dt);
+        gameStage.act(Gdx.graphics.getDeltaTime());
 
     }
 

@@ -36,6 +36,7 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private GlyphLayout glyphLayout;
 
+
     public ConfirmationScreen(CardGame game, Engine engine, String confirmationText) {
         super();
         this.game = game;
@@ -76,6 +77,7 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
             public void clicked(InputEvent event, float x, float y) {
                 // TODO: call endMatch()
                 System.out.println("call endMatch()");
+                game.setScreen(new MenuScreen(game, engine));
                 btnClick.play();
             }
 
@@ -97,7 +99,7 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
             public void clicked(InputEvent event, float x, float y) {
                 btnClick.play();
                 // TODO: Find way to change back to current game screen.
-                System.out.println("Find way to change back to current game screen.");
+                game.setScreen(new GameScreen(game, engine));
             }
 
             @Override // Fires when the button is pressed down

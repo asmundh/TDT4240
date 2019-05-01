@@ -2,7 +2,6 @@ package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.TextureComponent;
+import com.mygdx.game.model.screens.utils.Assets;
 
 
 public class CardView {
@@ -22,14 +22,6 @@ public class CardView {
     private Texture blackRect;
     private BitmapFont font;
     private Entity cardEntity;
-
-    //TODO add to assets
-    // Paths to static textures for all cards.
-    private String pathToAttackIcon = "textures/attackIcon.png";
-    private String pathToHealtchIcon = "textures/healthIcon.png";
-    private String pathToGreenRect = "textures/greenRect.png";
-    private String pathToBlackRect = "textures/blackRect.png";
-
 
     //Fixed size for cards
     private int cardWidth = 200;
@@ -77,10 +69,10 @@ public class CardView {
         selected = cm.get(cardEntity).selected;
 
         shapeRenderer = new ShapeRenderer();
-        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
+        attackIconTexture = Assets.getTexture(Assets.attackIcon);
+        healthIconTexture = Assets.getTexture(Assets.healtchIcon);
+        greenRect = Assets.getTexture(Assets.greenRect);
+        blackRect = Assets.getTexture(Assets.blackRect);
         font = new BitmapFont();
 
     }

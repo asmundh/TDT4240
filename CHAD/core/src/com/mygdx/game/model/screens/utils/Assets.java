@@ -9,6 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import java.util.HashMap;
 
 public class Assets {
+    public static String attackIcon = "textures/attackIcon.png";
+    public static String healtchIcon = "textures/healthIcon.png";
+    public static String greenRect = "textures/greenRect.png";
+    public static String blackRect = "textures/blackRect.png";
 
     public static String quitBtn = "textures/quit_btn.png";
     public static String yesBtn = "textures/yes_btn.png";
@@ -69,6 +73,10 @@ public class Assets {
     }
 
     public static void load() {
+        assetManager.load(healtchIcon, Texture.class);
+        assetManager.load(attackIcon, Texture.class);
+        assetManager.load(greenRect, Texture.class);
+        assetManager.load(blackRect, Texture.class);
         assetManager.load(quitBtn, Texture.class);
         assetManager.load(yesBtn, Texture.class);
         assetManager.load(noBtn, Texture.class);
@@ -84,9 +92,6 @@ public class Assets {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
-
-        //assetManager.load(deck1, Skin.class);
-        //assetManager.load(deck2, Skin.class);
 
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
@@ -116,5 +121,4 @@ public class Assets {
     public static Skin getSkin(String path) {
         return assetManager.get(path, Skin.class);
     }
-
 }
