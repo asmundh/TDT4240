@@ -66,4 +66,12 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
         mAndroidLauncher.receiveGameData(gameData);
         mAndroidLauncher.takeTurn();
     }
+
+    public boolean getIsSignedIn(){
+        return mAndroidLauncher.getIsSignedIn();
+    }
+
+    public void manualSignIn(){
+        mAndroidLauncher.manualSignIn();
+    }
 }

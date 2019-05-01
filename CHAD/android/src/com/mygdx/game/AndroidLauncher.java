@@ -163,6 +163,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		signInSilently();
 	}
 
+	// Called by androidInterface to manually start a google sign-in
+	public void manualSignIn(){
+		startSignInIntent();
+	}
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -251,6 +256,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		mInvitationsClient = null;
 
 		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
+		mSignedIn = false;
 	}
 
 	// This is a helper functio that will do all the setup to create a simple failure message.
@@ -1256,6 +1262,13 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	} */
 
 	// loadMatchButton attempt to load a match
+
+
+	// called by AndroidInterface to figure out if the user is signed in
+	public boolean getIsSignedIn(){
+		return mSignedIn;
+	}
+
 	public void loadMatch(){
 		int[] mMatchStatuses = new int[3];
 		mMatchStatuses[0] = TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN;

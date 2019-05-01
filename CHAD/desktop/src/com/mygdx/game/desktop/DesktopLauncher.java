@@ -75,6 +75,12 @@ public class DesktopLauncher {
 			public void sendGameDataAndEndTurn(String gameData) {
 
 			}
+
+			@Override
+			public boolean getIsSignedIn() {
+				return true;
+			}
+
 		}), config);
   }
 
