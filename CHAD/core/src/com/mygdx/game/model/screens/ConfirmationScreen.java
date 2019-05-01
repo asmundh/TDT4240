@@ -75,8 +75,7 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
         yesBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                // TODO: call endMatch()
-                System.out.println("call endMatch()");
+                this.game.androidInterface.endMatch();
                 game.setScreen(new MenuScreen(game, engine));
                 btnClick.play();
             }
