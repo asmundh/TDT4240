@@ -36,6 +36,8 @@ public class Assets {
     public static String magmaGolem = "textures/cards/magma_golem.png";
     public static String mossGolem = "textures/cards/moss_golem.png";
 
+    public static String signInButton = "textures/sign_in_button.png";
+
 
     public static String deck2 = "decks/deck2.json";
 
@@ -79,6 +81,7 @@ public class Assets {
         assetManager.load(boardBackground, Texture.class);
         assetManager.load(enemyRect, Texture.class);
         assetManager.load(handRect, Texture.class);
+        assetManager.load(signInButton, Texture.class);
 
 
         //assetManager.load(deck1, Skin.class);
@@ -93,6 +96,7 @@ public class Assets {
         assetManager.load(backBtn, Texture.class);
         assetManager.load(exitBtn, Texture.class);
         assetManager.load(exit_gameBtn, Texture.class);
+        assetManager.load(signInButton, Texture.class);
 
         // Music and sound:
         assetManager.load(backgroundMusic, Music.class);

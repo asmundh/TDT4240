@@ -68,4 +68,7 @@ public interface AndroidInterface {
 
     // Used to figure out if the user is signed in or not
     public boolean getIsSignedIn();
+
+    // Used to manually sign in, is hooked up to the signInBtn in menuScreen
+    public void manualSignIn();
 }

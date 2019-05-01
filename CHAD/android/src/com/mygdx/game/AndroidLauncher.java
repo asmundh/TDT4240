@@ -163,6 +163,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		signInSilently();
 	}
 
+	// Called by androidInterface to manually start a google sign-in
+	public void manualSignIn(){
+		startSignInIntent();
+	}
+
 	@Override
 	protected void onPause() {
 		super.onPause();

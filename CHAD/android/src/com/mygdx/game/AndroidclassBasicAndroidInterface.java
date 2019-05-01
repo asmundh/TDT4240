@@ -70,4 +70,8 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
     public boolean getIsSignedIn(){
         return mAndroidLauncher.getIsSignedIn();
     }
+
+    public void manualSignIn(){
+        mAndroidLauncher.manualSignIn();
+    }
 }
