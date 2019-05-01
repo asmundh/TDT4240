@@ -1280,6 +1280,10 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				Log.d(AppSettings.tag, "Loaded My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
 				Log.d(AppSettings.tag, "Loaded Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
 				Log.d(AppSettings.tag, "Loaded completed matches: " + loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount());
+				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount() == 0){
+					Log.d(AppSettings.tag, "There are 0 matches going on. Setting mMatch to null");
+					mMatch = null;
+				}
 				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0){
 					// there is one OR MORE matches where it is my turn
 					mMatch = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
@@ -1345,6 +1349,12 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	public String getDisplayName(){
 
 		return mDisplayName;
+	}
+
+	public void gdxEndMatch(){
+		dismissMatch();
+		loadMatch();
+		endMatch();
 	}
 
 	public boolean getFoundOpponent(){

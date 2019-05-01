@@ -46,6 +46,9 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         background = Assets.getTexture(Assets.menuBG);
         this.engine = engine;
 
+        this.flagLookingForMatch = false;
+        this.foundMatch = false;
+
         this.bgMusic = Assets.getMusic(Assets.backgroundMusic);
         this.bgMusic.setVolume(0.3f);
         this.bgMusic.play();
@@ -59,6 +62,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void create() {
+        System.out.println("Entered menuscreen");
         stage = new Stage(new ScreenViewport()); // Create stage used by buttons
         Gdx.input.setInputProcessor(stage); // Set inputs to be handled by the stage
 
@@ -170,6 +174,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void update(float dt) { // Only thing we're checking for is if user presses button
+
         // check if we have found an opponent
         if(game.androidInterface.getFoundOpponent()){
             System.out.println("Found opponent!");
@@ -177,8 +182,10 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             foundMatch = true;
         }
 
-        // if a match is found, then the game changes to GameScreen
+        // if a match is found, then the game changes to GameScreen and change lookingforflag
         if(foundMatch) {
+            flagLookingForMatch = false;
+            foundMatch = false;
             game.setScreen(new GameScreen(game, engine));
         }
 

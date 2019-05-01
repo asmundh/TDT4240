@@ -82,4 +82,8 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
     public boolean getFoundOpponent(){
         return mAndroidLauncher.getFoundOpponent();
     }
+
+    public void gdxEndMatch(){
+        mAndroidLauncher.gdxEndMatch();
+    }
 }
