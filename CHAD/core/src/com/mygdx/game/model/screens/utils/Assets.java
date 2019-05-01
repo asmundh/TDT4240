@@ -53,6 +53,7 @@ public class Assets {
     public static String mossGolem = "textures/cards/moss_golem.png";
 
     public static String signInButton = "textures/sign_in_button.png";
+    public static String lookingForMatch = "textures/lookingForMatch.png";
 
 
     public static String deck2 = "decks/deck2.json";
@@ -113,7 +114,16 @@ public class Assets {
         assetManager.load(enemyRect, Texture.class);
         assetManager.load(handRect, Texture.class);
         assetManager.load(signInButton, Texture.class);
+
+        assetManager.load(lookingForMatch, Texture.class);
+
+
+        //assetManager.load(deck1, Skin.class);
+        //assetManager.load(deck2, Skin.class);
+
+
       
+
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
@@ -124,6 +134,7 @@ public class Assets {
         assetManager.load(exitBtn, Texture.class);
         assetManager.load(exit_gameBtn, Texture.class);
         assetManager.load(signInButton, Texture.class);
+        assetManager.load(lookingForMatch, Texture.class);
 
         // Music and sound:
         assetManager.load(backgroundMusic, Music.class);

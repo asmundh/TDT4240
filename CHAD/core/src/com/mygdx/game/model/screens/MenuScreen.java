@@ -35,6 +35,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     private BitmapFont font;
     private boolean isSignedIn = false;
     private boolean foundMatch = false; // flag used to display loading/looking for match
+    private boolean flagLookingForMatch = false;
+    private String lookingForMatch = "Looking for match";
 
 
     public MenuScreen(CardGame game, Engine engine){ // Constructor initializes background and runs create()
@@ -80,9 +82,13 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
         playBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
-            // Once button is clicked, the game should start looking for a match and display information
+            // Once button is clicked, the game should start looking for a match and display lookingForMatch
             public void clicked(InputEvent event, float x, float y) {
                 game.androidInterface.createNewMatch();
+                // hide playbutton
+                playBtn.setVisible(false);
+                // show looking for match
+                flagLookingForMatch = true;
                 System.out.println("Now looking for game...");
                 btnClick.play();
                 bgMusic.stop();
@@ -196,6 +202,14 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         font.getData().setScale(2);
         font.draw(sb, "Signed in as: " + userName, 10, Gdx.graphics.getHeight()*0.95f);
         sb.end();
+
+        if(flagLookingForMatch){
+            sb.begin();
+            font.setColor(Color.WHITE);
+            font.getData().setScale(4);
+            font.draw(sb, lookingForMatch, Gdx.graphics.getWidth()/2-200, Gdx.graphics.getHeight()/2);
+            sb.end();
+        }
 
     }
 
