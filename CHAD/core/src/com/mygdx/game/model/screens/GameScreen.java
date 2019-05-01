@@ -3,10 +3,11 @@ package com.mygdx.game.model.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -17,26 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.World;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.CardGame;
-import com.mygdx.game.model.components.BoardComponent;
-import com.mygdx.game.model.components.CardStatsComponent;
-import com.mygdx.game.model.components.PlayerComponent;
 import com.mygdx.game.model.screens.utils.Assets;
 import com.mygdx.game.model.systems.BoardSystem;
 import com.mygdx.game.model.systems.CardSystem;
 import com.mygdx.game.model.systems.PlayerSystem;
 import com.mygdx.game.view.BoardView;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +37,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     private List<Entity> players;
     private Stage gameStage;
     private Entity boardEntity;
-    private Stage playing;
 
     private String userName = null;
     private String opponentUserName = null;
@@ -72,8 +57,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         players = world.createPlayers();
         boardEntity = world.createBoard();
-      
-        Gdx.input.setInputProcessor(playing);
+
         engine.addSystem(new PlayerSystem());
         engine.addSystem(new CardSystem());
         engine.addSystem(new BoardSystem());
