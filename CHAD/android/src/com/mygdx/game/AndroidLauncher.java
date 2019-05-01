@@ -1347,6 +1347,20 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		return mDisplayName;
 	}
 
+	public boolean getFoundOpponent(){
+		if(mMatch != null) {
+			// find list of participants in match
+			ArrayList<String> participantIds = mMatch.getParticipantIds();
+
+			// check size of list, if it is 2 then we have an opponent
+			if(participantIds.size() == 2){
+				return true;
+			}
+			else return false;
+		}
+		else return false;
+	}
+
 	// Called from core to get the signed in players id
 	public String getPlayerId(){
 

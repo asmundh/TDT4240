@@ -74,4 +74,12 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
     public void manualSignIn(){
         mAndroidLauncher.manualSignIn();
     }
+
+    public void createNewMatch(){
+        mAndroidLauncher.createNewMatch();
+    }
+
+    public boolean getFoundOpponent(){
+        return mAndroidLauncher.getFoundOpponent();
+    }
 }
