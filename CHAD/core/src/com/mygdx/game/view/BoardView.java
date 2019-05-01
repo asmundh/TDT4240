@@ -38,6 +38,7 @@ public class BoardView {
     private int enemyHealth;
     private Entity player;
     private Entity enemyPlayer;
+    private int health; //your own health
 
     private String deckPath = Assets.deck;
     private String boardBackgroundPath = Assets.boardBackground;
@@ -48,6 +49,7 @@ public class BoardView {
     private List<CardView> allCardViews;
     private CardView cardView;
     private Vector2 showHandButtonPos;
+    private Vector2 endTurnButtonPos;
 
 
     private List<Entity> friendlyCardsOnBoardEntity;
@@ -103,6 +105,10 @@ public class BoardView {
         return new Rectangle(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
     }
 
+    public Rectangle getEndTurnButtonRect() {
+        return new Rectangle(endTurnButtonPos.x, endTurnButtonPos.y, 225, 80);
+    }
+
     private Vector2[] handPositions = {
             new Vector2(Gdx.graphics.getWidth() / 6 + 50, 100),
             new Vector2(Gdx.graphics.getWidth() / 6 + 300, 100),
@@ -143,6 +149,11 @@ public class BoardView {
 
         showHandButtonPos = new Vector2(50, 150);
 
+        endTurnButtonPos = new Vector2(Gdx.graphics.getWidth() - 250, Gdx.graphics.getHeight() / 2);
+
+
+
+
 
         /*
         for (int i = 0; i < 14; i++) {
@@ -176,9 +187,12 @@ public class BoardView {
         enemyPlayer = bm.get(boardEntity).playerTwo;
         showHand = bm.get(boardEntity).showHand;
         enemyHealth = pm.get(enemyPlayer).health;
+        health = pm.get(player).health;
         friendlyCardsOnBoardEntity = pm.get(player).cardsOnTable;
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
+        int manapoints = pm.get(player).manaPoints;
+
 
         /*
         friendlyCardsOnBoard.clear();
@@ -286,5 +300,28 @@ public class BoardView {
             font.draw(batch, "Show hand", 90, 200);
             batch.end();
         }
+
+        //drawing of mana points
+        batch.begin();
+        font.setColor(Color.CYAN);
+        font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 200);
+        batch.end();
+
+        //drawing of own health
+        batch.begin();
+        font.setColor(Color.GREEN);
+        font.draw(batch, "Your Health: " + String.valueOf(health), Gdx.graphics.getWidth()*0.85f, 300);
+        batch.end();
+
+
+        //Drawing of End Turn button
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(endTurnButtonPos.x, endTurnButtonPos.y, 225, 80);
+        shapeRenderer.end();
+        batch.begin();
+        font.setColor(Color.WHITE);
+        font.draw(batch, "End Turn", endTurnButtonPos.x + 50, endTurnButtonPos.y + 60);
+        batch.end();
     }
 }

@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
+import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
 import com.mygdx.game.model.screens.utils.Assets;
 import com.mygdx.game.model.systems.BoardSystem;
@@ -31,6 +32,7 @@ import com.mygdx.game.World;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -73,9 +75,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
         bv = new BoardView(boardEntity);
-
-
-
     }
 
     @Override
@@ -122,6 +121,23 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     }
 
+    public void wakeAllCards() {
+        for (Entity player : engine.getSystem(BoardSystem.class).getPlayers(boardEntity)) {
+            for (Entity card : engine.getSystem(PlayerSystem.class).getCardsOnTable(player)) {
+                if (engine.getSystem(CardSystem.class).isSleeping(card)) {
+                    engine.getSystem(CardSystem.class).setSleeping(card, false);
+                }
+            }
+
+        }
+    }
+
+    public void startNewTurn() {
+        wakeAllCards();
+        engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
+
+    }
+
     @Override
     public void handleInput() {
         if (Gdx.input.justTouched()) {
@@ -135,6 +151,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
                 Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
                 if (prevClickedCard == null) {
+                    // Now showing the hand
                     return;
                 }
                 else {
@@ -154,6 +171,22 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
                     engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
                 }
+            }
+            else if (bv.getEndTurnButtonRect().contains(pos)) {
+                //End turn
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
+                if (prevClickedCard == null) {
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                } else {
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                }
+                wakeAllCards();
+
+                engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10);
+
+                //testing:
+                startNewTurn();
             }
 
 
@@ -255,10 +288,21 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
             if (prevClickedCard != null) {
-                if (prevClickedCard == cardChosen) { // Confirm card and add to table
-                    engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                if (prevClickedCard == cardChosen) {
+                    // Confirm card and add to table
+                    if (engine.getSystem(PlayerSystem.class).getManaPoints(players.get(0)) >= engine.getSystem(CardSystem.class).getCost(cardChosen)) { //player has enough mana for card
+                        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+                        engine.getSystem(CardSystem.class).deployCard(cardChosen);
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                        engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardChosen));
+                    }
+                    else { //player does not have enough mana for card
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    }
+
+
                 } else { // New card chosen
                     engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);

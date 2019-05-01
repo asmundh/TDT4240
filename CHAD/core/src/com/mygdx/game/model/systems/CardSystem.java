@@ -88,6 +88,10 @@ public class CardSystem extends IteratingSystem {
         }
     }
 
+    public void deployCard(Entity entity) {
+        csm.get(entity).sleeping = true;
+    }
+
     public int getAttackPower(Entity attackingEntity) {
         return csm.get(attackingEntity).attackPower;
     }
@@ -119,6 +123,8 @@ public class CardSystem extends IteratingSystem {
     public boolean isSleeping(Entity cardEntity) {
         return csm.get(cardEntity).sleeping;
     }
+
+
     public void setSleeping(Entity cardEntity, boolean value) {
         csm.get(cardEntity).sleeping = value;
     }

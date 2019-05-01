@@ -29,11 +29,10 @@ public class PlayerSystem extends IteratingSystem {
 
     // Used to initiilize the deck
     public void setUpDeck(World world, Entity player, int numOfCards){
-        for(int i = 0; i < numOfCards - 1; i++){
-            addCardToDeck(player, world.createCard(1));
+        for(int i = 0; i < numOfCards; i++){
+            addCardToDeck(player, world.createRandomCard());
 
         }
-        addCardToDeck(player, world.createCard(2));
 
         for (int i = 0; i < numOfCards; i++) {
             Entity card = player.getComponent(PlayerComponent.class).deck.get(i);
@@ -64,8 +63,13 @@ public class PlayerSystem extends IteratingSystem {
 
     // Take last card from deck, and add to hand list
     public void pickFromDeck(Entity entity) {
-        Entity card = pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1);
-        pm.get(entity).hand.add(card);
+
+        if (pm.get(entity).hand.size() < 5) {
+            Entity card = pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1);
+            pm.get(entity).hand.add(card);
+        }
+
+
         //pm.get(entity).hand.add(pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1));
     }
 
@@ -74,14 +78,29 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     // From hand to table
-    public void AddCardToTable(Entity entity, int index) {
+    public boolean AddCardToTable(Entity entity, int index) {
         if (pm.get(entity).cardsOnTable.size() < 4) {
             pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
+            return true;
+        } else {
+            return false;
         }
     }
 
     public void addRectangleToCard(Entity entity, int index) {
         
+    }
+
+    public void payForCard(Entity playerEntity, int cost) {
+        pm.get(playerEntity).manaPoints -= cost;
+    }
+
+    public int getManaPoints(Entity playerEntity) {
+        return pm.get(playerEntity).manaPoints;
+    }
+
+    public void setManaPoints(Entity playerEntity, int manaPoints) {
+        pm.get(playerEntity).manaPoints = manaPoints;
     }
 
     // Returns given card in table
