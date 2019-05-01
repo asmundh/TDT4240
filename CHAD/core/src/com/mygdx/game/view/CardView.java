@@ -2,7 +2,6 @@ package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,8 +29,6 @@ public class CardView {
     private String pathToHealtchIcon = Assets.pathToHealtchIcon;
     private String pathToGreenRect = Assets.pathToGreenRect;
     private String pathToBlackRect = Assets.pathToBlackRect;
-
-
 
     //Fixed size for cards
     public static final int cardWidth = 200;
@@ -82,8 +79,6 @@ public class CardView {
         font = new BitmapFont();
 
     }
-
-
 
     public void draw(SpriteBatch batch, float xCoord, float yCoord, Entity cardEntity) {
 
@@ -164,12 +159,6 @@ public class CardView {
             font.draw(batch, String.valueOf(cost), xCoord + 0.5f*fontOffset, yCoord + font.getLineHeight());
             batch.end();
         }
-
-
-
-
-
-
 
     }
 
