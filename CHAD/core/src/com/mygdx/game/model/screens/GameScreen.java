@@ -6,9 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.mygdx.game.CardGame;
+import com.mygdx.game.World;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -26,8 +27,6 @@ import com.mygdx.game.model.systems.BoardSystem;
 import com.mygdx.game.model.systems.CardSystem;
 import com.mygdx.game.model.systems.PlayerSystem;
 import com.mygdx.game.view.BoardView;
-import com.mygdx.game.view.CardView;
-import com.mygdx.game.World;
 
 
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     private List<Entity> players;
     private Entity boardEntity;
     private Stage playing;
-
   
     protected GameScreen(CardGame game, Engine engine) {
         this.game = game;
@@ -57,7 +55,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void create() {
         players = world.createPlayers();
+      
         boardEntity = world.createBoard();
+      
         Gdx.input.setInputProcessor(playing);
         engine.addSystem(new PlayerSystem());
         engine.addSystem(new CardSystem());
@@ -88,10 +88,21 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void draw() {
-
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        bv.draw(game.batch);
+
+        // Winning: player 1
+        if (engine.getSystem(PlayerSystem.class).getHealth(players.get(0)) == 0 && engine.getSystem(PlayerSystem.class).getHealth(players.get(1)) != 0) {
+            game.setScreen(new GameOverScreen(game, engine, players.get(1), players.get(0)));
+        }
+
+        // Winning: player 2
+        else if(engine.getSystem(PlayerSystem.class).getHealth(players.get(1)) == 0 && engine.getSystem(PlayerSystem.class).getHealth(players.get(0)) != 0) {
+            game.setScreen(new GameOverScreen(game, engine, players.get(0), players.get(1)));
+        }
+
+        else {
+            bv.draw(game.batch);
+        }
 
     }
 
@@ -327,6 +338,5 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public void chosenCard(Entity cardChosen) {
         engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
         engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-
     }
 }
