@@ -29,7 +29,7 @@ public class Assets {
     public static String enemyRect = "textures/enemy.png";
     public static String handRect = "textures/handRect.png";
 
-    public static String goblin = "textures/cards/goblin.png";
+    public static String goblin = "textures/cards/goblin2.png";
     public static String ogre = "textures/cards/ogre.png";
     public static String orc = "textures/cards/orc.png";
     public static String iceGolem = "textures/cards/ice_golem.png";
@@ -45,7 +45,7 @@ public class Assets {
     public static String btnClick = "music/sfx/16930_1461335337.mp3";
 
     public static HashMap<String, String> cards = new HashMap<String, String>() {{
-        put("goblin", "textures/cards/goblin.png");
+        put("goblin", "textures/cards/goblin2.png");
         put("orc", "textures/cards/orc.png");
         put("ogre", "textures/cards/ogre.png");
         put("magma_golem", "textures/cards/magma_golem.png");
