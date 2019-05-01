@@ -5,8 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -29,6 +31,9 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     private Engine engine;
     private Music bgMusic;
     private Sound btnClick;
+    private String userName = "mats";
+    private BitmapFont font;
+
 
     public MenuScreen(CardGame game, Engine engine){ // Constructor initializes background and runs create()
         super();
@@ -42,6 +47,9 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         this.bgMusic.play();
 
         this.btnClick = Assets.getSound(Assets.btnClick);
+
+        this.font = new BitmapFont();
+
 
         create(); // Run create on one-time operations
     }
@@ -130,6 +138,13 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         sb.end();
 
         stage.draw(); // Draw elements to Stage
+
+        sb.begin();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(2);
+        font.draw(sb, "Signed in as: " + userName, 10, Gdx.graphics.getHeight()*0.95f);
+        sb.end();
+
     }
 
     @Override
