@@ -1,12 +1,10 @@
 package com.mygdx.game;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.screens.LoadingScreen;
 import com.mygdx.game.model.screens.utils.Assets;
 

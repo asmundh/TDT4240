@@ -10,7 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import java.util.HashMap;
 
 public class Assets {
+    public static String attackIcon = "textures/attackIcon.png";
+    public static String healtchIcon = "textures/healthIcon.png";
+    public static String greenRect = "textures/greenRect.png";
+    public static String blackRect = "textures/blackRect.png";
 
+    public static String quitBtn = "textures/quit_btn.png";
     public static String yesBtn = "textures/yes_btn.png";
     public static String noBtn = "textures/no_btn.png";
     public static String stepBackBtn = "textures/stepBackBtn.png";
@@ -79,6 +84,11 @@ public class Assets {
 
 
     public static void load() {
+        assetManager.load(healtchIcon, Texture.class);
+        assetManager.load(attackIcon, Texture.class);
+        assetManager.load(greenRect, Texture.class);
+        assetManager.load(blackRect, Texture.class);
+        assetManager.load(quitBtn, Texture.class);
         assetManager.load(yesBtn, Texture.class);
         assetManager.load(noBtn, Texture.class);
         assetManager.load(stepBackBtn, Texture.class);
@@ -104,11 +114,15 @@ public class Assets {
         assetManager.load(enemyRect, Texture.class);
         assetManager.load(handRect, Texture.class);
         assetManager.load(signInButton, Texture.class);
+
         assetManager.load(lookingForMatch, Texture.class);
 
 
         //assetManager.load(deck1, Skin.class);
         //assetManager.load(deck2, Skin.class);
+
+
+      
 
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
@@ -154,5 +168,4 @@ public class Assets {
     public  static Sound getSound(String path) {
         return assetManager.get(path, Sound.class);
     }
-
 }
