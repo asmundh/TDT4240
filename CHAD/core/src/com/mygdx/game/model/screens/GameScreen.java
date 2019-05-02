@@ -339,11 +339,13 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 if (prevClickedCard == cardChosen) {
                     // Confirm card and add to table
                     if (engine.getSystem(PlayerSystem.class).getManaPoints(players.get(0)) >= engine.getSystem(CardSystem.class).getCost(cardChosen)) { //player has enough mana for card
-                        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-                        engine.getSystem(CardSystem.class).deployCard(cardChosen);
-                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
-                        engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardChosen));
+                        boolean added = engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+                        if (added) {
+                            engine.getSystem(CardSystem.class).deployCard(cardChosen);
+                            engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                            engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardChosen));
+                        }
                     }
                     else { //player does not have enough mana for card
                         engine.getSystem(CardSystem.class).updateSelected(cardChosen);
