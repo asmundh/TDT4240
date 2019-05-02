@@ -157,7 +157,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         bv = new BoardView(boardEntity);
         this.boardEntity = boardEntity;
         this.players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
-        engine.getSystem(BoardSystem.class).turnSwitcher(boardEntity);
         int turnNumber = engine.getSystem(BoardSystem.class).getTurnNumber(boardEntity);
 
         engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
@@ -165,6 +164,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         wakeAllCards();
 
+    }
+
+    public void endAndSendTurn(Entity boardEntity) {
+        //loadNewTurn(boardEntity);
+        engine.getSystem(PlayerSystem.class).switchIsYourTurn(players.get(0));
     }
 
 
@@ -201,6 +205,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void handleInput() {
+
+        //Input will not be handled if it is not your turn.
+        if (!engine.getSystem(PlayerSystem.class).getIsYourTurn(players.get(0))) {
+            return;
+        }
+
         if (Gdx.input.justTouched()) {
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             pos.y = Gdx.graphics.getHeight() - pos.y;
@@ -251,7 +261,10 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 engine.getSystem(PlayerSystem.class).clearBoard(playersTest.get(1));
                 engine.getSystem(PlayerSystem.class).addCardToTable(playersTest.get(0), world.createRandomCard());
 
-                loadNewTurn(boardEntityTest);
+
+
+                engine.getSystem(BoardSystem.class).turnSwitcher(boardEntityTest);
+                endAndSendTurn(boardEntityTest);
 
 
             }

@@ -194,18 +194,7 @@ public class BoardView {
         int manapoints = pm.get(player).manaPoints;
 
 
-        /*
-        friendlyCardsOnBoard.clear();
-        cardsInHand.clear();
-        enemyCardsOnBoard.clear();
 
-        for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
-            friendlyCardsOnBoard.add(friendlyCardsOnBoardEntity.get(i));
-        }
-        for (int i = 0; i < cardsInHandEntity.size(); i++) {
-            cardsInHand.add(cardsInHandEntity.get(i));
-        }
-        */
 
 
         batch.begin();
@@ -323,5 +312,23 @@ public class BoardView {
         font.setColor(Color.WHITE);
         font.draw(batch, "End Turn", endTurnButtonPos.x + 50, endTurnButtonPos.y + 60);
         batch.end();
+
+
+
+
+        //Drawing of overlay if it is not your turn
+        if (!pm.get(player).isYourTurn) {
+            batch.begin();
+            font.setColor(Color.WHITE);
+            font.getData().setScale(3);
+            font.draw(batch, "It is not your turn. Please wait for your opponent to finish their turn.", Gdx.graphics.getWidth()*0.2f, Gdx.graphics.getHeight() / 2);
+            batch.end();
+        }
+
+
+
+
+
+
     }
 }

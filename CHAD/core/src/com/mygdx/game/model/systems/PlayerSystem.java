@@ -134,6 +134,18 @@ public class PlayerSystem extends IteratingSystem {
         return pm.get(entity).id;
     }
 
+    public boolean getIsYourTurn(Entity playerEntity) {
+        return pm.get(playerEntity).isYourTurn;
+    }
+
+    public void setIsYourTurn(Entity playerEntity, boolean bool) {
+        pm.get(playerEntity).isYourTurn = bool;
+    }
+
+    public void switchIsYourTurn(Entity playerEntity) {
+        pm.get(playerEntity).isYourTurn = !pm.get(playerEntity).isYourTurn;
+    }
+
     public void SetPlayerId(Entity entity, String id) {
         pm.get(entity).id = id;
     }
