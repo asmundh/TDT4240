@@ -19,10 +19,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.World;
 import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.screens.utils.GameStateObject;
 import com.mygdx.game.model.systems.BoardSystem;
 import com.mygdx.game.model.systems.CardSystem;
 import com.mygdx.game.model.systems.PlayerSystem;
 import com.mygdx.game.view.BoardView;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,52 +68,53 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         for (int i = 0; i < 5; i++) {
             engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0));
+
+            engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0)); //hvorfor funker ikke dette?!
+
+
+            final Button quitBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))));
+            quitBtn.setTransform(true);
+            quitBtn.setSize(quitBtn.getWidth() / 2, quitBtn.getHeight() / 2);
+            quitBtn.setOrigin(quitBtn.getWidth() / 2, quitBtn.getHeight() / 2);
+
+            quitBtn.addListener(new ClickListener() {
+                @Override // Fires when the user lets go of the button
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
+                }
+
+                @Override // Fires when the button is pressed down
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    quitBtn.addAction(Actions.scaleTo(0.95f, 0.95f, 0.1f));
+                    return super.touchDown(event, x, y, pointer, button);
+                }
+
+                @Override // Fires when the button is released
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    super.touchUp(event, x, y, pointer, button);
+                    quitBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
+                }
+            });
+
+            Table menuTable = new Table(); // Table containing the buttons on the screen
+            menuTable.add(quitBtn);
+            menuTable.getCell(quitBtn).height(quitBtn.getHeight()).width(quitBtn.getWidth());
+            menuTable.setFillParent(true);
+            menuTable.moveBy((-Gdx.graphics.getWidth() / 2 + 150), (Gdx.graphics.getHeight() / 2 - 60));
+
+            gameStage.addActor(menuTable); // Add the table containing the buttons to the stage
+
+
+            bv = new BoardView(boardEntity);
+
+            // Initiate player-names
+            this.userName = this.game.androidInterface.getDisplayName();
+            this.opponentUserName = this.game.androidInterface.getOpponentDisplayName();
+            engine.getSystem(PlayerSystem.class).setPlayerName(players.get(0), userName);
+            engine.getSystem(PlayerSystem.class).setPlayerName(players.get(1), opponentUserName);
         }
-        engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0));
 
-
-
-
-        final Button quitBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))));
-        quitBtn.setTransform(true);
-        quitBtn.setSize(quitBtn.getWidth()/2, quitBtn.getHeight()/2);
-        quitBtn.setOrigin(quitBtn.getWidth()/2, quitBtn.getHeight()/2);
-
-        quitBtn.addListener(new ClickListener() {
-            @Override // Fires when the user lets go of the button
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
-            }
-
-            @Override // Fires when the button is pressed down
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                quitBtn.addAction(Actions.scaleTo(0.95f, 0.95f, 0.1f));
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override // Fires when the button is released
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-                quitBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
-            }
-        });
-
-        Table menuTable = new Table(); // Table containing the buttons on the screen
-        menuTable.add(quitBtn);
-        menuTable.getCell(quitBtn).height(quitBtn.getHeight()).width(quitBtn.getWidth());
-        menuTable.setFillParent(true);
-        menuTable.moveBy((-Gdx.graphics.getWidth()/2 + 150),(Gdx.graphics.getHeight()/2 - 60));
-
-        gameStage.addActor(menuTable); // Add the table containing the buttons to the stage
-
-
-        bv = new BoardView(boardEntity);
-
-        // Initiate player-names
-        this.userName = this.game.androidInterface.getDisplayName();
-        this.opponentUserName = this.game.androidInterface.getOpponentDisplayName();
-        engine.getSystem(PlayerSystem.class).setPlayerName(players.get(0), userName);
-        engine.getSystem(PlayerSystem.class).setPlayerName(players.get(1), opponentUserName);
+        checkAndLoadNewTurn();
     }
 
     @Override
@@ -154,9 +158,242 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         super.dispose();
     }
 
+    // Check if gameData on server != null --> means that the state has been updated
+    public boolean checkNewTurn() {
+       return (game.androidInterface.getGameData() != null);
+    }
+
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            if (checkNewTurn()) {
+                parseNewTurn(game.androidInterface.getGameData());
+            }
+        }
+    };
+
+    public void checkAndLoadNewTurn() {
+        Timer timer = new Timer();
+        long delay = 0;
+        long interval = 10000;
+        timer.schedule(task, delay, interval);
+    }
 
 
-    public void loadNewTurn(Entity boardEntity) {
+
+
+    public void parseNewTurn(String gameState) {
+
+        int playerHealth = 0;
+        int enemyHealth = 0;
+        List<Integer> playerHand = new ArrayList();
+        List<Integer> enemyHand = new ArrayList();
+        List<List<Integer>> playerBoard = new ArrayList<>();
+        List<List<Integer>> enemyBoard = new ArrayList<>();
+
+        int currentCategory = 0;
+        int currentCardCategory = 0;
+        String sb = "";
+        int currentCardId = 0;
+        int currentCardHealth = 0;
+        int currentCardAttack = 0;
+
+        for (int i = 0; i < gameState.length(); i++) {
+            if (currentCategory == 0) {
+                if (!(gameState.charAt(i) == '#')) {
+                    sb = sb + gameState.charAt(i);
+                } else {
+                    currentCategory++;
+                    playerHealth = Integer.valueOf(sb);
+                    sb = "";
+                }
+            }
+            if (currentCategory == 1) {
+                if (!(gameState.charAt(i) == '#')) {
+                    sb = sb + gameState.charAt(i);
+                } else {
+                    currentCategory++;
+                    enemyHealth = Integer.valueOf(sb);
+                    sb = "";
+                }
+            }
+            if (currentCategory == 2) {
+                if (!(gameState.charAt(i) == '#')) {
+                    if (!(gameState.charAt(i) == 'i')) {
+                        sb = sb + gameState.charAt(i);
+                    } else {
+                        currentCardCategory++;
+                        playerHand.add(Integer.valueOf(sb));
+                        sb = "";
+                    }
+                } else {
+                    currentCategory++;
+                    sb = "";
+                }
+            }
+            if (currentCategory == 3) {
+                if (!(gameState.charAt(i) == '#')) {
+                    if (!(gameState.charAt(i) == 'i')) {
+                        sb = sb + gameState.charAt(i);
+                    } else {
+                        currentCardCategory++;
+                        enemyHand.add(Integer.valueOf(sb));
+                        sb = "";
+                    }
+                } else {
+                    currentCategory++;
+                    sb = "";
+                }
+            }
+            if (currentCategory == 4) {
+                if (!(gameState.charAt(i) == '#')) {
+                    if (currentCardCategory == 0) {
+                        if (!(gameState.charAt(i) == 'i')) {
+                            sb = sb + gameState.charAt(i);
+                        } else {
+                            currentCardCategory++;
+                            currentCardId = Integer.valueOf(sb);
+                            sb = "";
+
+                        }
+                        if (currentCardCategory == 1) {
+                            if (!(gameState.charAt(i) == 'h')) {
+                                sb = sb + gameState.charAt(i);
+                            } else {
+                                currentCardCategory++;
+                                currentCardHealth = Integer.valueOf(sb);
+                                sb = "";
+                            }
+                        }
+                        if (currentCardCategory == 2) {
+                            if (!(gameState.charAt(i) == 'a')) {
+                                sb = sb + gameState.charAt(i);
+                            } else {
+                                currentCardCategory++;
+                                currentCardAttack = Integer.valueOf(sb);
+                                sb = "";
+                            }
+                        }
+                        List<Integer> newCard = new ArrayList();
+                        newCard.add(currentCardId);
+                        newCard.add(currentCardHealth);
+                        newCard.add(currentCardAttack);
+                        playerBoard.add(newCard);
+                        currentCardCategory = 0;
+                    } else {
+                        currentCategory++;
+                        currentCardCategory = 0;
+                        sb = "";
+                    }
+                }
+
+            }
+            if (currentCategory == 5) {
+                if (!(gameState.charAt(i) == '#')) {
+                    if (currentCardCategory == 0) {
+                        if (!(gameState.charAt(i) == 'i')) {
+                            sb = sb + gameState.charAt(i);
+                        } else {
+                            currentCardCategory++;
+                            currentCardId = Integer.valueOf(sb);
+                            sb = "";
+
+                        }
+                        if (currentCardCategory == 1) {
+                            if (!(gameState.charAt(i) == 'h')) {
+                                sb = sb + gameState.charAt(i);
+                            } else {
+                                currentCardCategory++;
+                                currentCardHealth = Integer.valueOf(sb);
+                                sb = "";
+                            }
+                        }
+                        if (currentCardCategory == 2) {
+                            if (!(gameState.charAt(i) == 'a')) {
+                                sb = sb + gameState.charAt(i);
+                            } else {
+                                currentCardCategory++;
+                                currentCardAttack = Integer.valueOf(sb);
+                                sb = "";
+                            }
+                        }
+                        List<Integer> newCard = new ArrayList();
+                        newCard.add(currentCardId);
+                        newCard.add(currentCardHealth);
+                        newCard.add(currentCardAttack);
+                        enemyBoard.add(newCard);
+                        currentCardCategory = 0;
+                    } else {
+                        currentCategory++;
+                        currentCardCategory = 0;
+                        sb = "";
+                    }
+                }
+
+            }
+        }
+
+
+        //Updating players healths
+        engine.getSystem(PlayerSystem.class).setHealth(players.get(0), playerHealth);
+        engine.getSystem(PlayerSystem.class).setHealth(players.get(1), enemyHealth);
+
+
+        //Creating card entities for player and enemy
+        List<Entity> handEntityList = new ArrayList();
+        List<Entity> enemyHandEntityList = new ArrayList();
+        for (int i = 0; i < playerHand.size(); i++) {
+            handEntityList.add(world.createCard(playerHand.get(i)));
+        }
+        for (int i = 0; i < enemyHand.size(); i++) {
+            enemyHandEntityList.add(world.createCard(enemyHand.get(i)));
+        }
+
+        //Clearing hands and adding updated cards
+        engine.getSystem(PlayerSystem.class).clearHand(players.get(0));
+        engine.getSystem(PlayerSystem.class).clearHand(players.get(1));
+
+        for (int i = 0; i < handEntityList.size(); i++) {
+            engine.getSystem(PlayerSystem.class).addCardToHand(players.get(0), handEntityList.get(i));
+        }
+        for (int i = 0; i < enemyHandEntityList.size(); i++) {
+            engine.getSystem(PlayerSystem.class).addCardToHand(players.get(1), enemyHandEntityList.get(i));
+        }
+
+        //Creating card entities for the board
+        List<Entity> playerBoardCards = new ArrayList<>();
+        List<Entity> enemyBoardCards = new ArrayList<>();
+        for (int i = 0; i < playerBoard.size(); i++) {
+            playerBoardCards.add(world.createBoardCard(playerBoard.get(i).get(0), playerBoard.get(i).get(1), playerBoard.get(i).get(2)));
+        }
+        for (int i = 0; i < enemyBoard.size(); i++) {
+            enemyBoardCards.add(world.createBoardCard(enemyBoard.get(i).get(0), enemyBoard.get(i).get(1), enemyBoard.get(i).get(2)));
+        }
+
+        //clearing entire board and adding updated cards
+        engine.getSystem(PlayerSystem.class).clearBoard(players.get(0));
+        engine.getSystem(PlayerSystem.class).clearBoard(players.get(1));
+
+        for (int i = 0; i < playerBoardCards.size(); i++) {
+            engine.getSystem(PlayerSystem.class).addCardToTable(players.get(0), playerBoardCards.get(i));
+        }
+        for (int i = 0; i < enemyBoardCards.size(); i++) {
+            engine.getSystem(PlayerSystem.class).addCardToTable(players.get(1), enemyBoardCards.get(i));
+        }
+
+        engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), true); //Set your turn to true
+        engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0)); //Increase your turn number by 1
+        engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
+        int yourTurnNumber = engine.getSystem(PlayerSystem.class).getYourTurnNumber(players.get(0));
+        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), yourTurnNumber); //Reset mana points. All turns after 9, players mana points will be reset to 10
+
+
+
+    }
+
+
+
+    public void startNewTurn(Entity boardEntity) {
         bv = new BoardView(boardEntity);
         this.boardEntity = boardEntity;
         this.players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
@@ -175,8 +412,60 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void endTurn(Entity boardEntity) {
-        loadNewTurn(boardEntity);
-        //engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), false); //set your turn to false
+        engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), false); //set your turn to false
+
+        List<Entity> players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
+
+        int playerHealth = engine.getSystem(PlayerSystem.class).getHealth(players.get(0));
+        int enemyHealth = engine.getSystem(PlayerSystem.class).getHealth(players.get(1));
+        List<Entity> playerHand = engine.getSystem(PlayerSystem.class).getCardsOnHand(players.get(0));
+        List<Entity> enemyHand = engine.getSystem(PlayerSystem.class).getCardsOnHand(players.get(1));
+        List<Entity> playerBoard = engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0));
+        List<Entity> enemyBoard = engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(1));
+        List playerHandId = new ArrayList<>();
+        List enemyHandId = new ArrayList<>();
+        List playerBoardId = new ArrayList<>();
+        List enemyBoardId = new ArrayList<>();
+
+
+
+        for(int i = 0; i < playerHand.size(); i++) {
+            playerHandId.add(engine.getSystem(CardSystem.class).getId(playerHand.get(i)));
+        }
+        for(int i = 0; i < enemyHand.size(); i++) {
+            enemyHandId.add(engine.getSystem(CardSystem.class).getId(playerHand.get(i)));
+        }
+        for(int i = 0; i < playerBoard.size(); i++) {
+            List card = new ArrayList();
+            card.add(engine.getSystem(CardSystem.class).getId(playerBoard.get(i)));
+            card.add(engine.getSystem(CardSystem.class).getHealth(playerBoard.get(i)));
+            card.add(engine.getSystem(CardSystem.class).getAttackPower(playerBoard.get(i)));
+
+            playerBoardId.add(card);
+        }
+        for(int i = 0; i < enemyBoard.size(); i++) {
+            List card = new ArrayList();
+            card.add(engine.getSystem(CardSystem.class).getId(enemyBoard.get(i)));
+            card.add(engine.getSystem(CardSystem.class).getHealth(enemyBoard.get(i)));
+            card.add(engine.getSystem(CardSystem.class).getAttackPower(enemyBoard.get(i)));
+
+            enemyBoardId.add(card);
+        }
+
+        GameStateObject gameState = new GameStateObject();
+        gameState.playerHealth = playerHealth;
+        gameState.enemyHealth = enemyHealth;
+        gameState.playerHand = playerHandId;
+        gameState.enemyHand = enemyHandId;
+        gameState.playerBoard = playerBoardId;
+        gameState.enemyBoard = enemyBoardId;
+
+
+
+        game.androidInterface.sendGameDataAndEndTurn(gameState.toString());
+
+
+
     }
 
 

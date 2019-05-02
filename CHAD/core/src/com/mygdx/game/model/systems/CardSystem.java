@@ -124,6 +124,13 @@ public class CardSystem extends IteratingSystem {
         return csm.get(cardEntity).sleeping;
     }
 
+    public void setId(Entity cardEntity, int id) {
+        csm.get(cardEntity).id = id;
+    }
+    public int getId(Entity cardEntity) {
+        return csm.get(cardEntity).id;
+    }
+
 
     public void setSleeping(Entity cardEntity, boolean value) {
         csm.get(cardEntity).sleeping = value;

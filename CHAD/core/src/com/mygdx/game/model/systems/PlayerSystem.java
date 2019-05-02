@@ -97,6 +97,11 @@ public class PlayerSystem extends IteratingSystem {
             pm.get(playerEntity).cardsOnTable.remove(i);
         }
     }
+    public void clearHand(Entity playerEntity) {
+        for (int i = 0; i < pm.get(playerEntity).hand.size(); i++) {
+            pm.get(playerEntity).hand.remove(i);
+        }
+    }
 
     public void payForCard(Entity playerEntity, int cost) {
         pm.get(playerEntity).manaPoints -= cost;
