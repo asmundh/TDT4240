@@ -550,19 +550,13 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
                 }
 
-                //for testing only===========================================
-                List<Entity> playersTest = world.createPlayers();
-                Entity boardEntityTest = world.createBoard();
-                engine.getSystem(BoardSystem.class).addPlayer(boardEntityTest, playersTest);
-                engine.getSystem(PlayerSystem.class).clearBoard(playersTest.get(0));
-                engine.getSystem(PlayerSystem.class).clearBoard(playersTest.get(1));
-                engine.getSystem(PlayerSystem.class).addCardToTable(playersTest.get(0), world.createRandomCard());
+
 
 
 
                 //switch and end the turn
-                engine.getSystem(BoardSystem.class).turnSwitcher(boardEntityTest);
-                endTurn(boardEntityTest);
+                engine.getSystem(BoardSystem.class).turnSwitcher(boardEntity);
+                endTurn(boardEntity);
 
 
             }
