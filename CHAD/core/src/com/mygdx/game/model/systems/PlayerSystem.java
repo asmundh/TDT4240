@@ -9,6 +9,7 @@ import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerSystem extends IteratingSystem {
@@ -91,6 +92,12 @@ public class PlayerSystem extends IteratingSystem {
         
     }
 
+    public void clearBoard(Entity playerEntity) {
+        for (int i = 0; i < pm.get(playerEntity).cardsOnTable.size(); i++) {
+            pm.get(playerEntity).cardsOnTable.remove(i);
+        }
+    }
+
     public void payForCard(Entity playerEntity, int cost) {
         pm.get(playerEntity).manaPoints -= cost;
     }
@@ -100,7 +107,12 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     public void setManaPoints(Entity playerEntity, int manaPoints) {
-        pm.get(playerEntity).manaPoints = manaPoints;
+        if (manaPoints > 10) {
+            pm.get(playerEntity).manaPoints = 10;
+        }
+        else {
+            pm.get(playerEntity).manaPoints = manaPoints;
+        }
     }
 
     // Returns given card in table
@@ -110,6 +122,12 @@ public class PlayerSystem extends IteratingSystem {
 
     public Entity removeCardOnTable(Entity playerEntity , int index) {
         return pm.get(playerEntity).cardsOnTable.remove(index);
+    }
+
+    public void addCardToTable(Entity playerEntity, Entity cardEntity) {
+        if (pm.get(playerEntity).cardsOnTable.size() < 5) {
+            pm.get(playerEntity).cardsOnTable.add(cardEntity);
+        }
     }
 
     public String getPlayerId(Entity entity) {

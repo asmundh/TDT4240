@@ -65,11 +65,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         for (int i = 0; i < 5; i++) {
             engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0));
-            engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(1));
         }
-        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
-        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
-        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(1), 0);
+
 
         final Button quitBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))));
         quitBtn.setTransform(true);
@@ -154,6 +151,26 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         super.dispose();
     }
 
+
+
+    public void loadNewTurn(Entity boardEntity) {
+        bv = new BoardView(boardEntity);
+        this.boardEntity = boardEntity;
+        this.players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
+        engine.getSystem(BoardSystem.class).turnSwitcher(boardEntity);
+        int turnNumber = engine.getSystem(BoardSystem.class).getTurnNumber(boardEntity);
+
+        engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
+        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), turnNumber); //Reset mana points. All turns after 9, players mana points will be reset to 10.
+
+        wakeAllCards();
+
+    }
+
+
+
+
+
     public void searchAndDestroyDeadCards() {
         for (Entity player : engine.getSystem(BoardSystem.class).getPlayers(boardEntity)) {
             ArrayList<Integer> cardsToRemove = new ArrayList<>();
@@ -180,11 +197,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
     }
 
-    public void startNewTurn() {
-        wakeAllCards();
-        engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
 
-    }
 
     @Override
     public void handleInput() {
@@ -229,12 +242,18 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
                 }
-                wakeAllCards();
 
-                engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10);
+                //for testing only===========================================
+                List<Entity> playersTest = world.createPlayers();
+                Entity boardEntityTest = world.createBoard();
+                engine.getSystem(BoardSystem.class).addPlayer(boardEntityTest, playersTest);
+                engine.getSystem(PlayerSystem.class).clearBoard(playersTest.get(0));
+                engine.getSystem(PlayerSystem.class).clearBoard(playersTest.get(1));
+                engine.getSystem(PlayerSystem.class).addCardToTable(playersTest.get(0), world.createRandomCard());
 
-                //testing:
-                startNewTurn();
+                loadNewTurn(boardEntityTest);
+
+
             }
 
 

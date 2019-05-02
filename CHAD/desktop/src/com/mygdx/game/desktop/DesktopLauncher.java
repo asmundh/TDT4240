@@ -86,6 +86,18 @@ public class DesktopLauncher {
 
 			}
 
+			public void createNewMatch() {
+
+			}
+
+			public boolean getFoundOpponent() {
+				return false;
+			}
+
+			@Override
+			public void gdxEndMatch() {
+
+			}
 		}), config);
   }
 

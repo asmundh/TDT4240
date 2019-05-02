@@ -68,7 +68,13 @@ public class BoardSystem extends IteratingSystem {
 
     public void turnSwitcher(Entity entity) {
         bm.get(entity).turn = !bm.get(entity).turn;
+        bm.get(entity).turnNumber++;
     }
+
+    public int getTurnNumber(Entity boardEntity) {
+        return bm.get(boardEntity).turnNumber;
+    }
+
 
 
     public void cardChosen(Entity board, Entity lastCardClicked) {

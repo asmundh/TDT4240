@@ -170,6 +170,9 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         if(this.isSignedIn){
             this.userName = this.game.androidInterface.getDisplayName();
         }
+
+
+
     }
 
     @Override
@@ -191,6 +194,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
         handleInput();
         stage.act(Gdx.graphics.getDeltaTime());
+
+        game.setScreen(new GameScreen(game, engine)); //for testing only
     }
 
     @Override
