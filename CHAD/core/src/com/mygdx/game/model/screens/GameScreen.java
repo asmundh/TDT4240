@@ -66,6 +66,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         for (int i = 0; i < 5; i++) {
             engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0));
         }
+        engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0));
+
+
 
 
         final Button quitBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.quitBtn))));
@@ -157,18 +160,23 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         bv = new BoardView(boardEntity);
         this.boardEntity = boardEntity;
         this.players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
-        int turnNumber = engine.getSystem(BoardSystem.class).getTurnNumber(boardEntity);
 
+
+        engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), true); //Set your turn to true
+        engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0)); //Increase your turn number by 1
         engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
-        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), turnNumber); //Reset mana points. All turns after 9, players mana points will be reset to 10.
+        int yourTurnNumber = engine.getSystem(PlayerSystem.class).getYourTurnNumber(players.get(0));
+        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), yourTurnNumber); //Reset mana points. All turns after 9, players mana points will be reset to 10
+
+
 
         wakeAllCards();
 
     }
 
-    public void endAndSendTurn(Entity boardEntity) {
-        //loadNewTurn(boardEntity);
-        engine.getSystem(PlayerSystem.class).switchIsYourTurn(players.get(0));
+    public void endTurn(Entity boardEntity) {
+        loadNewTurn(boardEntity);
+        //engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), false); //set your turn to false
     }
 
 
@@ -263,8 +271,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
 
+                //switch and end the turn
                 engine.getSystem(BoardSystem.class).turnSwitcher(boardEntityTest);
-                endAndSendTurn(boardEntityTest);
+                endTurn(boardEntityTest);
 
 
             }

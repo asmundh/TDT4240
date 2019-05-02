@@ -179,6 +179,14 @@ public class PlayerSystem extends IteratingSystem {
         pm.get(playerEntity).name = name;
     }
 
+    public void increaseYourTurnNumber(Entity playerEntity) {
+        pm.get(playerEntity).yourTurnNumber++;
+    }
+
+    public int getYourTurnNumber(Entity playerEntity) {
+        return pm.get(playerEntity).yourTurnNumber;
+    }
+
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PlayerComponent playerComp = pm.get(entity);
