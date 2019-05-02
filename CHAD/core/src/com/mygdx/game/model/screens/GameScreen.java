@@ -214,6 +214,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 if (prevClickedCard == null) {
                     return;
                 } else {
+                    if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity) == true) { return; }
                     engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
@@ -340,7 +341,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     // Confirm card and add to table
                     if (engine.getSystem(PlayerSystem.class).getManaPoints(players.get(0)) >= engine.getSystem(CardSystem.class).getCost(cardChosen)) { //player has enough mana for card
                         boolean added = engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
-                        if (added) {
+                        if (added) { // Card is successfully added to the table
                             engine.getSystem(CardSystem.class).deployCard(cardChosen);
                             engine.getSystem(CardSystem.class).updateSelected(cardChosen);
                             engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
