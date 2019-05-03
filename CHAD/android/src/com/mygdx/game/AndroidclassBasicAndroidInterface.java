@@ -90,4 +90,8 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
     public void setMatchNull(){
         mAndroidLauncher.setMatchNull();
     }
+
+    public void dismissAllMatches(){
+        mAndroidLauncher.dismissAllMatches();
+    }
 }

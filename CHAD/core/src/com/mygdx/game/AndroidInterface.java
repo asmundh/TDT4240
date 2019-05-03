@@ -83,4 +83,7 @@ public interface AndroidInterface {
 
     // Used to forcibly set match to null
     public void setMatchNull();
+
+    // Used to forcibly dismiss all matches on the server for logged in user
+    public void dismissAllMatches();
 }

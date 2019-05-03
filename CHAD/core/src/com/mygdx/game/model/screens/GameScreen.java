@@ -793,9 +793,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
                 } else { // New card chosen
-                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
-                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                    if (!bv.getEnemyRectangle().contains(pos)) {
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                        engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                    }
                 }
             } else {
                 engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
