@@ -113,6 +113,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         setBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
+                game.androidInterface.changeView();
                 game.setScreen(new SettingsScreen(game, engine));
                 btnClick.play();
             }
@@ -170,6 +171,9 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         if(this.isSignedIn){
             this.userName = this.game.androidInterface.getDisplayName();
         }
+
+
+
     }
 
     @Override
@@ -186,6 +190,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         if(foundMatch) {
             flagLookingForMatch = false;
             foundMatch = false;
+            System.out.println("MenuScreen - update(): setting a new GameScreen - because of foundMatch");
             game.setScreen(new GameScreen(game, engine));
         }
 

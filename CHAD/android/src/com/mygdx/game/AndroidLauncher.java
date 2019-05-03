@@ -830,6 +830,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 		if(status == TurnBasedMatch.MATCH_STATUS_COMPLETE){
 			Log.d(AppSettings.tag, "Match is completed! Someone ended it.");
+			mMatch = null;
 		}
 
 		switch (status) {
@@ -847,12 +848,13 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				Log.d(TAG, "We're still waiting for an automatch partner.");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_COMPLETE:
-				 showWarning("Complete!",
+				 /*showWarning("Complete!",
 				"This game is over; someone finished it, and so did you!  " +
-				"There is nothing to be done. This game will get dismissed now.");
+				"There is nothing to be done. This game will get dismissed now.");*/
 					Log.d(TAG, "This game is over; someone finished it, and so did you!  ");
 					Log.d(AppSettings.tag, "Dismissing the game since it is completed");
 					mTurnBasedMultiplayerClient.dismissMatch(match.getMatchId());
+					mMatch = null;
 					return;
 
 				// Note that in this state, you must still call "Finish" yourself,
@@ -866,17 +868,17 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 			case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_my_turn");
 				mTurnData = SkeletonTurn.unpersist(mMatch.getData());
-				setGameplayUI();
+				//setGameplayUI();
 				return;
 			case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_their_turn");
 				// Should return results.
-				showWarning("Alas...", "It's not your turn.");
+				//showWarning("Alas...", "It's not your turn.");
 				break;
 			case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_invited");
-				showWarning("Good inititative!",
-						"Still waiting for invitations.\n\nBe patient!");
+				/*showWarning("Good inititative!",
+						"Still waiting for invitations.\n\nBe patient!");*/
 		}
 		Log.d(AppSettings.tag, "setting mTurnData to null");
 		mTurnData = null;
@@ -968,7 +970,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	};
 
 	public void showErrorMessage(int stringId) {
-		showWarning("Warning", getResources().getString(stringId));
+		//showWarning("Warning", getResources().getString(stringId));
 	}
 
 	// Returns false if something went wrong, probably. This should handle
@@ -1158,17 +1160,21 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// Function to take a turn (For testing)
 	public void takeTurn() {
-		if(isDoingTurn) {
-
-			showSpinner();
+		Log.d(AppSettings.tag, "takeTurn(): starting...");
+		if(mMatch.getTurnStatus() == 1) {
+			Log.d(AppSettings.tag, "takeTurn(): isDoingTurn is true");
+			//showSpinner();
 
 			String nextParticipantId = getNextParticipantId();
+			Log.d(AppSettings.tag, "takeTurn(): got nextParticipantID: "+ getNextParticipantId());
 			// Create the next turn
 			mTurnData.turnCounter += 1;
 			// mTurnData.data = mDataView.getText().toString(); commented out because we dont use the textView
 			// mTurnData.data = mDisplayName;
 			// Set turn data to be equal to gameDataFromCore
 			mTurnData.data = gameDataFromCore;
+			Log.d(AppSettings.tag, "takeTurn(): mTurnData.data: " + mTurnData.data);
+			Log.d(AppSettings.tag, "takeTurn(): mMatch.getMatchId():" + mMatch.getMatchId());
 
 			mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
 					mTurnData.persist(), nextParticipantId)
@@ -1180,12 +1186,12 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 						}
 					})
 					.addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
-
+			Log.d(AppSettings.tag, "Uploaded turn, setting mTurnData to null");
 			mTurnData = null;
 		}
 		else{
 			Log.d(AppSettings.tag, "It is not your turn!");
-			showWarning("STOP!", "It is not your turn!");
+			//showWarning("STOP!", "It is not your turn!");
 		}
 	}
 
@@ -1317,26 +1323,32 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// Function used to end the current match, return true if ended, return false if not
 	public boolean endMatch(){
+		Log.d(AppSettings.tag, "endMatch was called...");
 		// Attempt to end the match
 		try {
 			mTurnBasedMultiplayerClient.finishMatch(mMatch.getMatchId())
 					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
 						@Override
 						public void onSuccess(TurnBasedMatch turnBasedMatch) {
+							Log.d(AppSettings.tag, "endMatch(): Successfully ended match, setting mMatch to null after onUpdateMatch");
+							mMatch = null;
 							onUpdateMatch(turnBasedMatch);
 						}
 					})
 					.addOnFailureListener(createFailureListener("There was a problem finishing the match!"));
 			if(mMatch.getStatus() == TurnBasedMatch.MATCH_STATUS_COMPLETE){
+				mMatch = null;
 				return true;
 			}
 			else{
 				Log.d(AppSettings.tag, "Something went wrong trying to end/finish the game");
+				mMatch = null;
 				return false;
 			}
 		}
 		catch (Exception e){
 			Log.d(AppSettings.tag, "Something went wrong when trying to end/finish the game");
+			mMatch = null;
 			return false;
 		}
 	}
@@ -1382,9 +1394,19 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 		return gameDataFromCore;
 	}
+
 	// returns the latest data this androidlauncher has received from matchupdates
 	public String getGameData(){
+		Log.d(AppSettings.tag, "getGameData(): starting...");
+		Log.d(AppSettings.tag, "getGameData(): trying to loadMatch()...");
+		loadMatch();
+		if(mMatch != null) {
+			Log.d(AppSettings.tag, "getGameData(): starting...");
+			Log.d(AppSettings.tag, "getGameData(): trying to update the match before fetching data...");
+			updateMatch(mMatch);
+		}
 		if(mTurnData != null){
+			Log.d(AppSettings.tag, "getGameData(): the mTurnData is not null! Returning the data to core.");
 			return mTurnData.data;
 		}
 		else{
@@ -1394,12 +1416,21 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	}
 
 	public void receiveGameData(String gameData){
+		Log.d(AppSettings.tag, "Received gamedata: " + gameData);
 		gameDataFromCore = gameData;
+		Log.d(AppSettings.tag, "Attempting to take turn...");
+		takeTurn();
+		Log.d(AppSettings.tag, "Took turn.");
 	}
 
 	// Called from core to know if it is a players turn
 	public boolean getIsDoingTurn(){
 		return isDoingTurn;
+	}
+
+	// Called from core to force mMatch to become null (end game scenario)
+	public void setMatchNull(){
+		mMatch = null;
 	}
 
 	// Call to get displayName of opponent

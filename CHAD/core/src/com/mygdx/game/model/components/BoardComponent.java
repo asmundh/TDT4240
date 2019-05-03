@@ -8,6 +8,7 @@ public class BoardComponent implements Component {
     public Entity playerTwo;
     public boolean showHand;
     public boolean turn;
+    public int turnNumber;
     public Entity lastCardClicked; // Siste kortet som ble trykket på. For å holde styr på om du trykker på ditt kort
     // for første gang, eller om du skal angripe en motstander, eller om du skal trykke på et av dine andre kort
 

@@ -64,7 +64,7 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
 
     public void sendGameDataAndEndTurn(String gameData){
         mAndroidLauncher.receiveGameData(gameData);
-        mAndroidLauncher.takeTurn();
+        // mAndroidLauncher.takeTurn();
     }
 
     public boolean getIsSignedIn(){
@@ -85,5 +85,9 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
 
     public void gdxEndMatch(){
         mAndroidLauncher.gdxEndMatch();
+    }
+
+    public void setMatchNull(){
+        mAndroidLauncher.setMatchNull();
     }
 }
