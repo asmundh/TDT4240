@@ -134,11 +134,15 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         // Winning: player 1
         if (engine.getSystem(PlayerSystem.class).getHealth(players.get(0)) == 0 && engine.getSystem(PlayerSystem.class).getHealth(players.get(1)) != 0) {
+            endTurn(boardEntity);
+            game.androidInterface.endMatch();
             game.setScreen(new GameOverScreen(game, engine, players.get(1), players.get(0)));
         }
 
         // Winning: player 2
         else if(engine.getSystem(PlayerSystem.class).getHealth(players.get(1)) == 0 && engine.getSystem(PlayerSystem.class).getHealth(players.get(0)) != 0) {
+            endTurn(boardEntity);
+            game.androidInterface.endMatch();
             game.setScreen(new GameOverScreen(game, engine, players.get(0), players.get(1)));
         }
 

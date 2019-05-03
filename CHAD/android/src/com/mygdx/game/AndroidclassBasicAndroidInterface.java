@@ -86,4 +86,8 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
     public void gdxEndMatch(){
         mAndroidLauncher.gdxEndMatch();
     }
+
+    public void setMatchNull(){
+        mAndroidLauncher.setMatchNull();
+    }
 }

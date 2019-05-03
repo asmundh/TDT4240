@@ -80,4 +80,7 @@ public interface AndroidInterface {
 
     // Used to forcibly end a match from GDX
     public void gdxEndMatch();
+
+    // Used to forcibly set match to null
+    public void setMatchNull();
 }

@@ -190,6 +190,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         if(foundMatch) {
             flagLookingForMatch = false;
             foundMatch = false;
+            System.out.println("MenuScreen - update(): setting a new GameScreen - because of foundMatch");
             game.setScreen(new GameScreen(game, engine));
         }
 

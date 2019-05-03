@@ -830,6 +830,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 		if(status == TurnBasedMatch.MATCH_STATUS_COMPLETE){
 			Log.d(AppSettings.tag, "Match is completed! Someone ended it.");
+			mMatch = null;
 		}
 
 		switch (status) {
@@ -853,6 +854,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 					Log.d(TAG, "This game is over; someone finished it, and so did you!  ");
 					Log.d(AppSettings.tag, "Dismissing the game since it is completed");
 					mTurnBasedMultiplayerClient.dismissMatch(match.getMatchId());
+					mMatch = null;
 					return;
 
 				// Note that in this state, you must still call "Finish" yourself,
@@ -1321,26 +1323,32 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// Function used to end the current match, return true if ended, return false if not
 	public boolean endMatch(){
+		Log.d(AppSettings.tag, "endMatch was called...");
 		// Attempt to end the match
 		try {
 			mTurnBasedMultiplayerClient.finishMatch(mMatch.getMatchId())
 					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
 						@Override
 						public void onSuccess(TurnBasedMatch turnBasedMatch) {
+							Log.d(AppSettings.tag, "endMatch(): Successfully ended match, setting mMatch to null after onUpdateMatch");
+							mMatch = null;
 							onUpdateMatch(turnBasedMatch);
 						}
 					})
 					.addOnFailureListener(createFailureListener("There was a problem finishing the match!"));
 			if(mMatch.getStatus() == TurnBasedMatch.MATCH_STATUS_COMPLETE){
+				mMatch = null;
 				return true;
 			}
 			else{
 				Log.d(AppSettings.tag, "Something went wrong trying to end/finish the game");
+				mMatch = null;
 				return false;
 			}
 		}
 		catch (Exception e){
 			Log.d(AppSettings.tag, "Something went wrong when trying to end/finish the game");
+			mMatch = null;
 			return false;
 		}
 	}
@@ -1418,6 +1426,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	// Called from core to know if it is a players turn
 	public boolean getIsDoingTurn(){
 		return isDoingTurn;
+	}
+
+	// Called from core to force mMatch to become null (end game scenario)
+	public void setMatchNull(){
+		mMatch = null;
 	}
 
 	// Call to get displayName of opponent
