@@ -96,6 +96,7 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
         noBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
+                game.androidInterface.changeView();
                 btnClick.play();
                 // TODO: Find way to change back to current game screen.
                 game.setScreen(new GameScreen(game, engine));

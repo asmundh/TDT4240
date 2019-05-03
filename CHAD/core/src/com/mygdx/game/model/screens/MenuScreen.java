@@ -194,8 +194,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
         handleInput();
         stage.act(Gdx.graphics.getDeltaTime());
-
-        game.setScreen(new GameScreen(game, engine)); //for testing only
     }
 
     @Override

@@ -866,7 +866,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 			case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_my_turn");
 				mTurnData = SkeletonTurn.unpersist(mMatch.getData());
-				setGameplayUI();
+				//setGameplayUI();
 				return;
 			case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_their_turn");
@@ -1158,17 +1158,21 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// Function to take a turn (For testing)
 	public void takeTurn() {
-		if(isDoingTurn) {
-
-			showSpinner();
+		Log.d(AppSettings.tag, "takeTurn(): starting...");
+		if(mMatch.getTurnStatus() == 1) {
+			Log.d(AppSettings.tag, "takeTurn(): isDoingTurn is true");
+			//showSpinner();
 
 			String nextParticipantId = getNextParticipantId();
+			Log.d(AppSettings.tag, "takeTurn(): got nextParticipantID: "+ getNextParticipantId());
 			// Create the next turn
 			mTurnData.turnCounter += 1;
 			// mTurnData.data = mDataView.getText().toString(); commented out because we dont use the textView
 			// mTurnData.data = mDisplayName;
 			// Set turn data to be equal to gameDataFromCore
 			mTurnData.data = gameDataFromCore;
+			Log.d(AppSettings.tag, "takeTurn(): mTurnData.data: " + mTurnData.data);
+			Log.d(AppSettings.tag, "takeTurn(): mMatch.getMatchId():" + mMatch.getMatchId());
 
 			mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
 					mTurnData.persist(), nextParticipantId)
@@ -1185,7 +1189,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		}
 		else{
 			Log.d(AppSettings.tag, "It is not your turn!");
-			showWarning("STOP!", "It is not your turn!");
+			//showWarning("STOP!", "It is not your turn!");
 		}
 	}
 
@@ -1394,7 +1398,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	}
 
 	public void receiveGameData(String gameData){
+		Log.d(AppSettings.tag, "Received gamedata: " + gameData);
 		gameDataFromCore = gameData;
+		Log.d(AppSettings.tag, "Attempting to take turn...");
+		takeTurn();
+		Log.d(AppSettings.tag, "Took turn.");
 	}
 
 	// Called from core to know if it is a players turn

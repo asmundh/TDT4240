@@ -98,9 +98,7 @@ public class PlayerSystem extends IteratingSystem {
         }
     }
     public void clearHand(Entity playerEntity) {
-        for (int i = 0; i < pm.get(playerEntity).hand.size(); i++) {
-            pm.get(playerEntity).hand.remove(i);
-        }
+            pm.get(playerEntity).hand.clear();
     }
 
     public void payForCard(Entity playerEntity, int cost) {

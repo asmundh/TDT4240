@@ -269,7 +269,7 @@ public class BoardView {
             batch.end();
 
 
-
+            System.out.println("BoardView: " + cardsInHandEntity.size());
             for (int i = 0; i < this.cardsInHandEntity.size(); i++) {
                 float xHand = this.handPositions[i].x;
                 float yHand = this.handPositions[i].y;
