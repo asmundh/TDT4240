@@ -21,7 +21,7 @@ public class GameStateObject {
         gamestate = gamestate + playerHealth + "#" + enemyHealth + "#";
 
 
-        for (int i = 0; i < playerHand.size(); i++) {
+        /*for (int i = 0; i < playerHand.size(); i++) {
             gamestate = gamestate + playerHand.get(i) + "i";
         }
 
@@ -31,12 +31,12 @@ public class GameStateObject {
             gamestate = gamestate + enemyHand.get(i) + "c";
         }
 
-        gamestate = gamestate + "#";
+        gamestate = gamestate + "#"; */
 
         for (int i = 0; i < playerBoard.size(); i++) {
             gamestate = gamestate + playerBoard.get(i).get(0) + "i";
             gamestate = gamestate + playerBoard.get(i).get(1) + "h";
-            gamestate = gamestate + playerBoard.get(i).get(1) + "a";
+            gamestate = gamestate + playerBoard.get(i).get(2) + "a";
 
             gamestate = gamestate + "c";
         }
@@ -45,7 +45,7 @@ public class GameStateObject {
         for (int i = 0; i < enemyBoard.size(); i++) {
             gamestate = gamestate + enemyBoard.get(i).get(0) + "i";
             gamestate = gamestate + enemyBoard.get(i).get(1) + "h";
-            gamestate = gamestate + enemyBoard.get(i).get(1) + "a";
+            gamestate = gamestate + enemyBoard.get(i).get(2) + "a";
 
             gamestate = gamestate + "c";
         }

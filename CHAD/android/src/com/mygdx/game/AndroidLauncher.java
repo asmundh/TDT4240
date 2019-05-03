@@ -847,9 +847,9 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				Log.d(TAG, "We're still waiting for an automatch partner.");
 				return;
 			case TurnBasedMatch.MATCH_STATUS_COMPLETE:
-				 showWarning("Complete!",
+				 /*showWarning("Complete!",
 				"This game is over; someone finished it, and so did you!  " +
-				"There is nothing to be done. This game will get dismissed now.");
+				"There is nothing to be done. This game will get dismissed now.");*/
 					Log.d(TAG, "This game is over; someone finished it, and so did you!  ");
 					Log.d(AppSettings.tag, "Dismissing the game since it is completed");
 					mTurnBasedMultiplayerClient.dismissMatch(match.getMatchId());
@@ -871,12 +871,12 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 			case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_their_turn");
 				// Should return results.
-				showWarning("Alas...", "It's not your turn.");
+				//showWarning("Alas...", "It's not your turn.");
 				break;
 			case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_invited");
-				showWarning("Good inititative!",
-						"Still waiting for invitations.\n\nBe patient!");
+				/*showWarning("Good inititative!",
+						"Still waiting for invitations.\n\nBe patient!");*/
 		}
 		Log.d(AppSettings.tag, "setting mTurnData to null");
 		mTurnData = null;
@@ -968,7 +968,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	};
 
 	public void showErrorMessage(int stringId) {
-		showWarning("Warning", getResources().getString(stringId));
+		//showWarning("Warning", getResources().getString(stringId));
 	}
 
 	// Returns false if something went wrong, probably. This should handle
@@ -1184,7 +1184,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 						}
 					})
 					.addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
-
+			Log.d(AppSettings.tag, "Uploaded turn, setting mTurnData to null");
 			mTurnData = null;
 		}
 		else{
@@ -1386,9 +1386,19 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 		return gameDataFromCore;
 	}
+
 	// returns the latest data this androidlauncher has received from matchupdates
 	public String getGameData(){
+		Log.d(AppSettings.tag, "getGameData(): starting...");
+		Log.d(AppSettings.tag, "getGameData(): trying to loadMatch()...");
+		loadMatch();
+		if(mMatch != null) {
+			Log.d(AppSettings.tag, "getGameData(): starting...");
+			Log.d(AppSettings.tag, "getGameData(): trying to update the match before fetching data...");
+			updateMatch(mMatch);
+		}
 		if(mTurnData != null){
+			Log.d(AppSettings.tag, "getGameData(): the mTurnData is not null! Returning the data to core.");
 			return mTurnData.data;
 		}
 		else{

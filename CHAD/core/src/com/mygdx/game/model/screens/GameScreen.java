@@ -80,7 +80,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             quitBtn.addListener(new ClickListener() {
                 @Override // Fires when the user lets go of the button
                 public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
+                    //game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
+                    checkAndLoadNewTurn();
                 }
 
                 @Override // Fires when the button is pressed down
@@ -167,6 +168,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         @Override
         public void run() {
             if (checkNewTurn()) {
+
                 System.out.println("Received something else than null from server...");
                 System.out.println("gameData received: " + game.androidInterface.getGameData());
                 parseNewTurn(game.androidInterface.getGameData());
@@ -175,10 +177,17 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     };
 
     public void checkAndLoadNewTurn() {
-        Timer timer = new Timer();
+        /*Timer timer = new Timer();
         long delay = 0;
-        long interval = 10000;
-        timer.schedule(task, delay, interval);
+        long interval = 30000;
+        timer.schedule(task, delay, interval);*/
+        if (checkNewTurn()) {
+
+            System.out.println("Received something else than null from server...");
+            System.out.println("gameData received: " + game.androidInterface.getGameData());
+            parseNewTurn(game.androidInterface.getGameData());
+        }
+
     }
 
 
@@ -225,7 +234,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 } else {
                     //currentCategory++;
                     categoryFlag = true;
-                    playerHealth = Integer.valueOf(sb);
+                    enemyHealth = Integer.valueOf(sb);
                     sb = "";
                 }
             }
@@ -235,17 +244,17 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 } else {
                     //currentCategory++;
                     categoryFlag = true;
-                    enemyHealth = Integer.valueOf(sb);
+                    playerHealth = Integer.valueOf(sb);
                     sb = "";
                 }
             }
-            if (currentCategory == 2) {
+            /*if (currentCategory == 2) {
                 if (!(gameState.charAt(i) == '#')) {
                     if (!(gameState.charAt(i) == 'i')) {
                         sb = sb + gameState.charAt(i);
                     } else {
                         //currentCardCategory++;
-                        playerHand.add(Integer.valueOf(sb));
+                        enemyHand.add(Integer.valueOf(sb));
                         sb = "";
                     }
                 } else {
@@ -260,7 +269,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                         sb = sb + gameState.charAt(i);
                     } else {
                         //currentCardCategory++;
-                        enemyHand.add(Integer.valueOf(sb));
+                        playerHand.add(Integer.valueOf(sb));
                         sb = "";
                     }
                 } else {
@@ -268,47 +277,70 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     categoryFlag = true;
                     sb = "";
                 }
-            }
-            if (currentCategory == 4) {
-                if (!(gameState.charAt(i) == '#')) {
-                    if (currentCardCategory == 0) {
-                        if (!(gameState.charAt(i) == 'i')) {
-                            sb = sb + gameState.charAt(i);
-                        } else {
-                            //currentCardCategory++;
-                            currentCardCategoryFlag = true;
-                            currentCardId = Integer.valueOf(sb);
-                            sb = "";
+            }*/
 
+            if (currentCategory == 2) {
+                System.out.println("parseNewturn(): currentCategory == 2");
+                boolean finishedCard = false;
+                if (!(gameState.charAt(i) == '#')) {
+                    if(gameState.charAt(i) == 'c'){
+
+                    }
+                    else{
+                        if (currentCardCategory == 0) {
+                            System.out.println("parseNewturn(): currentCardCategory == 0");
+                            if (!(gameState.charAt(i) == 'i')) {
+                                sb = sb + gameState.charAt(i);
+                            } else {
+                                //currentCardCategory++;
+                                System.out.println("parseNewTurn(): Found an 'i', setting currentCardCategoryFlag to true");
+                                currentCardCategoryFlag = true;
+                                currentCardId = Integer.valueOf(sb);
+                                sb = "";
+
+                            }
                         }
                         if (currentCardCategory == 1) {
+                            System.out.println("parseNewturn(): currentCardCategory == 1");
                             if (!(gameState.charAt(i) == 'h')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
                                 //currentCardCategory++;
+                                System.out.println("parseNewTurn(): Found an 'h', setting currentCardCategoryFlag to true");
                                 currentCardCategoryFlag = true;
                                 currentCardHealth = Integer.valueOf(sb);
                                 sb = "";
                             }
                         }
                         if (currentCardCategory == 2) {
+                            System.out.println("parseNewturn(): currentCardCategory == 2");
                             if (!(gameState.charAt(i) == 'a')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
                                 //currentCardCategory++;
-                                currentCardCategoryFlag = true;
+                                //currentCardCategoryFlag = true;
+                                System.out.println("parseNewTurn(): Found an 'a', setting currentCardCategoryFlag to true");
+
                                 currentCardAttack = Integer.valueOf(sb);
                                 sb = "";
+                                finishedCard = true;
                             }
                         }
+                    }
+
+                    if(finishedCard) {
                         List<Integer> newCard = new ArrayList();
                         newCard.add(currentCardId);
                         newCard.add(currentCardHealth);
                         newCard.add(currentCardAttack);
-                        playerBoard.add(newCard);
+                        enemyBoard.add(newCard);
+                        System.out.println("parseNewTurn(): Attempted to add a card to enemyBoard");
+                        System.out.println("parseNewTurn(): These were the stats of the attempted card: " + "id: " + currentCardId+ ", health: "+ currentCardHealth + ", attack: " + currentCardAttack +".");
                         currentCardCategory = 0;
+                        finishedCard = false;
                     }
-                }else {
+                }
+                else {
                     //currentCategory++;
                     categoryFlag = true;
                     currentCardCategory = 0;
@@ -316,22 +348,35 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 }
 
             }
-            if (currentCategory == 5) {
+            if (currentCategory == 3) {
+                System.out.println("parseNewTurn(): currentCatergory is 3.");
+                System.out.println("parseNewTurn(): currentCardCategory is: " + currentCardCategory);
+                boolean finishedCard = false;
                 if (!(gameState.charAt(i) == '#')) {
-                    if (currentCardCategory == 0) {
-                        if (!(gameState.charAt(i) == 'i')) {
-                            sb = sb + gameState.charAt(i);
-                        } else {
-                            //currentCardCategory++;
-                            currentCardCategoryFlag = true;
-                            currentCardId = Integer.valueOf(sb);
-                            sb = "";
+                    if(gameState.charAt(i) == 'c'){
 
+                    }
+                    else{
+                        if (currentCardCategory == 0) {
+                            System.out.println("parseNewTurn(): currentCardCategory == 0");
+                            if (!(gameState.charAt(i) == 'i')) {
+                                sb = sb + gameState.charAt(i);
+                            } else {
+                                //currentCardCategory++;
+                                System.out.println("parseNewTurn(): Found an 'i', setting currentCardCategoryFlag to true");
+                                currentCardCategoryFlag = true;
+                                currentCardId = Integer.valueOf(sb);
+                                sb = "";
+
+                            }
                         }
                         if (currentCardCategory == 1) {
+                            System.out.println("parseNewTurn(): currentCardCategory == 1");
                             if (!(gameState.charAt(i) == 'h')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
+                                System.out.println("parseNewTurn(): Found an 'h', setting currentCardCategoryFlag to true");
+
                                 //currentCardCategory++;
                                 currentCardCategoryFlag = true;
                                 currentCardHealth = Integer.valueOf(sb);
@@ -339,21 +384,31 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                             }
                         }
                         if (currentCardCategory == 2) {
+                            System.out.println("parseNewTurn(): currenCardCategory == 2");
                             if (!(gameState.charAt(i) == 'a')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
+                                System.out.println("parseNewTurn(): Found an 'a', setting currentCardCategoryFlag to true");
+                                System.out.println("parseNewTurn(): found an 'a' setting finishedCard to true");
                                 //currentCardCategory++;
-                                currentCardCategoryFlag = true;
+                                //currentCardCategoryFlag = true;
                                 currentCardAttack = Integer.valueOf(sb);
                                 sb = "";
+                                finishedCard = true;
                             }
                         }
+                    }
+
+                    if(finishedCard) {
                         List<Integer> newCard = new ArrayList();
                         newCard.add(currentCardId);
                         newCard.add(currentCardHealth);
                         newCard.add(currentCardAttack);
-                        enemyBoard.add(newCard);
+                        playerBoard.add(newCard);
+                        System.out.println("parseNewTurn(): Attempted to add a card to playerBoard");
+                        System.out.println("parseNewTurn(): These were the stats of the attempted card: " + "id: " + currentCardId+ ", health: "+ currentCardHealth + ", attack: " + currentCardAttack +".");
                         currentCardCategory = 0;
+                        finishedCard = false;
                     }
                 }
                 else {
@@ -366,6 +421,26 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             }
         }
 
+        // printing hands of players
+        for(int i = 0; i < playerHand.size(); i++){
+            System.out.println("parseNewTurn(): playerHand array: index of :" + i + ": " + playerHand.get(i));
+        }
+
+        for(int i = 0; i < enemyHand.size(); i++){
+            System.out.println("parseNewTurn(): enemyHand array: index of :" + i + ": " + enemyHand.get(i));
+        }
+
+        // printing boards of players
+        for(int i = 0; i < playerBoard.size(); i++){
+            System.out.println("parseNewTurn(): playerBoard array: index of :" + i + ": " + playerBoard.get(i));
+        }
+
+        for(int i = 0; i < enemyBoard.size(); i++){
+            System.out.println("parseNewTurn(): enemyBoard array: index of :" + i + ": " + enemyBoard.get(i));
+        }
+
+
+
 
 
         //Updating players healths
@@ -374,16 +449,16 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
         //Creating card entities for player and enemy
-        List<Entity> handEntityList = new ArrayList();
+        /*List<Entity> handEntityList = new ArrayList();
         List<Entity> enemyHandEntityList = new ArrayList();
         for (int i = 0; i < playerHand.size(); i++) {
             handEntityList.add(world.createCard(playerHand.get(i)));
         }
         for (int i = 0; i < enemyHand.size(); i++) {
             enemyHandEntityList.add(world.createCard(enemyHand.get(i)));
-        }
+        } */
 
-        //Clearing hands and adding updated cards
+        /*//Clearing hands and adding updated cards
         engine.getSystem(PlayerSystem.class).clearHand(players.get(0));
         System.out.println("Size of hand after clearing: " + engine.getSystem(PlayerSystem.class).getCardsOnHand(players.get(0)).size());
         engine.getSystem(PlayerSystem.class).clearHand(players.get(1));
@@ -393,7 +468,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
         for (int i = 0; i < enemyHandEntityList.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToHand(players.get(1), enemyHandEntityList.get(i));
-        }
+        } */
 
         //Creating card entities for the board
         List<Entity> playerBoardCards = new ArrayList<>();
@@ -466,12 +541,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
 
-        for(int i = 0; i < playerHand.size(); i++) {
+        /*for(int i = 0; i < playerHand.size(); i++) {
             playerHandId.add(engine.getSystem(CardSystem.class).getId(playerHand.get(i)));
         }
         for(int i = 0; i < enemyHand.size(); i++) {
             enemyHandId.add(engine.getSystem(CardSystem.class).getId(playerHand.get(i)));
-        }
+        }*/
         for(int i = 0; i < playerBoard.size(); i++) {
             List card = new ArrayList();
             card.add(engine.getSystem(CardSystem.class).getId(playerBoard.get(i)));
@@ -479,6 +554,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             card.add(engine.getSystem(CardSystem.class).getAttackPower(playerBoard.get(i)));
 
             playerBoardId.add(card);
+            System.out.println("endTurn(): added these stats for a card on player: id: " + card.get(0) + ", health: " +card.get(1) + ", attack: " + card.get(2) + ".");
         }
         for(int i = 0; i < enemyBoard.size(); i++) {
             List card = new ArrayList();
@@ -487,13 +563,15 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             card.add(engine.getSystem(CardSystem.class).getAttackPower(enemyBoard.get(i)));
 
             enemyBoardId.add(card);
+            System.out.println("endTurn(): added these stats for a card on enemy: id: " + card.get(0) + ", health: " +card.get(1) + ", attack: " + card.get(2) + ".");
+
         }
 
         GameStateObject gameState = new GameStateObject();
         gameState.playerHealth = playerHealth;
         gameState.enemyHealth = enemyHealth;
-        gameState.playerHand = playerHandId;
-        gameState.enemyHand = enemyHandId;
+        //gameState.playerHand = playerHandId;
+        //gameState.enemyHand = enemyHandId;
         gameState.playerBoard = playerBoardId;
         gameState.enemyBoard = enemyBoardId;
 

@@ -113,6 +113,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         setBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
+                game.androidInterface.changeView();
                 game.setScreen(new SettingsScreen(game, engine));
                 btnClick.play();
             }
