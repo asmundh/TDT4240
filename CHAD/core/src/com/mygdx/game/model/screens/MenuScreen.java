@@ -49,9 +49,11 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         this.flagLookingForMatch = false;
         this.foundMatch = false;
 
-        this.bgMusic = Assets.getMusic(Assets.backgroundMusic);
+        //this.bgMusic = Assets.getMusic(Assets.backgroundMusic);
+        this.bgMusic = game.getBgMusic();
         this.bgMusic.setVolume(0.3f);
-        this.bgMusic.play();
+        //this.bgMusic.play();
+        game.playMusic(bgMusic);
 
         this.btnClick = Assets.getSound(Assets.btnClick);
 
@@ -95,7 +97,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
                 flagLookingForMatch = true;
                 System.out.println("Now looking for game...");
                 btnClick.play();
-                bgMusic.stop();
+                game.getBgMusic().stop();
             }
 
             @Override // Fires when the button is pressed down
@@ -113,7 +115,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         setBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                game.androidInterface.changeView();
+                //game.androidInterface.changeView();
                 game.setScreen(new SettingsScreen(game, engine));
                 btnClick.play();
             }
@@ -179,8 +181,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
     @Override
     public void update(float dt) { // Only thing we're checking for is if user presses button
-
-        game.setScreen(new GameScreen(game, engine));
 
         // check if we have found an opponent
         if(game.androidInterface.getFoundOpponent()){
