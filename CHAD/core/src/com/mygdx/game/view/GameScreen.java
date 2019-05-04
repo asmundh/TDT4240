@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -17,21 +17,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.World;
-import com.mygdx.game.model.screens.utils.Assets;
-import com.mygdx.game.model.screens.utils.GameStateObject;
-import com.mygdx.game.model.systems.BoardSystem;
-import com.mygdx.game.model.systems.CardSystem;
-import com.mygdx.game.model.systems.PlayerSystem;
-import com.mygdx.game.view.BoardView;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.mygdx.game.model.World;
+import com.mygdx.game.model.Assets;
+import com.mygdx.game.model.GameStateObject;
+import com.mygdx.game.controller.BoardSystem;
+import com.mygdx.game.controller.CardSystem;
+import com.mygdx.game.controller.PlayerSystem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
+public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     private CardGame game;
     private World world;
@@ -44,9 +41,11 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
     private String userName = null;
     private String opponentUserName = null;
 
-    protected GameScreen2(CardGame game, Engine engine) {
+    private int turnCounter = 0;
+    private boolean loadedNewTurn = false;
+  
+    protected GameScreen(CardGame game, Engine engine) {
         this.game = game;
-
         this.engine = engine;
         this.world = new World(engine);
 
@@ -80,8 +79,8 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
             quitBtn.addListener(new ClickListener() {
                 @Override // Fires when the user lets go of the button
                 public void clicked(InputEvent event, float x, float y) {
-                    //game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
-                    checkAndLoadNewTurn();
+                    game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
+
                 }
 
                 @Override // Fires when the button is pressed down
@@ -106,7 +105,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
             gameStage.addActor(menuTable); // Add the table containing the buttons to the stage
 
 
-            bv = new BoardView(boardEntity);
+            bv = new BoardView(game, boardEntity);
 
             // Initiate player-names
             this.userName = this.game.androidInterface.getDisplayName();
@@ -115,7 +114,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(PlayerSystem.class).setPlayerName(players.get(1), opponentUserName);
         }
 
-        checkAndLoadNewTurn();
+        loadTurnCounter();
     }
 
     @Override
@@ -165,30 +164,42 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         return (game.androidInterface.getGameData() != null);
     }
 
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            if (checkNewTurn()) {
-
-                System.out.println("Received something else than null from server...");
-                System.out.println("gameData received: " + game.androidInterface.getGameData());
-                parseNewTurn(game.androidInterface.getGameData());
-            }
+    public boolean checkNotFirstTurn() {
+        if(game.androidInterface.getTurnCounter() == 9000){
+            System.out.println("There seems to be a new game and it is now you who started");
+            return false;
         }
-    };
+        return true;
+    }
+
+    public void loadTurnCounter() {
+        System.out.println("loadTurnCounter(): my local turncounter: " + turnCounter);
+
+        // Loads the turncounter on the server
+        int loadedTurnCounter = game.androidInterface.getTurnCounter();
+        System.out.println("loadTurnCounter(): received turnCounter: " + loadedTurnCounter);
+
+
+        // Compare the turnCounter to the local turncounter
+        if(loadedTurnCounter != turnCounter){   // received new turnCounter, there has been an update
+            turnCounter = loadedTurnCounter;
+            // load new turn
+            loadedNewTurn = false;
+            checkAndLoadNewTurn();
+        }
+        else{
+            System.out.println("loadTurnCounter(): the counter received from server is equal to your local counter...");
+        }
+    }
 
     public void checkAndLoadNewTurn() {
-        /*Timer timer = new Timer();
-        long delay = 0;
-        long interval = 30000;
-        timer.schedule(task, delay, interval);*/
-        if (checkNewTurn()) {
-
-            System.out.println("Received something else than null from server...");
+        if (checkNotFirstTurn()) {
             System.out.println("gameData received: " + game.androidInterface.getGameData());
-            parseNewTurn(game.androidInterface.getGameData());
+            if(!(loadedNewTurn)){
+                parseNewTurn(game.androidInterface.getGameData());
+                loadedNewTurn = true;
+            }
         }
-
     }
 
 
@@ -218,7 +229,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         boolean categoryFlag = false;
         boolean currentCardCategoryFlag = false;
 
-        for (int i = 0; i < gameState.length(); i++) {
+        for (int i = 0; i < gameState.length() -1; i++) {
             if(categoryFlag){
                 categoryFlag = false;
                 currentCategory ++;
@@ -231,7 +242,6 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                 if (!(gameState.charAt(i) == '#')) {
                     sb = sb + gameState.charAt(i);
                 } else {
-                    //currentCategory++;
                     categoryFlag = true;
                     enemyHealth = Integer.valueOf(sb);
                     sb = "";
@@ -241,42 +251,12 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                 if (!(gameState.charAt(i) == '#')) {
                     sb = sb + gameState.charAt(i);
                 } else {
-                    //currentCategory++;
                     categoryFlag = true;
                     playerHealth = Integer.valueOf(sb);
                     sb = "";
                 }
             }
-            /*if (currentCategory == 2) {
-                if (!(gameState.charAt(i) == '#')) {
-                    if (!(gameState.charAt(i) == 'i')) {
-                        sb = sb + gameState.charAt(i);
-                    } else {
-                        //currentCardCategory++;
-                        enemyHand.add(Integer.valueOf(sb));
-                        sb = "";
-                    }
-                } else {
-                    // currentCategory++;
-                    categoryFlag = true;
-                    sb = "";
-                }
-            }
-            if (currentCategory == 3) {
-                if (!(gameState.charAt(i) == '#')) {
-                    if (!(gameState.charAt(i) == 'i')) {
-                        sb = sb + gameState.charAt(i);
-                    } else {
-                        //currentCardCategory++;
-                        playerHand.add(Integer.valueOf(sb));
-                        sb = "";
-                    }
-                } else {
-                    //currentCategory++;
-                    categoryFlag = true;
-                    sb = "";
-                }
-            }*/
+
 
             if (currentCategory == 2) {
                 System.out.println("parseNewturn(): currentCategory == 2");
@@ -291,7 +271,6 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                             if (!(gameState.charAt(i) == 'i')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                //currentCardCategory++;
                                 System.out.println("parseNewTurn(): Found an 'i', setting currentCardCategoryFlag to true");
                                 currentCardCategoryFlag = true;
                                 currentCardId = Integer.valueOf(sb);
@@ -304,7 +283,6 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                             if (!(gameState.charAt(i) == 'h')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                //currentCardCategory++;
                                 System.out.println("parseNewTurn(): Found an 'h', setting currentCardCategoryFlag to true");
                                 currentCardCategoryFlag = true;
                                 currentCardHealth = Integer.valueOf(sb);
@@ -316,8 +294,6 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                             if (!(gameState.charAt(i) == 'a')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                //currentCardCategory++;
-                                //currentCardCategoryFlag = true;
                                 System.out.println("parseNewTurn(): Found an 'a', setting currentCardCategoryFlag to true");
 
                                 currentCardAttack = Integer.valueOf(sb);
@@ -340,12 +316,10 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                     }
                 }
                 else {
-                    //currentCategory++;
                     categoryFlag = true;
                     currentCardCategory = 0;
                     sb = "";
                 }
-
             }
             if (currentCategory == 3) {
                 System.out.println("parseNewTurn(): currentCatergory is 3.");
@@ -361,12 +335,10 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                             if (!(gameState.charAt(i) == 'i')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                //currentCardCategory++;
                                 System.out.println("parseNewTurn(): Found an 'i', setting currentCardCategoryFlag to true");
                                 currentCardCategoryFlag = true;
                                 currentCardId = Integer.valueOf(sb);
                                 sb = "";
-
                             }
                         }
                         if (currentCardCategory == 1) {
@@ -411,12 +383,10 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                     }
                 }
                 else {
-                    //currentCategory++;
                     categoryFlag = true;
                     currentCardCategory = 0;
                     sb = "";
                 }
-
             }
         }
 
@@ -442,27 +412,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).setHealth(players.get(0), playerHealth);
         engine.getSystem(PlayerSystem.class).setHealth(players.get(1), enemyHealth);
 
-        //Creating card entities for player and enemy
-        /*List<Entity> handEntityList = new ArrayList();
-        List<Entity> enemyHandEntityList = new ArrayList();
-        for (int i = 0; i < playerHand.size(); i++) {
-            handEntityList.add(world.createCard(playerHand.get(i)));
-        }
-        for (int i = 0; i < enemyHand.size(); i++) {
-            enemyHandEntityList.add(world.createCard(enemyHand.get(i)));
-        } */
-
-        /*//Clearing hands and adding updated cards
-        engine.getSystem(PlayerSystem.class).clearHand(players.get(0));
-        System.out.println("Size of hand after clearing: " + engine.getSystem(PlayerSystem.class).getCardsOnHand(players.get(0)).size());
-        engine.getSystem(PlayerSystem.class).clearHand(players.get(1));
-
-        for (int i = 0; i < handEntityList.size(); i++) {
-            engine.getSystem(PlayerSystem.class).addCardToHand(players.get(0), handEntityList.get(i));
-        }
-        for (int i = 0; i < enemyHandEntityList.size(); i++) {
-            engine.getSystem(PlayerSystem.class).addCardToHand(players.get(1), enemyHandEntityList.get(i));
-        } */
+        startCheck();
 
         //Creating card entities for the board
         List<Entity> playerBoardCards = new ArrayList<>();
@@ -478,9 +428,14 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).clearBoard(players.get(0));
         engine.getSystem(PlayerSystem.class).clearBoard(players.get(1));
 
+        endCheck();
+
+        System.out.println("parseNewTurn(): playerBoardCards.size(): " + playerBoardCards.size());
+
         for (int i = 0; i < playerBoardCards.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToTable(players.get(0), playerBoardCards.get(i));
         }
+        System.out.println("parseNewTurn(): enemyBoardCards.size(): " + enemyBoardCards.size());
         for (int i = 0; i < enemyBoardCards.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToTable(players.get(1), enemyBoardCards.get(i));
         }
@@ -488,16 +443,19 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), true); //Set your turn to true
         engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0)); //Increase your turn number by 1
         engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
-        int yourTurnNumber = engine.getSystem(PlayerSystem.class).getYourTurnNumber(players.get(0));
-        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), yourTurnNumber); //Reset mana points. All turns after 9, players mana points will be reset to 10
+        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10); //Reset mana points. All turns after 9, players mana points will be reset to 10
 
         System.out.println("parseNewTurn() ended...");
+        System.out.println("parseNewTurn() playerBoardCards size:" + playerBoardCards.size());
+        System.out.println("parseNewTurn() enemyBoardCards size:" + enemyBoardCards.size());
         System.out.println("parseNewTurn(): Playerhand size: "+ playerHand.size());
         System.out.println("parseNewTurn(): enemyHand size: "+ enemyHand.size());
+
+        wakeAllCards();
     }
 
     public void startNewTurn(Entity boardEntity) {
-        bv = new BoardView(boardEntity);
+        bv = new BoardView(game, boardEntity);
         this.boardEntity = boardEntity;
         this.players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
 
@@ -517,23 +475,12 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
 
         int playerHealth = engine.getSystem(PlayerSystem.class).getHealth(players.get(0));
         int enemyHealth = engine.getSystem(PlayerSystem.class).getHealth(players.get(1));
-        List<Entity> playerHand = engine.getSystem(PlayerSystem.class).getCardsOnHand(players.get(0));
-        List<Entity> enemyHand = engine.getSystem(PlayerSystem.class).getCardsOnHand(players.get(1));
         List<Entity> playerBoard = engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0));
         List<Entity> enemyBoard = engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(1));
-        List playerHandId = new ArrayList<>();
-        List enemyHandId = new ArrayList<>();
         List playerBoardId = new ArrayList<>();
         List enemyBoardId = new ArrayList<>();
 
 
-
-        /*for(int i = 0; i < playerHand.size(); i++) {
-            playerHandId.add(engine.getSystem(CardSystem.class).getId(playerHand.get(i)));
-        }
-        for(int i = 0; i < enemyHand.size(); i++) {
-            enemyHandId.add(engine.getSystem(CardSystem.class).getId(playerHand.get(i)));
-        }*/
         for(int i = 0; i < playerBoard.size(); i++) {
             List card = new ArrayList();
             card.add(engine.getSystem(CardSystem.class).getId(playerBoard.get(i)));
@@ -557,8 +504,6 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         GameStateObject gameState = new GameStateObject();
         gameState.playerHealth = playerHealth;
         gameState.enemyHealth = enemyHealth;
-        //gameState.playerHand = playerHandId;
-        //gameState.enemyHand = enemyHandId;
         gameState.playerBoard = playerBoardId;
         gameState.enemyBoard = enemyBoardId;
 
@@ -567,10 +512,6 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         game.androidInterface.sendGameDataAndEndTurn(gameState.toString());
         System.out.println("Have sent data to server and ended turn AFAIK");
     }
-
-
-
-
 
     public void searchAndDestroyDeadCards() {
         for (Entity player : engine.getSystem(BoardSystem.class).getPlayers(boardEntity)) {
@@ -584,7 +525,6 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                 engine.getSystem(PlayerSystem.class).removeCardOnTable(player, i);
             }
         }
-
     }
 
     public void wakeAllCards() {
@@ -597,23 +537,42 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         }
     }
 
+    public void startCheck() {
+                            System.out.println("handleInput START: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+    }
+    public void endCheck() {
+        System.out.println("handleInput END: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+    }
+
     @Override
     public void handleInput() {
         //Input will not be handled if it is not your turn.
-        if (!isMyTurn()) return;
 
         if (Gdx.input.justTouched()) {
+
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             pos.y = Gdx.graphics.getHeight() - pos.y;
             // Depending on where the player has clicked, act accordingly.
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
+            if (!isMyTurn()){
+
+                if((bv.getLoadTurnButtonRect().contains(pos))){
+                    loadTurnCounter();
+                }
+                else{
+                    return;
+                }
+            }
+
             if (bv.getShowHandButtonRect().contains(pos)){ // Hides the hand when the button is clicked. Button for showing and hiding hand
+
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
                 deselectCard(prevClickedCard);
             }
 
             else if (bv.getEndTurnButtonRect().contains(pos)) {
+
                 //End turn and switch whose turn it is
                 System.out.println("Trying to end turn");
                 deselectCard(prevClickedCard);
@@ -621,8 +580,17 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
                 endTurn(boardEntity);
             }
 
+            else if (bv.getLoadTurnButtonRect().contains(pos)) {
+
+                //End turn and switch whose turn it is
+                System.out.println("Trying to load new turn");
+                deselectCard(prevClickedCard);
+                loadTurnCounter();
+            }
+
             else if (isHandShowing()) {
                 this.handleInputHand(pos);
+
             }
 
             else if (bv.getEnemyRectangle().contains(pos)) { // Attack enemy card if we have selected a card from table.
@@ -635,6 +603,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
             }
 
             else {
+
                 this.handleInputTable(pos);
             }
             searchAndDestroyDeadCards();
@@ -738,6 +707,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
     }
 
     public void placeCard(Entity cardEntity, int indexOfCardToPlace) {
+        System.out.println("placeCard(): trying to AddCardToTable: - indexOfCardToPlace = " + indexOfCardToPlace );
         engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), indexOfCardToPlace);
         engine.getSystem(CardSystem.class).deployCard(cardEntity);
         engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardEntity));
@@ -748,6 +718,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardEntity);
         engine.getSystem(CardSystem.class).updateSelected(cardEntity);
     }
+
 
     public void deselectCard(Entity cardEntity) {
         try {
@@ -761,6 +732,7 @@ public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
         boolean hasMana = engine.getSystem(PlayerSystem.class).getManaPoints(players.get(0)) >= engine.getSystem(CardSystem.class).getCost(cardChosen);
         return (hasMana && hasRoom);
     }
+
 
     private boolean isMyTurn() {
         return engine.getSystem(PlayerSystem.class).getIsYourTurn(players.get(0));

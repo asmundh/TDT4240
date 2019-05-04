@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
 
 public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -58,7 +58,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         this.btnClick = Assets.getSound(Assets.btnClick);
 
         this.font = new BitmapFont();
-
 
         create(); // Run create on one-time operations
     }
@@ -115,7 +114,10 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         setBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
+<<<<<<< HEAD:CHAD/core/src/com/mygdx/game/model/screens/MenuScreen.java
                 //game.androidInterface.changeView();
+=======
+>>>>>>> b6eae3e5c69103cf17bda13d74949a434b7bf3f5:CHAD/core/src/com/mygdx/game/view/MenuScreen.java
                 game.setScreen(new SettingsScreen(game, engine));
                 btnClick.play();
             }
@@ -193,7 +195,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             System.out.println("MenuScreen - update(): setting a new GameScreen - because of foundMatch");
             game.setScreen(new GameScreen(game, engine));
         }
-
         handleInput();
         stage.act(Gdx.graphics.getDeltaTime());
     }
@@ -222,7 +223,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             font.draw(sb, lookingForMatch, Gdx.graphics.getWidth()/2-200, Gdx.graphics.getHeight()/2);
             sb.end();
         }
-
     }
 
     @Override

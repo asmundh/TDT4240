@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,15 +17,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.World;
-import com.mygdx.game.model.screens.utils.Assets;
-import com.mygdx.game.model.screens.utils.GameStateObject;
-import com.mygdx.game.model.systems.BoardSystem;
-import com.mygdx.game.model.systems.CardSystem;
-import com.mygdx.game.model.systems.PlayerSystem;
+import com.mygdx.game.controller.BoardSystem;
+import com.mygdx.game.controller.CardSystem;
+import com.mygdx.game.controller.PlayerSystem;
+import com.mygdx.game.model.Assets;
+import com.mygdx.game.model.GameStateObject;
+import com.mygdx.game.model.World;
 import com.mygdx.game.view.BoardView;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.mygdx.game.view.GameOverScreen;
+import com.mygdx.game.view.ScreenInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +110,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             gameStage.addActor(menuTable); // Add the table containing the buttons to the stage
 
 
-            bv = new BoardView(boardEntity);
+            bv = new BoardView(game, boardEntity);
 
             // Initiate player-names
             this.userName = this.game.androidInterface.getDisplayName();
@@ -553,7 +552,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void startNewTurn(Entity boardEntity) {
-        bv = new BoardView(boardEntity);
+        bv = new BoardView(game, boardEntity);
         this.boardEntity = boardEntity;
         this.players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
 

@@ -11,9 +11,6 @@ public interface AndroidInterface {
 
      */
 
-    // Does not do anything was just used to test the interface
-    public String getMessage();
-
     // Used to change the view in en AndroidLauncher (between libGDX and my own GPGS button setup, only for tesintg
     // Use this for developer view of androidlauncher, shows the buttons for communicating with GPGS
     public void changeView();
@@ -23,9 +20,6 @@ public interface AndroidInterface {
 
     // Returns the logged in player's displayname (username)
     public String getDisplayName();
-
-    // returns whether it is the logged in users turn or not
-    public boolean getIsDoingTurn();
 
     // Used to start an auto-matched 1 v 1 match
     public void startQuickMatch();
@@ -37,7 +31,7 @@ public interface AndroidInterface {
     public String getGameData();
 
     // Used to get the last data the androidLauncher received from this core, can be used to check what you sent to the launcher and for comparing
-    public String getGameDataFromCore();
+//    public String getGameDataFromCore();
 
     /*
     Used to send data from the core to the android launcher
@@ -46,10 +40,6 @@ public interface AndroidInterface {
     take that data and pass it into its own mTurnData.
      */
     public void sendGameData(String gameData);
-
-    // Used to call takeTurn() in the androidLauncher. Make sure you have called sendGameData before calling this method
-    // If wanted I can make a sendGameDataAndEndTurn() function
-    public void endTurn();
 
     /*
     Used to call endMatch() in androidLauncher. Make sure you ask the user in libGDX if they really

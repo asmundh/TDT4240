@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
 
 public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -96,7 +96,6 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
         noBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                game.androidInterface.changeView();
                 btnClick.play();
                 // TODO: Find way to change back to current game screen.
                 game.setScreen(new GameScreen(game, engine));
@@ -124,7 +123,6 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
         menuTable.moveBy(0,-50);
 
         confirmationStage.addActor(menuTable); // Add the table containing the buttons to the stage
-
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens.utils;
+package com.mygdx.game.model;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -57,10 +57,6 @@ public class Assets {
     public static String signInButton = "textures/sign_in_button.png";
     public static String lookingForMatch = "textures/lookingForMatch.png";
 
-
-    public static String deck2 = "decks/deck2.json";
-
-
     // Music and sound:
     public static String backgroundMusic = "music/RobbH_-_Magic_Moon_-_Restless_heart_(rnb_beat_mix).mp3";
     public static String btnClick = "music/sfx/16930_1461335337.mp3";
@@ -83,7 +79,6 @@ public class Assets {
     public static void dispose(){
         assetManager.dispose();
     }
-
 
     public static void load() {
         assetManager.load(play, Texture.class);
@@ -121,17 +116,9 @@ public class Assets {
 
         assetManager.load(lookingForMatch, Texture.class);
 
-
-        //assetManager.load(deck1, Skin.class);
-        //assetManager.load(deck2, Skin.class);
-
-
-      
-
         for (String card : cards.keySet()) {
             assetManager.load(cards.get(card), Texture.class);
         }
-
 
         assetManager.load(menuBG, Texture.class);
         assetManager.load(backBtn, Texture.class);
@@ -155,14 +142,6 @@ public class Assets {
 
     public static Texture getTexture(String tex) {
         return assetManager.get(tex, Texture.class);
-    }
-
-    public static TextureAtlas getTextureAtlas(String tex){
-        return assetManager.get(tex, TextureAtlas.class);
-    }
-
-    public static Skin getSkin(String path) {
-        return assetManager.get(path, Skin.class);
     }
 
     public static Music getMusic(String path) {

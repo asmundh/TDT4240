@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.model;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -6,10 +6,8 @@ import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.PlayerComponent;
-import com.mygdx.game.model.components.RectangleComponent;
 import com.mygdx.game.model.components.TextureComponent;
-import com.mygdx.game.model.screens.utils.Assets;
-import com.mygdx.game.model.systems.PlayerSystem;
+import com.mygdx.game.controller.PlayerSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,6 @@ public class World  {
 
     public World(Engine engine){
         this.engine = engine;
-
     }
 
     public Entity createBoard() {
@@ -32,7 +29,6 @@ public class World  {
         BoardComponent bc = new BoardComponent();
         TextureComponent tc = new TextureComponent();
 
-        // TODO fjerne denne, gjør den bedre : Testdata
         tc.texture  = Assets.getTexture(Assets.background);
         bc.showHand = true;
 
@@ -42,16 +38,15 @@ public class World  {
         engine.addEntity(boardEntity);
 
         return boardEntity;
-
     }
 
     public Entity createCard(int id) {
+        System.out.println("World.createCard(): - I was fired from somewhere. Trying to create a card!");
         Entity cardEntity = new Entity();
 
         CardPowerComponent cardPower = new CardPowerComponent();
         CardStatsComponent cardStats = new CardStatsComponent();
         TextureComponent tc = new TextureComponent();
-        RectangleComponent rc = new RectangleComponent();
 
         switch (id){
             case 0:
@@ -151,21 +146,19 @@ public class World  {
         cardEntity.add(cardPower);
         cardEntity.add(cardStats);
         cardEntity.add(tc);
-        cardEntity.add(rc);
 
         engine.addEntity(cardEntity);
 
         return cardEntity;
-
     }
 
     public Entity createBoardCard(int id, int health, int attack) {
+        System.out.println("World.createBoardCard(): I was fired from somewhere... trying to create a card for a board");
         Entity cardEntity = new Entity();
 
         CardPowerComponent cardPower = new CardPowerComponent();
         CardStatsComponent cardStats = new CardStatsComponent();
         TextureComponent tc = new TextureComponent();
-        RectangleComponent rc = new RectangleComponent();
 
         switch (id){
             case 0:
@@ -265,12 +258,10 @@ public class World  {
         cardEntity.add(cardPower);
         cardEntity.add(cardStats);
         cardEntity.add(tc);
-        cardEntity.add(rc);
 
         engine.addEntity(cardEntity);
 
         return cardEntity;
-
     }
 
     public Entity createRandomCard() {
@@ -279,11 +270,9 @@ public class World  {
         CardPowerComponent cardPower = new CardPowerComponent();
         CardStatsComponent cardStats = new CardStatsComponent();
         TextureComponent tc = new TextureComponent();
-        RectangleComponent rc = new RectangleComponent();
 
         Random r = new Random();
         int id = r.nextInt(6);
-
 
         switch (id){
             case 0:
@@ -383,12 +372,10 @@ public class World  {
         cardEntity.add(cardPower);
         cardEntity.add(cardStats);
         cardEntity.add(tc);
-        cardEntity.add(rc);
 
         engine.addEntity(cardEntity);
 
         return cardEntity;
-
     }
 
     public List<Entity> createPlayers() {
@@ -419,6 +406,4 @@ public class World  {
 
         return entities;
     }
-
-
 }

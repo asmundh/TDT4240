@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -16,8 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
+<<<<<<< HEAD:CHAD/core/src/com/mygdx/game/model/screens/SettingsScreen.java
 import com.mygdx.game.model.screens.utils.Assets;
 import com.mygdx.game.model.screens.utils.MusicStateManager;
+=======
+import com.mygdx.game.model.Assets;
+
+/*
+This is the screen that is displayed when the player clicks on Settings.
+ */
+>>>>>>> b6eae3e5c69103cf17bda13d74949a434b7bf3f5:CHAD/core/src/com/mygdx/game/view/SettingsScreen.java
 
 public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -138,7 +146,6 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         menuTable.moveBy(0,0);
 
         settings.addActor(menuTable); // Add the table containing the buttons to the stage
-
     }
 
     @Override
@@ -154,7 +161,6 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sb.begin(); // Draw elements to Sprite Batch
-        //sb.draw(background, 0,0, CardGame.WIDTH, CardGame.HEIGHT);
         sb.end();
 
         settings.draw(); // Draw elements to Stage
