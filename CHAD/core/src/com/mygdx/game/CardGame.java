@@ -69,6 +69,7 @@ public class CardGame extends Game {
 	}
 
 	public void playMusic(Music music){
+		Music bgMusic = getBgMusic();
 		if(musicStateManager.getMusicState() && !bgMusic.isPlaying()){
 			bgMusic.play();
 			bgMusic.setLooping(true);
