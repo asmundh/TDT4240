@@ -79,13 +79,16 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     // From hand to table
-    public boolean AddCardToTable(Entity entity, int index) {
-        if (pm.get(entity).cardsOnTable.size() < 4) {
-            pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
-            return true;
+    public void AddCardToTable(Entity playerEntity, int index) {
+        if (tableHasRoom(playerEntity)) {
+            pm.get(playerEntity).cardsOnTable.add(pm.get(playerEntity).hand.remove(index));
         } else {
-            return false;
+            return;
         }
+    }
+
+    public boolean tableHasRoom(Entity playerEntity) {
+        return (pm.get(playerEntity).cardsOnTable.size() < 4);
     }
 
     public void addRectangleToCard(Entity entity, int index) {

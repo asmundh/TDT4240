@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameScreen extends ScreenAdapter implements ScreenInterface {
+public class GameScreen2 extends ScreenAdapter implements ScreenInterface {
 
     private CardGame game;
     private World world;
@@ -43,8 +43,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     private String userName = null;
     private String opponentUserName = null;
-  
-    protected GameScreen(CardGame game, Engine engine) {
+
+    protected GameScreen2(CardGame game, Engine engine) {
         this.game = game;
 
         this.engine = engine;
@@ -165,7 +165,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     // Check if gameData on server != null --> means that the state has been updated
     public boolean checkNewTurn() {
-       return (game.androidInterface.getGameData() != null);
+        return (game.androidInterface.getGameData() != null);
     }
 
     TimerTask task = new TimerTask() {
@@ -611,6 +611,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(CardSystem.class).setSleeping(card, false);
                 }
             }
+
         }
     }
 
@@ -627,56 +628,70 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         if (Gdx.input.justTouched()) {
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             pos.y = Gdx.graphics.getHeight() - pos.y;
+
             // Depending on where the player has clicked, act accordingly.
-            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
             if (bv.getShowHandButtonRect().contains(pos)){
                 // Hides the hand when the button is clicked. Button for showing and hiding hand
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
                 if (prevClickedCard == null) {
                     // Now showing the hand
                     return;
-                } else {
+                }
+                else {
                     // Unclicks the previously clicked card on the hand. If prev clicked card is green, make it not green and then make new card green.
-                    deselectCard(prevClickedCard);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                }
+            }
+            else if (bv.getEnemyRectangle().contains(pos)) {
+                // Attack enemy card if we have selected a card.
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
+                if (prevClickedCard == null) {
+                    return;
+                } else {
+                    engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
                 }
             }
             else if (bv.getEndTurnButtonRect().contains(pos)) {
                 //End turn
+                Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
                 if (prevClickedCard == null) {
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                 } else {
                     engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
                 }
+
+
+
+
                 System.out.println("Trying to end turn");
                 //switch and end the turn
                 engine.getSystem(BoardSystem.class).turnSwitcher(boardEntity);
                 endTurn(boardEntity);
+
+
             }
 
-            else if (bv.getEnemyRectangle().contains(pos)) {
-                // Attack enemy card if we have selected a card from table.
-                if (prevClickedCard != null && !engine.getSystem(BoardSystem.class).getShowHand(boardEntity)) {
-                    engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
-                    deselectCard(prevClickedCard);
-                    engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
-                } else {
-                    return;
-                }
-            }
 
-            else if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity)) {
+            else if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity) == true) {
                 this.handleInputHand(pos);
             }
+
             else {
                 this.handleInputTable(pos);
             }
+
             searchAndDestroyDeadCards();
         }
     }
 
-    private int getIndexOnTable(Vector2 pos) {
+    public void handleInputTable(Vector2 pos) {
         int index = -1;
         List<Rectangle> boardPos = bv.getBoardPosition();
         System.out.println("Pos" + pos);
@@ -697,25 +712,23 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 break;
             }
         }
-        return index;
-    }
 
-    public void handleInputTable(Vector2 pos) {
-        int index = getIndexOnTable(pos);
-
-        Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
-
-        if (index == -1) { // Deselects a card if no card is clicked
-            deselectCard(prevClickedCard);
+        if (index == -1) { // Deselects a card
+            Entity prevChosenCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
+            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+            engine.getSystem(CardSystem.class).updateSelected(prevChosenCard);
             return;
         }
+
+        Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
         if (index < 4 && index >= 0) { // Friendly cards
             Entity cardClicked = engine.getSystem(PlayerSystem.class).getCardOnTable(players.get(0), index);
             boolean sleeping = engine.getSystem(CardSystem.class).isSleeping(cardClicked);
             if (prevClickedCard != null && !sleeping) {
                 if (prevClickedCard == cardClicked) {
-                    deselectCard(cardClicked);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    engine.getSystem(CardSystem.class).updateSelected(cardClicked);
                 } else {
                     engine.getSystem(CardSystem.class).updateSelected(prevClickedCard); // Deselects prev clicked card
                     engine.getSystem(CardSystem.class).updateSelected(cardClicked); // Selects current clicked card
@@ -742,7 +755,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
 
-    private int getCardTouchedOnHand(Vector2 pos) {
+    public void handleInputHand(Vector2 pos) {
         List<Rectangle> handPos = bv.getHandPosition();
         int index = -1;
 
@@ -754,51 +767,49 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 break;
             }
         }
-        return index;
-    }
 
-    public void handleInputHand(Vector2 pos) {
-        int indexOfCardHit = getCardTouchedOnHand(pos);
-        if (indexOfCardHit == -1) { // Didnt touch a card.
+        if(index == -1) {
             return;
         }
-        if (indexOfCardHit >= 0) {
-            Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), indexOfCardHit);
+
+        if (index >= 0) {
+            Entity cardChosen = engine.getSystem(PlayerSystem.class).getCardFromHand(players.get(0), index);
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
-            if (prevClickedCard == cardChosen) {
-                if (canPlaceCard(cardChosen)) { //player has enough mana for card and table has room
-                    placeCard(cardChosen, indexOfCardHit);
-                } else {
-                    deselectCard(cardChosen);
+
+            if (prevClickedCard != null) {
+                if (prevClickedCard == cardChosen) {
+                    // Confirm card and add to table
+                    if (engine.getSystem(PlayerSystem.class).getManaPoints(players.get(0)) >= engine.getSystem(CardSystem.class).getCost(cardChosen)) { //player has enough mana for card
+                        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), index);
+                        engine.getSystem(CardSystem.class).deployCard(cardChosen);
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                        engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardChosen));
+                    }
+                    else { //player does not have enough mana for card
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                    }
+
+
+                } else { // New card chosen
+                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
                 }
             } else {
-                deselectCard(prevClickedCard);
-                selectCard(cardChosen);
+                engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                // engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                // chosenCard(cardChosen);
             }
         }
-    }
+        else {
+            Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
+            engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+            engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+        }
 
-    public void placeCard(Entity cardEntity, int indexOfCardToPlace) {
-        engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), indexOfCardToPlace);
-        engine.getSystem(CardSystem.class).deployCard(cardEntity);
-        engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardEntity));
-        deselectCard(cardEntity);
-    }
-
-    public void selectCard(Entity cardEntity) {
-        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardEntity);
-        engine.getSystem(CardSystem.class).updateSelected(cardEntity);
-    }
-
-    public void deselectCard(Entity cardEntity) {
-        engine.getSystem(CardSystem.class).updateSelected(cardEntity);
-        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
-    }
-
-    public boolean canPlaceCard(Entity cardChosen) {
-        boolean hasRoom = engine.getSystem(PlayerSystem.class).tableHasRoom(players.get(0));
-        boolean hasMana = engine.getSystem(PlayerSystem.class).getManaPoints(players.get(0)) >= engine.getSystem(CardSystem.class).getCost(cardChosen);
-        return (hasMana && hasRoom);
     }
 
     //makes the card glow, has to click one more time to confirm.
@@ -806,5 +817,4 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
         engine.getSystem(CardSystem.class).updateSelected(cardChosen);
     }
-
 }
