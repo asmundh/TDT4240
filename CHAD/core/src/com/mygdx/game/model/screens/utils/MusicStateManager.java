@@ -8,27 +8,22 @@ public class MusicStateManager {
     private Preferences prefs;
     private CardGame game;
 
-    private static final String PREF_NAME = "CHAD";
-    private static final String MUSIC_STATE = "mstate";
+    private boolean isPlaying;
 
     public MusicStateManager(CardGame game) {
+        this.isPlaying = true;
         this.game = game;
-        prefs = Gdx.app.getPreferences(PREF_NAME);
-        game.musicBool = prefs.getBoolean(MUSIC_STATE, true);
     }
 
-    public void saveState(boolean musicState) {
-        game.musicBool = musicState;
-        prefs.putBoolean(MUSIC_STATE, musicState);
-        prefs.flush();
-
-        if(game.musicBool)
+    public void changeState() {
+        this.isPlaying = !isPlaying;
+        if(isPlaying)
             game.getBgMusic().play();
         else
             game.getBgMusic().stop();
     }
 
     public boolean getMusicState() {
-        return prefs.getBoolean(MUSIC_STATE);
+        return isPlaying;
     }
 }

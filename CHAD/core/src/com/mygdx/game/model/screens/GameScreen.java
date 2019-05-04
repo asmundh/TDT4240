@@ -606,7 +606,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
             enemyBoardId.add(card);
             System.out.println("endTurn(): added these stats for a card on enemy: id: " + card.get(0) + ", health: " +card.get(1) + ", attack: " + card.get(2) + ".");
-
         }
 
         GameStateObject gameState = new GameStateObject();

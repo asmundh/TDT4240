@@ -19,9 +19,8 @@ public class CardGame extends Game {
 	private Assets assets;
 	public Engine engine;
 	public AndroidInterface androidInterface;
-	public Boolean musicBool = true;
 	private Music bgMusic;
-	private MusicStateManager musicStateManager;
+	public MusicStateManager musicStateManager;
 
 	public CardGame(AndroidInterface androidInterface){
 		this.androidInterface = androidInterface;
@@ -37,9 +36,8 @@ public class CardGame extends Game {
 		batch = new SpriteBatch();
 		Gdx.gl.glClearColor(1, 0, 0, 1);
     
-		//this.setScreen(new MenuScreen(this));
 		this.setScreen(new LoadingScreen(this, engine));
-
+		this.musicStateManager = new MusicStateManager(this);
 	}
 
 	@Override
@@ -72,8 +70,7 @@ public class CardGame extends Game {
 	}
 
 	public void playMusic(Music music){
-
-		if(this.musicBool && !bgMusic.isPlaying()){
+		if(musicStateManager.getMusicState() && !bgMusic.isPlaying()){
 			bgMusic.play();
 			bgMusic.setLooping(true);
 		}

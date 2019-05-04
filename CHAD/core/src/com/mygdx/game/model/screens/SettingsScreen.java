@@ -38,8 +38,6 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         this.engine = engine;
 
         this.btnClick = Assets.getSound(Assets.btnClick);
-        //this.menuScreen = new MenuScreen(game, engine);
-        this.musicStateManager = new MusicStateManager(game);
     }
 
     @Override
@@ -88,7 +86,7 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         muteBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                musicStateManager.saveState(!musicStateManager.getMusicState());
+                game.musicStateManager.changeState();
                 btnClick.play();
             }
 

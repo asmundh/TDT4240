@@ -174,9 +174,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             this.userName = this.game.androidInterface.getDisplayName();
             game.androidInterface.dismissAllMatches();
         }
-
-
-
     }
 
     @Override
