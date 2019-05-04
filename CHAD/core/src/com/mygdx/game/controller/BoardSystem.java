@@ -63,7 +63,6 @@ public class BoardSystem extends IteratingSystem {
         return players;
     }
 
-
     @Override
     protected void processEntity(Entity entity, float dt) {
         BoardComponent boardComp = bm.get(entity);
@@ -75,12 +74,6 @@ public class BoardSystem extends IteratingSystem {
         bm.get(entity).turnNumber++;
     }
 
-    public int getTurnNumber(Entity boardEntity) {
-        return bm.get(boardEntity).turnNumber;
-    }
-
-
-
     public void cardChosen(Entity board, Entity lastCardClicked) {
         bm.get(board).lastCardClicked = lastCardClicked;
     }
@@ -89,6 +82,4 @@ public class BoardSystem extends IteratingSystem {
         return bm.get(board).lastCardClicked;
 
     }
-
-
 }
