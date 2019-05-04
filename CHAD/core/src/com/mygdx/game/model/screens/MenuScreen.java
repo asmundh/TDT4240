@@ -85,7 +85,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         signInBtn.setOrigin(signInBtn.getWidth()/2, signInBtn.getHeight()/2);
 
         // Initialize a  button using texture from Assets. Set the size, make is transformable and set the origin to the middle
-        final Button tutBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.settingBtn))));
+        final Button tutBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.tutorialBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.tutorialBtn))));
         tutBtn.setTransform(true);
         tutBtn.setOrigin(tutBtn.getWidth()/2, tutBtn.getHeight()/2);
 
@@ -138,6 +138,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         tutBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
+                btnClick.play();
                 game.setScreen(new TutorialScreen(game, engine));
             }
 
@@ -189,7 +190,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         menuTable.moveBy(0,-240);
         menuTable.row();
         menuTable.add(signInBtn).pad(10);
-        menuTable.getCell(signInBtn).height(178).width(600);
+        menuTable.getCell(signInBtn).height(buttonHeight).width(413);
         menuTable.setFillParent(true);
 
         stage.addActor(menuTable); // Add the table containing the buttons to the stage
