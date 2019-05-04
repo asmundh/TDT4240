@@ -19,8 +19,6 @@ public class CardGame extends Game {
 	private Assets assets;
 	public Engine engine;
 	public AndroidInterface androidInterface;
-	private Music bgMusic;
-	public MusicStateManager musicStateManager;
 
 	public CardGame(AndroidInterface androidInterface){
 		this.androidInterface = androidInterface;
@@ -37,7 +35,6 @@ public class CardGame extends Game {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
     
 		this.setScreen(new LoadingScreen(this, engine));
-		this.musicStateManager = new MusicStateManager(this);
 	}
 
 	@Override
@@ -64,15 +61,4 @@ public class CardGame extends Game {
 		return Gdx.graphics.getHeight();
 	}
 
-	public Music getBgMusic() {
-		return Assets.getMusic(Assets.backgroundMusic);
-	}
-
-	public void playMusic(Music music){
-		Music bgMusic = getBgMusic();
-		if(musicStateManager.getMusicState() && !bgMusic.isPlaying()){
-			bgMusic.play();
-			bgMusic.setLooping(true);
-		}
-	}
 }
