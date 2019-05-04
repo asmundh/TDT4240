@@ -110,7 +110,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             gameStage.addActor(menuTable); // Add the table containing the buttons to the stage
 
 
-            bv = new BoardView(boardEntity);
+            bv = new BoardView(game, boardEntity);
 
             // Initiate player-names
             this.userName = this.game.androidInterface.getDisplayName();
@@ -560,7 +560,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void startNewTurn(Entity boardEntity) {
-        bv = new BoardView(boardEntity);
+        bv = new BoardView(game, boardEntity);
         this.boardEntity = boardEntity;
         this.players = engine.getSystem(BoardSystem.class).getPlayers(boardEntity);
 

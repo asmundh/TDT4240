@@ -62,6 +62,8 @@ public class BoardView {
     private List<CardView> enemyCardsOnBoard;
     private List<CardView> cardsInHand;
 
+    private String opponentDisplayName = null;
+
 
     private static Vector2[] boardPositions = {
             new Vector2((Gdx.graphics.getWidth() / 2) - (Gdx.graphics.getWidth() / 4), (Gdx.graphics.getHeight() / 2) - (Gdx.graphics.getHeight() / 4)),
@@ -123,7 +125,7 @@ public class BoardView {
             new Vector2(Gdx.graphics.getWidth() / 6 + 1050, 100),
     };
 
-    public BoardView(Entity boardEntity) {
+    public BoardView(CardGame game, Entity boardEntity) {
         this.boardEntity = boardEntity;
         this.deck = Assets.getTexture(deckPath);
         this.background = Assets.getTexture(boardBackgroundPath);
@@ -131,6 +133,7 @@ public class BoardView {
         this.handRect = Assets.getTexture(handRectPath);
         this.healthIconTexture = Assets.getTexture(healthIconPath);
         this.font = new BitmapFont();
+        this.game = game;
 
 
         shapeRenderer = new ShapeRenderer();
@@ -181,7 +184,7 @@ public class BoardView {
         }
         */
 
-
+        this.opponentDisplayName = game.androidInterface.getOpponentDisplayName();
 
     }
 
@@ -273,7 +276,7 @@ public class BoardView {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Color.LIGHT_GRAY);
-            shapeRenderer.rect(Gdx.graphics.getWidth() / 6, 50, Gdx.graphics.getWidth() / 1.5f, Gdx.graphics.getHeight() / 3);
+            shapeRenderer.rect(Gdx.graphics.getWidth() / 6, 50, 1283, 356);
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.rect(showHandButtonPos.x, showHandButtonPos.y, 225, 80);
             shapeRenderer.end();
@@ -312,18 +315,25 @@ public class BoardView {
 
         //drawing of mana points
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(Gdx.graphics.getWidth() - 300, 120, 250, 200);
+        shapeRenderer.setColor(Color.LIGHT_GRAY);
+        shapeRenderer.rect(Gdx.graphics.getWidth() - 300, 800, 250, 200);
         shapeRenderer.end();
         batch.begin();
         font.setColor(Color.CYAN);
-        font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 200);
+        font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 880);
         batch.end();
 
         //drawing of own health
         batch.begin();
         font.setColor(Color.GREEN);
-        font.draw(batch, "Your Health: " + String.valueOf(health), Gdx.graphics.getWidth()*0.85f, 300);
+        font.draw(batch, "Your Health: " + String.valueOf(health), Gdx.graphics.getWidth()*0.85f, 980);
+        batch.end();
+
+        //drawing of enemy displayname
+        batch.begin();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(2);
+        font.draw(batch, "Playing against: " + opponentDisplayName, 300, 1000);
         batch.end();
 
 
