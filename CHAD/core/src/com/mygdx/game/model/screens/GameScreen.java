@@ -530,9 +530,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).clearBoard(players.get(0));
         engine.getSystem(PlayerSystem.class).clearBoard(players.get(1));
 
+        System.out.println("parseNewTurn(): playerBoardCards.size(): " + playerBoardCards.size());
+
         for (int i = 0; i < playerBoardCards.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToTable(players.get(0), playerBoardCards.get(i));
         }
+        System.out.println("parseNewTurn(): enemyBoardCards.size(): " + enemyBoardCards.size());
         for (int i = 0; i < enemyBoardCards.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToTable(players.get(1), enemyBoardCards.get(i));
         }
@@ -544,8 +547,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10); //Reset mana points. All turns after 9, players mana points will be reset to 10
 
         System.out.println("parseNewTurn() ended...");
+        System.out.println("parseNewTurn() playerBoardCards size:" + playerBoardCards.size());
+        System.out.println("parseNewTurn() enemyBoardCards size:" + enemyBoardCards.size());
         System.out.println("parseNewTurn(): Playerhand size: "+ playerHand.size());
         System.out.println("parseNewTurn(): enemyHand size: "+ enemyHand.size());
+        wakeAllCards();
 
     }
 
