@@ -96,9 +96,7 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     public void clearBoard(Entity playerEntity) {
-        for (int i = 0; i < pm.get(playerEntity).cardsOnTable.size(); i++) {
-            pm.get(playerEntity).cardsOnTable.remove(i);
-        }
+        pm.get(playerEntity).cardsOnTable.clear();
     }
     public void clearHand(Entity playerEntity) {
             pm.get(playerEntity).hand.clear();
@@ -131,8 +129,12 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     public void addCardToTable(Entity playerEntity, Entity cardEntity) {
+        System.out.println("PlayerSystem - addCardToTable(): trying to add a card to table");
         if (pm.get(playerEntity).cardsOnTable.size() < 5) {
+
             pm.get(playerEntity).cardsOnTable.add(cardEntity);
+            System.out.println("PlayerSystem - addCardToTable(): added a card to table");
+
         }
     }
 

@@ -84,8 +84,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             quitBtn.addListener(new ClickListener() {
                 @Override // Fires when the user lets go of the button
                 public void clicked(InputEvent event, float x, float y) {
-                    //game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
-                    loadTurnCounter();
+                    game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
+
                 }
 
                 @Override // Fires when the button is pressed down
@@ -119,7 +119,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(PlayerSystem.class).setPlayerName(players.get(1), opponentUserName);
         }
 
-        checkAndLoadNewTurn();
+        loadTurnCounter();
     }
 
     @Override
@@ -167,12 +167,13 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     // Check if gameData on server != null --> means that the state has been updated
     public boolean checkNewTurn() {
         return (game.androidInterface.getGameData() != null);
-    public boolean checkNotFirstTurn() {
-        if(game.androidInterface.getTurnCounter() == 9000){
-            System.out.println("There seems to be a new game and it is now you who started");
-            return false;
-        }
-        return true;
+    }
+        public boolean checkNotFirstTurn () {
+            if (game.androidInterface.getTurnCounter() == 9000) {
+                System.out.println("There seems to be a new game and it is now you who started");
+                return false;
+            }
+            return true;
         /*else{
             System.out.println("checkNewTurn(): getGameData: "+ game.androidInterface.getGameData());
             System.out.println("checkNewTurn(): my local turncounter: "+ turnCounter);
@@ -187,7 +188,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }*/
     }
 
-    public void loadTurnCounter(){
+    public void loadTurnCounter() {
         System.out.println("loadTurnCounter(): my local turncounter: " + turnCounter);
 
         // Loads the turncounter on the server
@@ -263,7 +264,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         boolean categoryFlag = false;
         boolean currentCardCategoryFlag = false;
 
-        for (int i = 0; i < gameState.length(); i++) {
+        for (int i = 0; i < gameState.length() -1; i++) {
             if(categoryFlag){
                 categoryFlag = false;
                 currentCategory ++;
@@ -465,6 +466,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             }
         }
 
+
+
         // printing hands of players
         for(int i = 0; i < playerHand.size(); i++){
             System.out.println("parseNewTurn(): playerHand array: index of :" + i + ": " + playerHand.get(i));
@@ -509,6 +512,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             engine.getSystem(PlayerSystem.class).addCardToHand(players.get(1), enemyHandEntityList.get(i));
         } */
 
+        startCheck();
+
+
         //Creating card entities for the board
         List<Entity> playerBoardCards = new ArrayList<>();
         List<Entity> enemyBoardCards = new ArrayList<>();
@@ -523,6 +529,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).clearBoard(players.get(0));
         engine.getSystem(PlayerSystem.class).clearBoard(players.get(1));
 
+        endCheck();
+
         System.out.println("parseNewTurn(): playerBoardCards.size(): " + playerBoardCards.size());
 
         for (int i = 0; i < playerBoardCards.size(); i++) {
@@ -532,6 +540,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         for (int i = 0; i < enemyBoardCards.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToTable(players.get(1), enemyBoardCards.get(i));
         }
+
 
         engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), true); //Set your turn to true
         engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0)); //Increase your turn number by 1
@@ -546,7 +555,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         System.out.println("parseNewTurn(): enemyHand size: "+ enemyHand.size());
 
         wakeAllCards();
-
 
     }
 
@@ -651,32 +659,72 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
     }
 
+    public void startCheck() {
+                            System.out.println("handleInput START: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+    }
+    public void endCheck() {
+        System.out.println("handleInput END: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+
+    }
+
     @Override
     public void handleInput() {
         //Input will not be handled if it is not your turn.
-        if (!isMyTurn()) return;
 
         if (Gdx.input.justTouched()) {
+
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             pos.y = Gdx.graphics.getHeight() - pos.y;
             // Depending on where the player has clicked, act accordingly.
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
+            if (!isMyTurn()){
+
+                if((bv.getLoadTurnButtonRect().contains(pos))){
+                    //System.out.println("handleInput START: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+                    //System.out.println("handleInput START: size of enemyBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(1)).size());
+
+                    loadTurnCounter();
+                    //System.out.println("handleInput END: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+                    //System.out.println("handleInput END: size of enemyBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(1)).size());
+
+
+                }
+                else{
+                    return;
+                }
+            }
+
             if (bv.getShowHandButtonRect().contains(pos)){ // Hides the hand when the button is clicked. Button for showing and hiding hand
+
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
                 deselectCard(prevClickedCard);
+
             }
 
             else if (bv.getEndTurnButtonRect().contains(pos)) {
+
                 //End turn and switch whose turn it is
                 System.out.println("Trying to end turn");
                 deselectCard(prevClickedCard);
                 engine.getSystem(BoardSystem.class).turnSwitcher(boardEntity);
                 endTurn(boardEntity);
+
+            }
+
+            else if (bv.getLoadTurnButtonRect().contains(pos)) {
+
+                //End turn and switch whose turn it is
+                System.out.println("Trying to load new turn");
+                deselectCard(prevClickedCard);
+                loadTurnCounter();
+
             }
 
             else if (isHandShowing()) {
+
                 this.handleInputHand(pos);
+
             }
 
             else if (bv.getEnemyRectangle().contains(pos)) { // Attack enemy card if we have selected a card from table.
@@ -689,10 +737,15 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             }
 
             else {
+
                 this.handleInputTable(pos);
+
             }
+
             searchAndDestroyDeadCards();
+
         }
+
     }
 
     public void handleInputTable(Vector2 pos) {
@@ -792,6 +845,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void placeCard(Entity cardEntity, int indexOfCardToPlace) {
+        System.out.println("placeCard(): trying to AddCardToTable: - indexOfCardToPlace = " + indexOfCardToPlace );
         engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), indexOfCardToPlace);
         engine.getSystem(CardSystem.class).deployCard(cardEntity);
         engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardEntity));
