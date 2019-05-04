@@ -43,6 +43,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     private String userName = null;
     private String opponentUserName = null;
+
+    private int turnCounter = 0;
+    private boolean loadedNewTurn = false;
   
     protected GameScreen(CardGame game, Engine engine) {
         this.game = game;
@@ -81,7 +84,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 @Override // Fires when the user lets go of the button
                 public void clicked(InputEvent event, float x, float y) {
                     //game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
-                    checkAndLoadNewTurn();
+                    loadTurnCounter();
                 }
 
                 @Override // Fires when the button is pressed down
@@ -164,32 +167,71 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     // Check if gameData on server != null --> means that the state has been updated
-    public boolean checkNewTurn() {
-       return (game.androidInterface.getGameData() != null);
+    public boolean checkNotFirstTurn() {
+        if(game.androidInterface.getTurnCounter() == 9000){
+            System.out.println("There seems to be a new game and it is now you who started");
+            return false;
+        }
+        return true;
+        /*else{
+            System.out.println("checkNewTurn(): getGameData: "+ game.androidInterface.getGameData());
+            System.out.println("checkNewTurn(): my local turncounter: "+ turnCounter);
+
+            game.androidInterface.getGameData();
+            if(!(game.androidInterface.getTurnCounter() == turnCounter)){
+                System.out.println("checkNewTurn(): getTurnCounter: "+ game.androidInterface.getTurnCounter());
+                turnCounter = game.androidInterface.getTurnCounter();
+                return (game.androidInterface.getGameData() != null);
+
+            return false;
+        }*/
     }
 
-    TimerTask task = new TimerTask() {
+    public void loadTurnCounter(){
+        System.out.println("loadTurnCounter(): my local turncounter: " + turnCounter);
+
+        // Loads the turncounter on the server
+        int loadedTurnCounter = game.androidInterface.getTurnCounter();
+        System.out.println("loadTurnCounter(): received turnCounter: " + loadedTurnCounter);
+
+
+        // Compare the turnCounter to the local turncounter
+        if(loadedTurnCounter != turnCounter){   // received new turnCounter, there has been an update
+            turnCounter = loadedTurnCounter;
+            // load new turn
+            loadedNewTurn = false;
+            checkAndLoadNewTurn();
+        }
+        else{
+            System.out.println("loadTurnCounter(): the counter received from server is equal to your local counter...");
+        }
+    }
+
+    /*TimerTask task = new TimerTask() {
         @Override
         public void run() {
-            if (checkNewTurn()) {
+            if (checkNotFirstTurn()) {
 
                 System.out.println("Received something else than null from server...");
                 System.out.println("gameData received: " + game.androidInterface.getGameData());
                 parseNewTurn(game.androidInterface.getGameData());
             }
         }
-    };
+    };*/
 
     public void checkAndLoadNewTurn() {
         /*Timer timer = new Timer();
         long delay = 0;
         long interval = 30000;
         timer.schedule(task, delay, interval);*/
-        if (checkNewTurn()) {
+        if (checkNotFirstTurn()) {
 
-            System.out.println("Received something else than null from server...");
+            //System.out.println("Received something else than null from server...");
             System.out.println("gameData received: " + game.androidInterface.getGameData());
-            parseNewTurn(game.androidInterface.getGameData());
+            if(!(loadedNewTurn)){
+                parseNewTurn(game.androidInterface.getGameData());
+                loadedNewTurn = true;
+            }
         }
 
     }
@@ -499,7 +541,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).increaseYourTurnNumber(players.get(0)); //Increase your turn number by 1
         engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
         int yourTurnNumber = engine.getSystem(PlayerSystem.class).getYourTurnNumber(players.get(0));
-        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), yourTurnNumber); //Reset mana points. All turns after 9, players mana points will be reset to 10
+        engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10); //Reset mana points. All turns after 9, players mana points will be reset to 10
 
         System.out.println("parseNewTurn() ended...");
         System.out.println("parseNewTurn(): Playerhand size: "+ playerHand.size());
@@ -651,11 +693,13 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 if (prevClickedCard == null) {
                     return;
                 } else {
-                    if (engine.getSystem(BoardSystem.class).getShowHand(boardEntity) == true) { return; }
-                    engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
-                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
-                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
-                    engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
+
+                    if(!(engine.getSystem(BoardSystem.class).getShowHand(boardEntity))){
+                        engine.getSystem(PlayerSystem.class).takeDamage(players.get(1), engine.getSystem(CardSystem.class).getAttackPower(prevClickedCard));
+                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, null);
+                        engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                        engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
+                    }
                 }
             }
             else if (bv.getEndTurnButtonRect().contains(pos)) {
@@ -796,9 +840,14 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
                 } else { // New card chosen
-                    engine.getSystem(CardSystem.class).updateSelected(cardChosen);
-                    engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
-                    engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                    if (!bv.getEnemyRectangle().contains(pos)) {
+                        engine.getSystem(CardSystem.class).updateSelected(cardChosen);
+                        engine.getSystem(CardSystem.class).updateSelected(prevClickedCard);
+                        engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);
+                    }
+                    else{
+                        engine.getSystem(CardSystem.class).updateSelected(null);
+                    }
                 }
             } else {
                 engine.getSystem(BoardSystem.class).cardChosen(boardEntity, cardChosen);

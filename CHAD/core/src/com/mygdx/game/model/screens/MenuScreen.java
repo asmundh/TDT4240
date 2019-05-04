@@ -170,6 +170,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         this.isSignedIn = this.game.androidInterface.getIsSignedIn();
         if(this.isSignedIn){
             this.userName = this.game.androidInterface.getDisplayName();
+            game.androidInterface.dismissAllMatches();
         }
 
 

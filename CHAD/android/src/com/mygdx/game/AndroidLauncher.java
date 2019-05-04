@@ -1321,6 +1321,73 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		});
 	}
 
+	public void dismissAllMatches(){
+		int[] mMatchStatuses = new int[3];
+		mMatchStatuses[0] = TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN;
+		mMatchStatuses[1] = TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN;
+		mMatchStatuses[2] = TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE;
+		mTurnBasedMultiplayerClient.loadMatchesByStatus(mMatchStatuses).addOnSuccessListener(new OnSuccessListener<AnnotatedData<LoadMatchesResponse>>() {
+			@Override
+			public void onSuccess(AnnotatedData<LoadMatchesResponse> loadMatchesResponseAnnotatedData) {
+				Log.d(AppSettings.tag, "Loaded My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
+				Log.d(AppSettings.tag, "Loaded Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
+				Log.d(AppSettings.tag, "Loaded completed matches: " + loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount());
+				/*if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount() == 0){
+					Log.d(AppSettings.tag, "There are 0 matches going on. Setting mMatch to null");
+					mMatch = null;
+				}
+				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0){
+					// there is one OR MORE matches where it is my turn
+					mMatch = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
+					updateMatch(mMatch);
+				}
+				else if (loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() > 0){
+					// there is one OR MORE matches where it is not my turn
+					mMatch = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
+					updateMatch(mMatch);
+				}*/
+				if (loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount() > 0) {
+					// there is one OR MORE matches that is completed, will loop through all and delete them
+					// Amount of matches
+					int amountToLoop = loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount();
+					Log.d(AppSettings.tag, "getcompletedMatches().getCount() = " + amountToLoop);
+					for (int i = 0; i < amountToLoop; i++) {
+						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountToLoop) + " matches that are completed. Dismissing them all.");
+						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getCompletedMatches().get(i);
+						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
+					}
+				}
+				if (loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0) {
+					int amountMyTurn = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount();
+					Log.d(AppSettings.tag, "getMyTurnMatches().getCount() = " + amountMyTurn);
+					for (int i = 0; i < amountMyTurn; i++) {
+						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountMyTurn) + " matches that are my turn. Dismissing them all.");
+						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(i);
+						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
+					}
+				}
+				if (loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() > 0){
+					int amountTheirTurn = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount();
+					Log.d(AppSettings.tag, "getTheirTurnMatches().getCount() = " + amountTheirTurn);
+
+					for(int i = 0; i < amountTheirTurn; i++){
+						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountTheirTurn) + " matches that are their turn. Dismissing them all.");
+						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().get(i);
+						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
+					}
+				}
+			}
+		}).addOnFailureListener(new OnFailureListener() {
+			@Override
+			public void onFailure(@NonNull Exception e) {
+				Log.d(AppSettings.tag, "There was an error loading matches.");
+			}
+		});
+	}
+
 	// Function used to end the current match, return true if ended, return false if not
 	public boolean endMatch(){
 		Log.d(AppSettings.tag, "endMatch was called...");
@@ -1361,6 +1428,20 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	public String getDisplayName(){
 
 		return mDisplayName;
+	}
+
+	// Called to check turncounter
+	public int getTurnCounter(){
+		if(mMatch != null){
+			loadMatch();
+			updateMatch(mMatch);
+		}
+		if(mTurnData != null) {
+			return mTurnData.turnCounter;
+		}
+		else {
+			return 9000;
+		}
 	}
 
 	public void gdxEndMatch(){
