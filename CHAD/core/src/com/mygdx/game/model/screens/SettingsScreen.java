@@ -53,9 +53,10 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
 
         final Button muteBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.mute))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.mute))),
                 new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.play))));
-        backBtn.setTransform(true);
-        backBtn.setSize(backBtn.getWidth(), backBtn.getHeight());
-        backBtn.setOrigin(backBtn.getWidth()/2, backBtn.getHeight()/2);
+        muteBtn.setTransform(true);
+        muteBtn.setChecked(!game.musicStateManager.getMusicState());
+        muteBtn.setSize(muteBtn.getWidth(), muteBtn.getHeight());
+        muteBtn.setOrigin(muteBtn.getWidth()/2, muteBtn.getHeight()/2);
 
         // Initialize a  button using texture from Assets. Set the size, make is transformable and set the origin to the middle
         final Button exitBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.exit_gameBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.exit_gameBtn))));
