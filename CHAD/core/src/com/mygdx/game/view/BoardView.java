@@ -50,6 +50,8 @@ public class BoardView {
     private CardView cardView;
     private Vector2 showHandButtonPos;
     private Vector2 endTurnButtonPos;
+    private Vector2 loadTurnButtonPos;
+
 
 
     private List<Entity> friendlyCardsOnBoardEntity;
@@ -109,6 +111,10 @@ public class BoardView {
         return new Rectangle(endTurnButtonPos.x, endTurnButtonPos.y, 225, 80);
     }
 
+    public Rectangle getLoadTurnButtonRect() {
+        return new Rectangle(loadTurnButtonPos.x, loadTurnButtonPos.y, 225, 80);
+    }
+
     private Vector2[] handPositions = {
             new Vector2(Gdx.graphics.getWidth() / 6 + 50, 100),
             new Vector2(Gdx.graphics.getWidth() / 6 + 300, 100),
@@ -150,6 +156,7 @@ public class BoardView {
         showHandButtonPos = new Vector2(50, 150);
 
         endTurnButtonPos = new Vector2(Gdx.graphics.getWidth() - 250, Gdx.graphics.getHeight() / 2);
+        loadTurnButtonPos = new Vector2(10, Gdx.graphics.getHeight() / 2);
 
 
 
@@ -201,17 +208,28 @@ public class BoardView {
         batch.draw(background, 0, 0);
         batch.end();
 
+        /*
         //Drawing of deck
         batch.begin();
         batch.draw(deck,10,  Gdx.graphics.getHeight() / 2 - deck.getHeight() / 2);
         batch.end();
+        */
 
         //Drawing of enemy
-
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 1.67f, Gdx.graphics.getHeight() - enemyRect.getHeight()*1.15f, enemyRect.getWidth()*1.2f, enemyRect.getHeight()*1.2f);
+        shapeRenderer.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.DARK_GRAY);
         shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight(), enemyRect.getWidth(), enemyRect.getHeight());
         shapeRenderer.end();
+
+        batch.begin();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(3);
+        font.draw(batch, "The ENEMY", Gdx.graphics.getWidth() / 2 - enemyRect.getWidth() / 2, Gdx.graphics.getHeight() - enemyRect.getHeight()*0.5f);
+        batch.end();
 
         batch.begin();
         batch.draw(healthIconTexture, Gdx.graphics.getWidth() / 2 - healthIconTexture.getWidth(), Gdx.graphics.getHeight() - font.getLineHeight() / 2);
@@ -290,7 +308,13 @@ public class BoardView {
             batch.end();
         }
 
+
+
         //drawing of mana points
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.rect(Gdx.graphics.getWidth() - 300, 120, 250, 200);
+        shapeRenderer.end();
         batch.begin();
         font.setColor(Color.CYAN);
         font.draw(batch,"Mana Points: " + String.valueOf(manapoints), Gdx.graphics.getWidth()*0.85f, 200);
@@ -311,6 +335,16 @@ public class BoardView {
         batch.begin();
         font.setColor(Color.WHITE);
         font.draw(batch, "End Turn", endTurnButtonPos.x + 50, endTurnButtonPos.y + 60);
+        batch.end();
+
+        //Drawing of Load Turn button
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(loadTurnButtonPos.x, loadTurnButtonPos.y, 225, 80);
+        shapeRenderer.end();
+        batch.begin();
+        font.setColor(Color.WHITE);
+        font.draw(batch, "Load Turn", loadTurnButtonPos.x + 50, loadTurnButtonPos.y + 60);
         batch.end();
 
 

@@ -98,6 +98,11 @@ public class DesktopLauncher {
 			public void gdxEndMatch() {
 
 			}
+
+			@Override
+			public void setMatchNull() {
+
+			}
 		}), config);
   }
 
