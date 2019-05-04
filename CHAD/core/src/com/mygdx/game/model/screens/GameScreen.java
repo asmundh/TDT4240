@@ -44,7 +44,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     private String userName = null;
     private String opponentUserName = null;
-    private Music bgMusic;
 
 
     private int turnCounter = 0;
@@ -57,10 +56,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         this.world = new World(engine);
 
         create();
-        this.bgMusic = game.getBgMusic();
-        this.bgMusic.setVolume(0.3f);
-        //this.bgMusic.play();
-        game.playMusic(bgMusic);
     }
 
     @Override
@@ -612,6 +607,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
             enemyBoardId.add(card);
             System.out.println("endTurn(): added these stats for a card on enemy: id: " + card.get(0) + ", health: " +card.get(1) + ", attack: " + card.get(2) + ".");
+
         }
 
         GameStateObject gameState = new GameStateObject();
