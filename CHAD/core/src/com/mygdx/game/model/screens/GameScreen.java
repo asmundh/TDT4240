@@ -168,12 +168,13 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     public boolean checkNewTurn() {
         return (game.androidInterface.getGameData() != null);
     }
-        public boolean checkNotFirstTurn () {
-            if (game.androidInterface.getTurnCounter() == 9000) {
-                System.out.println("There seems to be a new game and it is now you who started");
-                return false;
-            }
-            return true;
+
+    public boolean checkNotFirstTurn() {
+        if(game.androidInterface.getTurnCounter() == 9000){
+            System.out.println("There seems to be a new game and it is now you who started");
+            return false;
+        }
+        return true;
         /*else{
             System.out.println("checkNewTurn(): getGameData: "+ game.androidInterface.getGameData());
             System.out.println("checkNewTurn(): my local turncounter: "+ turnCounter);
