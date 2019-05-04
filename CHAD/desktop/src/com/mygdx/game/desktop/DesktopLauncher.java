@@ -95,12 +95,22 @@ public class DesktopLauncher {
 			}
 
 			@Override
+			public int getTurnCounter() {
+				return 0;
+			}
+
+			@Override
 			public void gdxEndMatch() {
 
 			}
 
 			@Override
 			public void setMatchNull() {
+
+			}
+
+			@Override
+			public void dismissAllMatches() {
 
 			}
 		}), config);

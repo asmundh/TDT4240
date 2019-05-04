@@ -5,7 +5,6 @@ import com.badlogic.gdx.Preferences;
 import com.mygdx.game.CardGame;
 
 public class MusicStateManager {
-    private Preferences prefs;
     private CardGame game;
 
     private boolean isPlaying;
@@ -17,10 +16,11 @@ public class MusicStateManager {
 
     public void changeState() {
         this.isPlaying = !isPlaying;
-        if(isPlaying)
+        if (isPlaying) {
             game.getBgMusic().play();
-        else
+        } else {
             game.getBgMusic().stop();
+        }
     }
 
     public boolean getMusicState() {

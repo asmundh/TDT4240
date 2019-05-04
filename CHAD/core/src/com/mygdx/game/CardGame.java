@@ -65,8 +65,7 @@ public class CardGame extends Game {
 	}
 
 	public Music getBgMusic() {
-		this.bgMusic = Assets.getMusic(Assets.backgroundMusic);
-		return bgMusic;
+		return Assets.getMusic(Assets.backgroundMusic);
 	}
 
 	public void playMusic(Music music){

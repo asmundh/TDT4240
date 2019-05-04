@@ -52,6 +52,106 @@ public class HtmlLauncher extends GwtApplication {
                         public String getMessage() {
                                 return null;
                         }
+
+                        @Override
+                        public void changeView() {
+
+                        }
+
+                        @Override
+                        public String getPlayerId() {
+                                return null;
+                        }
+
+                        @Override
+                        public String getDisplayName() {
+                                return null;
+                        }
+
+                        @Override
+                        public boolean getIsDoingTurn() {
+                                return false;
+                        }
+
+                        @Override
+                        public void startQuickMatch() {
+
+                        }
+
+                        @Override
+                        public String getOpponentDisplayName() {
+                                return null;
+                        }
+
+                        @Override
+                        public String getGameData() {
+                                return null;
+                        }
+
+                        @Override
+                        public String getGameDataFromCore() {
+                                return null;
+                        }
+
+                        @Override
+                        public void sendGameData(String gameData) {
+
+                        }
+
+                        @Override
+                        public void endTurn() {
+
+                        }
+
+                        @Override
+                        public boolean endMatch() {
+                                return false;
+                        }
+
+                        @Override
+                        public void sendGameDataAndEndTurn(String gameData) {
+
+                        }
+
+                        @Override
+                        public boolean getIsSignedIn() {
+                                return false;
+                        }
+
+                        @Override
+                        public void manualSignIn() {
+
+                        }
+
+                        @Override
+                        public void createNewMatch() {
+
+                        }
+
+                        @Override
+                        public boolean getFoundOpponent() {
+                                return false;
+                        }
+
+                        @Override
+                        public int getTurnCounter() {
+                                return 0;
+                        }
+
+                        @Override
+                        public void gdxEndMatch() {
+
+                        }
+
+                        @Override
+                        public void setMatchNull() {
+
+                        }
+
+                        @Override
+                        public void dismissAllMatches() {
+
+                        }
                 });
         }
 }
