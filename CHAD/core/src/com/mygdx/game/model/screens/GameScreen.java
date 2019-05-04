@@ -167,6 +167,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     // Check if gameData on server != null --> means that the state has been updated
     public boolean checkNewTurn() {
         return (game.androidInterface.getGameData() != null);
+    }
     public boolean checkNotFirstTurn() {
         if(game.androidInterface.getTurnCounter() == 9000){
             System.out.println("There seems to be a new game and it is now you who started");
