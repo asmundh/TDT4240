@@ -13,12 +13,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CardGame;
 import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.components.PlayerComponent;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 
 
 public class BoardView {
@@ -161,29 +159,6 @@ public class BoardView {
         endTurnButtonPos = new Vector2(Gdx.graphics.getWidth() - 250, Gdx.graphics.getHeight() / 2);
         loadTurnButtonPos = new Vector2(10, Gdx.graphics.getHeight() / 2);
 
-
-
-
-
-        /*
-        for (int i = 0; i < 14; i++) {
-            allCardViews.add(new CardView());
-        }
-
-
-
-
-        for (int i = 0; i < friendlyCardsOnBoardEntity.size(); i++) {
-            friendlyCardsOnBoard.add(allCardViews.get(i));
-        }
-        for (int i = 0; i < enemyCardsOnBoardEntity.size(); i++) {
-            enemyCardsOnBoard.add(allCardViews.get(i + 4));
-        }
-        for (int i = 0; i < cardsInHandEntity.size(); i++) {
-            cardsInHand.add(allCardViews.get(i + 5));
-        }
-        */
-
         this.opponentDisplayName = game.androidInterface.getOpponentDisplayName();
 
     }
@@ -203,20 +178,9 @@ public class BoardView {
         cardsInHandEntity = pm.get(player).hand;
         int manapoints = pm.get(player).manaPoints;
 
-
-
-
-
         batch.begin();
         batch.draw(background, 0, 0);
         batch.end();
-
-        /*
-        //Drawing of deck
-        batch.begin();
-        batch.draw(deck,10,  Gdx.graphics.getHeight() / 2 - deck.getHeight() / 2);
-        batch.end();
-        */
 
         //Drawing of enemy
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -247,10 +211,6 @@ public class BoardView {
         font.draw(batch, healthString, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
         batch.end();
 
-
-
-
-
         //Drawing of friendly cards on board
         for (int i = 0; i < this.friendlyCardsOnBoardEntity.size(); i++) {
             float x = this.boardPositions[i].x;
@@ -267,10 +227,6 @@ public class BoardView {
             //this.enemyCardsOnBoard.get(i).draw(batch, x, y, cardEntity);
             this.cardView.draw(batch, x, y, enemyCardsOnBoardEntity.get(i));
         }
-
-
-
-
 
         if (showHand) {
 
@@ -310,8 +266,6 @@ public class BoardView {
             font.draw(batch, "Show hand", 90, 200);
             batch.end();
         }
-
-
 
         //drawing of mana points
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -357,9 +311,6 @@ public class BoardView {
         font.draw(batch, "Load Turn", loadTurnButtonPos.x + 50, loadTurnButtonPos.y + 60);
         batch.end();
 
-
-
-
         //Drawing of overlay if it is not your turn
         if (!pm.get(player).isYourTurn) {
             batch.begin();
@@ -368,11 +319,5 @@ public class BoardView {
             font.draw(batch, "It is not your turn. Please wait for your opponent to finish their turn.", Gdx.graphics.getWidth()*0.2f, Gdx.graphics.getHeight() / 2);
             batch.end();
         }
-
-
-
-
-
-
     }
 }

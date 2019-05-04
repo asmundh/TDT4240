@@ -1,4 +1,5 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
+
 
 public interface ScreenInterface {
 
@@ -10,11 +11,6 @@ public interface ScreenInterface {
 
     public void handleInput(); // Should contain methods to handle input from used
 
-    public void render(float dt); // Should run update() and draw()
-
-    //public void dispose(); // Disposes the screen. Run after changing screen
 
     //OBS: render and dispose must be added manually (via "Generate" in IntelliJ)
-
-
 }

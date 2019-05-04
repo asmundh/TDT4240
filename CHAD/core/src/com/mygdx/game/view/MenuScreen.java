@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
 
 public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -56,7 +56,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         this.btnClick = Assets.getSound(Assets.btnClick);
 
         this.font = new BitmapFont();
-
 
         create(); // Run create on one-time operations
     }
@@ -171,14 +170,10 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             this.userName = this.game.androidInterface.getDisplayName();
             game.androidInterface.dismissAllMatches();
         }
-
-
-
     }
 
     @Override
     public void update(float dt) { // Only thing we're checking for is if user presses button
-
 
         // check if we have found an opponent
         if(game.androidInterface.getFoundOpponent()){
@@ -194,7 +189,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             System.out.println("MenuScreen - update(): setting a new GameScreen - because of foundMatch");
             game.setScreen(new GameScreen(game, engine));
         }
-
         handleInput();
         stage.act(Gdx.graphics.getDeltaTime());
     }
@@ -223,7 +217,6 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
             font.draw(sb, lookingForMatch, Gdx.graphics.getWidth()/2-200, Gdx.graphics.getHeight()/2);
             sb.end();
         }
-
     }
 
     @Override

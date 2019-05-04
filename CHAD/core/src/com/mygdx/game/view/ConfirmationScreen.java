@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
 
 public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -123,7 +123,6 @@ public class ConfirmationScreen extends ScreenAdapter implements ScreenInterface
         menuTable.moveBy(0,-50);
 
         confirmationStage.addActor(menuTable); // Add the table containing the buttons to the stage
-
     }
 
     @Override
