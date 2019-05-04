@@ -179,6 +179,8 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void update(float dt) { // Only thing we're checking for is if user presses button
 
+        game.setScreen(new GameScreen(game, engine));
+
         // check if we have found an opponent
         if(game.androidInterface.getFoundOpponent()){
             System.out.println("Found opponent!");
