@@ -4,8 +4,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.HashMap;
 
@@ -37,6 +35,20 @@ public class Assets {
     public static String exitBtn = "textures/exit.png";
     public static String exit_gameBtn = "textures/exit_game.png";
 
+    // For the tutorial
+    public static String gameStart = "screenshots/GameStart.png";
+    public static String gameHand = "screenshots/GameHand.png";
+    public static String gamePoints = "screenshots/GamePoints.png";
+    public static String gameCard = "screenshots/GameCard.png";
+    public static String gameCardSelect = "screenshots/GameCardSelect.png";
+    public static String gameSentToBoard = "screenshots/GameSentToBoard.png";
+    public static String gameCardSleep = "screenshots/GameCardSleep.png";
+    public static String gameEnemyYou = "screenshots/GameEnemyYou.png";
+    public static String gameNewCard = "screenshots/GameNewCard.png";
+    public static String gameEnd = "screenshots/GameEnd.png";
+    public static String gameEndTurn = "screenshots/GameEndTurn.png";
+    public static String gameLoadTurn = "screenshots/GameLoadTurn.png";
+
     public static String pathToAttackIcon = "textures/attackIcon.png";
     public static String pathToHealtchIcon = "textures/healthIcon.png";
     public static String pathToGreenRect = "textures/greenRect.png";
@@ -56,6 +68,7 @@ public class Assets {
 
     public static String signInButton = "textures/sign_in_button.png";
     public static String lookingForMatch = "textures/lookingForMatch.png";
+
 
     // Music and sound:
     public static String backgroundMusic = "music/RobbH_-_Magic_Moon_-_Restless_heart_(rnb_beat_mix).mp3";
@@ -102,6 +115,19 @@ public class Assets {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
+
+        assetManager.load(gameStart, Texture.class);
+        assetManager.load(gameHand, Texture.class);
+        assetManager.load(gamePoints, Texture.class);
+        assetManager.load(gameCard, Texture.class);
+        assetManager.load(gameCardSelect, Texture.class);
+        assetManager.load(gameSentToBoard, Texture.class);
+        assetManager.load(gameCardSleep, Texture.class);
+        assetManager.load(gameEnemyYou, Texture.class);
+        assetManager.load(gameNewCard, Texture.class);
+        assetManager.load(gameEnd, Texture.class);
+        assetManager.load(gameEndTurn, Texture.class);
+        assetManager.load(gameLoadTurn, Texture.class);
 
         assetManager.load(pathToAttackIcon, Texture.class);
         assetManager.load(pathToHealtchIcon, Texture.class);
