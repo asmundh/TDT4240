@@ -18,13 +18,12 @@ public class CardSystem extends IteratingSystem {
     private static final Family family = Family.all(CardStatsComponent.class, CardPowerComponent.class, RectangleComponent.class).get();
     private ComponentMapper<CardStatsComponent> csm;
     private ComponentMapper<CardPowerComponent> cpm;
-    private ComponentMapper<RectangleComponent> rm;
+
 
     public CardSystem() {
         super(family);
         cpm = ComponentMapper.getFor(CardPowerComponent.class);
         csm = ComponentMapper.getFor(CardStatsComponent.class);
-        rm = ComponentMapper.getFor(RectangleComponent.class);
     }
 
     public int getHealth(Entity entity) {
