@@ -1,4 +1,4 @@
-package com.mygdx.game.model.systems;
+package com.mygdx.game.controller;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -18,12 +18,16 @@ import com.mygdx.game.view.BoardView;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+This is the system that updates the components in the board entity.
+It is also the bridge to get data from the components to the views.
+ */
+
 public class BoardSystem extends IteratingSystem {
 
     private static final Family family = Family.all(BoardComponent.class, TextureComponent.class).get();
     private ComponentMapper<BoardComponent> bm;
     private ComponentMapper<TextureComponent> tm;
-
 
 
     public BoardSystem() {
@@ -59,7 +63,6 @@ public class BoardSystem extends IteratingSystem {
         return players;
     }
 
-
     @Override
     protected void processEntity(Entity entity, float dt) {
         BoardComponent boardComp = bm.get(entity);
@@ -71,12 +74,6 @@ public class BoardSystem extends IteratingSystem {
         bm.get(entity).turnNumber++;
     }
 
-    public int getTurnNumber(Entity boardEntity) {
-        return bm.get(boardEntity).turnNumber;
-    }
-
-
-
     public void cardChosen(Entity board, Entity lastCardClicked) {
         bm.get(board).lastCardClicked = lastCardClicked;
     }
@@ -85,6 +82,4 @@ public class BoardSystem extends IteratingSystem {
         return bm.get(board).lastCardClicked;
 
     }
-
-
 }

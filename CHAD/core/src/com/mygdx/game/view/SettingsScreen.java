@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -16,7 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
+import com.mygdx.game.model.screens.utils.MusicStateManager;
+
+/*
+This is the screen that is displayed when the player clicks on Settings.
+ */
 
 public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -26,6 +31,8 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
 
     private Stage settings;
     private Sound btnClick;
+    private MusicStateManager musicStateManager;
+    private MenuScreen menuScreen;
 
     public SettingsScreen(CardGame game, Engine engine) {
         super();
@@ -47,6 +54,13 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         backBtn.setTransform(true);
         backBtn.setSize(backBtn.getWidth(), backBtn.getHeight());
         backBtn.setOrigin(backBtn.getWidth()/2, backBtn.getHeight()/2);
+
+        final Button muteBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.mute))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.mute))),
+                new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.play))));
+        muteBtn.setTransform(true);
+        muteBtn.setChecked(!game.musicStateManager.getMusicState());
+        muteBtn.setSize(muteBtn.getWidth(), muteBtn.getHeight());
+        muteBtn.setOrigin(muteBtn.getWidth()/2, muteBtn.getHeight()/2);
 
         // Initialize a  button using texture from Assets. Set the size, make is transformable and set the origin to the middle
         final Button exitBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.exit_gameBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.exit_gameBtn))));
@@ -73,6 +87,27 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
                 backBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
             }
         });
+
+        muteBtn.addListener(new ClickListener() {
+            @Override // Fires when the user lets go of the button
+            public void clicked(InputEvent event, float x, float y) {
+                game.musicStateManager.changeState();
+                btnClick.play();
+            }
+
+            @Override // Fires when the button is pressed down
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                muteBtn.addAction(Actions.scaleTo(0.95f, 0.95f, 0.1f));
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override // Fires when the button is released
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                muteBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
+            }
+        });
+
         exitBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
@@ -98,13 +133,15 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         menuTable.add(backBtn).pad(10);
         menuTable.getCell(backBtn).height(backBtn.getHeight()).width(backBtn.getWidth());
         menuTable.row();
-        menuTable.add(exitBtn);
+        menuTable.add(muteBtn).pad(10);
+        menuTable.getCell(muteBtn).height(muteBtn.getHeight()).width(muteBtn.getWidth());
+        menuTable.row();
+        menuTable.add(exitBtn).pad(10);
         menuTable.getCell(exitBtn).height(exitBtn.getHeight()).width(exitBtn.getWidth());
         menuTable.setFillParent(true);
         menuTable.moveBy(0,0);
 
         settings.addActor(menuTable); // Add the table containing the buttons to the stage
-
     }
 
     @Override
@@ -120,7 +157,6 @@ public class SettingsScreen extends ScreenAdapter implements ScreenInterface {
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sb.begin(); // Draw elements to Sprite Batch
-        //sb.draw(background, 0,0, CardGame.WIDTH, CardGame.HEIGHT);
         sb.end();
 
         settings.draw(); // Draw elements to Stage

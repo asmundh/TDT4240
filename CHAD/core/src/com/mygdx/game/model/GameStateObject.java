@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens.utils;
+package com.mygdx.game.model;
 
 import com.badlogic.ashley.core.Entity;
 
@@ -9,8 +9,6 @@ public class GameStateObject {
 
     public int playerHealth;
     public int enemyHealth;
-    public List playerHand;
-    public List enemyHand;
     public List<List> playerBoard;
     public List<List> enemyBoard;
 
@@ -19,19 +17,6 @@ public class GameStateObject {
 
         String gamestate = "";
         gamestate = gamestate + playerHealth + "#" + enemyHealth + "#";
-
-
-        /*for (int i = 0; i < playerHand.size(); i++) {
-            gamestate = gamestate + playerHand.get(i) + "i";
-        }
-
-        gamestate = gamestate + "#";
-
-        for (int i = 0; i < enemyHand.size(); i++) {
-            gamestate = gamestate + enemyHand.get(i) + "c";
-        }
-
-        gamestate = gamestate + "#"; */
 
         for (int i = 0; i < playerBoard.size(); i++) {
             gamestate = gamestate + playerBoard.get(i).get(0) + "i";
@@ -50,14 +35,8 @@ public class GameStateObject {
             gamestate = gamestate + "c";
         }
         gamestate = gamestate + "#";
-
-
-
         return gamestate;
     }
-
-
-
 }
 
 

@@ -1,16 +1,18 @@
-package com.mygdx.game.model.systems;
+package com.mygdx.game.controller;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.mygdx.game.World;
-import com.mygdx.game.model.components.CardPowerComponent;
-import com.mygdx.game.model.components.CardStatsComponent;
+import com.mygdx.game.model.World;
 import com.mygdx.game.model.components.PlayerComponent;
 
-import java.util.ArrayList;
 import java.util.List;
+
+/*
+This is the system that updates the components in the player entity.
+It is also the bridge to get data from the components to the views.
+ */
 
 public class PlayerSystem extends IteratingSystem {
     private static final Family family = Family.all(PlayerComponent.class).get();
@@ -18,28 +20,22 @@ public class PlayerSystem extends IteratingSystem {
 
     public PlayerSystem() {
         super(family);
-
         pm = ComponentMapper.getFor(PlayerComponent.class);
     }
 
     public Entity getCardFromHand(Entity player, int index) {
         return pm.get(player).hand.get(index);
-
     }
-
 
     // Used to initiilize the deck
     public void setUpDeck(World world, Entity player, int numOfCards){
         for(int i = 0; i < numOfCards; i++){
             addCardToDeck(player, world.createRandomCard());
-
         }
 
         for (int i = 0; i < numOfCards; i++) {
             Entity card = player.getComponent(PlayerComponent.class).deck.get(i);
-            //System.out.println(card.getComponent(CardStatsComponent.class).attackPower);
         }
-
     }
 
     public List<Entity> getCardsOnTable(Entity playerEntity) {
@@ -64,41 +60,27 @@ public class PlayerSystem extends IteratingSystem {
 
     // Take last card from deck, and add to hand list
     public void pickFromDeck(Entity entity) {
-
         if (pm.get(entity).hand.size() < 5) {
             Entity card = pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1);
             pm.get(entity).hand.add(card);
         }
-
-
-        //pm.get(entity).hand.add(pm.get(entity).deck.remove(pm.get(entity).deck.size() - 1));
-    }
-
-    public void addCardToHand(Entity entity, Entity card) {
-        pm.get(entity).hand.add(card);
     }
 
     // From hand to table
-    public boolean AddCardToTable(Entity entity, int index) {
-        if (pm.get(entity).cardsOnTable.size() < 4) {
-            pm.get(entity).cardsOnTable.add(pm.get(entity).hand.remove(index));
-            return true;
+    public void AddCardToTable(Entity playerEntity, int index) {
+        if (tableHasRoom(playerEntity)) {
+            pm.get(playerEntity).cardsOnTable.add(pm.get(playerEntity).hand.remove(index));
         } else {
-            return false;
+            return;
         }
     }
 
-    public void addRectangleToCard(Entity entity, int index) {
-        
+    public boolean tableHasRoom(Entity playerEntity) {
+        return (pm.get(playerEntity).cardsOnTable.size() < 4);
     }
 
     public void clearBoard(Entity playerEntity) {
-        for (int i = 0; i < pm.get(playerEntity).cardsOnTable.size(); i++) {
-            pm.get(playerEntity).cardsOnTable.remove(i);
-        }
-    }
-    public void clearHand(Entity playerEntity) {
-            pm.get(playerEntity).hand.clear();
+        pm.get(playerEntity).cardsOnTable.clear();
     }
 
     public void payForCard(Entity playerEntity, int cost) {
@@ -128,13 +110,12 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     public void addCardToTable(Entity playerEntity, Entity cardEntity) {
+        System.out.println("PlayerSystem - addCardToTable(): trying to add a card to table");
         if (pm.get(playerEntity).cardsOnTable.size() < 5) {
-            pm.get(playerEntity).cardsOnTable.add(cardEntity);
-        }
-    }
 
-    public String getPlayerId(Entity entity) {
-        return pm.get(entity).id;
+            pm.get(playerEntity).cardsOnTable.add(cardEntity);
+            System.out.println("PlayerSystem - addCardToTable(): added a card to table");
+        }
     }
 
     public boolean getIsYourTurn(Entity playerEntity) {
@@ -143,22 +124,6 @@ public class PlayerSystem extends IteratingSystem {
 
     public void setIsYourTurn(Entity playerEntity, boolean bool) {
         pm.get(playerEntity).isYourTurn = bool;
-    }
-
-    public void switchIsYourTurn(Entity playerEntity) {
-        pm.get(playerEntity).isYourTurn = !pm.get(playerEntity).isYourTurn;
-    }
-
-    public void SetPlayerId(Entity entity, String id) {
-        pm.get(entity).id = id;
-    }
-
-    public int getPlayerPowerPoints(Entity entity) {
-        return pm.get(entity).powerPoints;
-    }
-
-    public void setPlayerPowerPoints(Entity entity, int points) {
-        pm.get(entity).powerPoints = points;
     }
 
     public void takeDamage(Entity playerEntity, int damage) {
