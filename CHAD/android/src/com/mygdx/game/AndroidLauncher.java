@@ -1430,6 +1430,20 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		return mDisplayName;
 	}
 
+	// Called to check turncounter
+	public int getTurnCounter(){
+		if(mMatch != null){
+			loadMatch();
+			updateMatch(mMatch);
+		}
+		if(mTurnData != null) {
+			return mTurnData.turnCounter;
+		}
+		else {
+			return 9000;
+		}
+	}
+
 	public void gdxEndMatch(){
 		dismissMatch();
 		loadMatch();

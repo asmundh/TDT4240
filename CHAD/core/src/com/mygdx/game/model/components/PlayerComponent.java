@@ -14,7 +14,7 @@ public class PlayerComponent implements Component {
     public int powerPoints;
     public List<Entity> deck = new ArrayList<Entity>();
     public int health = 30;
-    public int manaPoints = 0;
+    public int manaPoints = 10;
     public boolean isYourTurn = true;
     public int yourTurnNumber = 0;
 }

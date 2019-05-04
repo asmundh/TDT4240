@@ -94,4 +94,8 @@ public class AndroidclassBasicAndroidInterface implements AndroidInterface {
     public void dismissAllMatches(){
         mAndroidLauncher.dismissAllMatches();
     }
+
+    public int getTurnCounter(){
+        return mAndroidLauncher.getTurnCounter();
+    }
 }

@@ -78,6 +78,9 @@ public interface AndroidInterface {
     // Used to check if our match has an opponent (if false, we are still searching)
     public boolean getFoundOpponent();
 
+    // Used to check the turncounter
+    public int getTurnCounter();
+
     // Used to forcibly end a match from GDX
     public void gdxEndMatch();
 
