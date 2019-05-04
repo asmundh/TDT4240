@@ -1,4 +1,4 @@
-package com.mygdx.game.model.screens;
+package com.mygdx.game.view;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -22,8 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.CardGame;
-import com.mygdx.game.model.screens.utils.Assets;
-import com.mygdx.game.model.systems.PlayerSystem;
+import com.mygdx.game.model.Assets;
+import com.mygdx.game.controller.PlayerSystem;
 
 public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
 
@@ -63,12 +63,6 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
         generator.dispose();
         font.setColor(Color.WHITE);
 
-        // Not in use at this point:
-        /*final Button ReplayBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.replayBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.replayBtn))));
-        ReplayBtn.setTransform(true);
-        ReplayBtn.setSize(ReplayBtn.getWidth(), ReplayBtn.getHeight());
-        ReplayBtn.setOrigin(ReplayBtn.getWidth()/2, ReplayBtn.getHeight()/2);*/
-
         // Initialize a  button using texture from Assets, first is up-texture, second is down. Set the size, make is transformable and set the origin to the middle
         final Button menuBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.menuBtn))), new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.menuBtn))));
         menuBtn.setTransform(true);
@@ -80,26 +74,6 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
         exitBtn.setTransform(true);
         exitBtn.setSize(exitBtn.getWidth(), exitBtn.getHeight());
         exitBtn.setOrigin(exitBtn.getWidth()/2, exitBtn.getHeight()/2);
-
-        // Replay button not in use at this point:
-        /*ReplayBtn.addListener(new ClickListener() {
-            @Override // Fires when the user lets go of the button
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game, engine));
-            }
-
-            @Override // Fires when the button is pressed down
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ReplayBtn.addAction(Actions.scaleTo(0.95f, 0.95f, 0.1f));
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override // Fires when the button is released
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-                ReplayBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
-            }
-        });*/
 
         menuBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
@@ -147,10 +121,6 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
         menuTable.add(menuBtn).pad(10);
         menuTable.getCell(menuBtn).height(menuBtn.getHeight()).width(menuBtn.getWidth());
         menuTable.row();
-        // Replay not in use at this time:
-        /*menuTable.add(ReplayBtn).pad(10);
-        menuTable.getCell(ReplayBtn).height(ReplayBtn.getHeight()).width(ReplayBtn.getWidth());
-        menuTable.row();*/
         menuTable.add(exitBtn);
         menuTable.getCell(exitBtn).height(exitBtn.getHeight()).width(exitBtn.getWidth());
         menuTable.setFillParent(true);
@@ -177,10 +147,6 @@ public class GameOverScreen extends ScreenAdapter implements ScreenInterface {
         glyphLayout.setText(font, multiLineText, Color.WHITE, Gdx.graphics.getWidth(), Align.center, true);
 
         sb.begin(); // Draw elements to Sprite Batch
-        /*sb.draw(Assets.getTexture(Assets.gameOverText),
-                CardGame.WIDTH/2 - 350,
-                CardGame.HEIGHT/2 + 350, Assets.getTexture(Assets.gameOverText).getWidth()/3,
-                Assets.getTexture(Assets.gameOverText).getHeight()/3);*/
         font.draw(sb, glyphLayout, 0, Gdx.graphics.getHeight()/2 + 300);
         sb.end();
 

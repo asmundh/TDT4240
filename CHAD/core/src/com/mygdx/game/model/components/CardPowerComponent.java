@@ -15,9 +15,4 @@ public class CardPowerComponent implements Component {
     public int powerSize;
     public int powerType;
 
-    public static final int SELF_DAMAGE_INCREASE = 0;
-    public static final int SELF_HEALTH_INCREASE = 1;
-    public static final int COST_REDUCTION = 2;
-    public static final int TEAM_DAMAGE_INCREASE = 3;
-    public static final int TEAM_HEALTH_INCREASE = 4;
 }
