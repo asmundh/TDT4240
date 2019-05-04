@@ -34,7 +34,7 @@ public class SkeletonTurn {
     public static final String TAG = "EBTurn";
 
     public String data = "";
-    public int turnCounter;
+    public int turnCounter = 0;
 
     public SkeletonTurn() {
     }
