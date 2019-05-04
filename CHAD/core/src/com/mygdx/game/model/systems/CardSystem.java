@@ -4,20 +4,25 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.World;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
+import com.mygdx.game.model.components.RectangleComponent;
 
 
 public class CardSystem extends IteratingSystem {
 
-    private static final Family family = Family.all(CardStatsComponent.class, CardPowerComponent.class).get();
+    private static final Family family = Family.all(CardStatsComponent.class, CardPowerComponent.class, RectangleComponent.class).get();
     private ComponentMapper<CardStatsComponent> csm;
     private ComponentMapper<CardPowerComponent> cpm;
+    private ComponentMapper<RectangleComponent> rm;
 
     public CardSystem() {
         super(family);
         cpm = ComponentMapper.getFor(CardPowerComponent.class);
         csm = ComponentMapper.getFor(CardStatsComponent.class);
+        rm = ComponentMapper.getFor(RectangleComponent.class);
 
         /*
         TODO: Add functionality that updates components as the cards move. Position etc.
@@ -73,16 +78,33 @@ public class CardSystem extends IteratingSystem {
     }
 
     public void takeDamage(Entity entity, int damage) {
+        System.out.println("took damage");
         if (getHealth(entity) - damage <= 0) {
             setHealth(entity, 0);
+
         }
         else {
             setHealth(entity, getHealth(entity) - damage);
         }
     }
 
-    public void dealDamage(Entity entity, int damage) {
-        takeDamage(entity, damage);
+    public void deployCard(Entity entity) {
+        csm.get(entity).sleeping = true;
+    }
+
+    public int getAttackPower(Entity attackingEntity) {
+        return csm.get(attackingEntity).attackPower;
+    }
+
+    public void dealDamage(Entity attackingEntity, Entity entityBeingAttacked) {
+        int damageToDeal = this.getAttackPower(attackingEntity);
+        takeDamage(entityBeingAttacked, damageToDeal);
+        csm.get(attackingEntity).sleeping = true;
+    }
+
+    public void retaliate(Entity attackingEntity, Entity entityBeingAttacked) {
+        int damageToDeal = this.getAttackPower(attackingEntity);
+        takeDamage(entityBeingAttacked, damageToDeal);
     }
 
     public void activatePower(Entity entity) {
@@ -98,8 +120,36 @@ public class CardSystem extends IteratingSystem {
         }
     }
 
+    public boolean isSleeping(Entity cardEntity) {
+        return csm.get(cardEntity).sleeping;
+    }
+
+    public void setId(Entity cardEntity, int id) {
+        csm.get(cardEntity).id = id;
+    }
+    public int getId(Entity cardEntity) {
+        return csm.get(cardEntity).id;
+    }
+
+
+    public void setSleeping(Entity cardEntity, boolean value) {
+        csm.get(cardEntity).sleeping = value;
+    }
+
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
 
     }
+
+    public void updateRectangle(Entity entity, Vector2 vec) {
+        rm.get(entity).rec.setPosition(vec);
+    }
+
+    public void updateSelected(Entity entity) {
+        if (entity != null) {
+            csm.get(entity).selected = !csm.get(entity).selected;
+
+        }
+    }
+
 }

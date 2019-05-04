@@ -1,12 +1,10 @@
 package com.mygdx.game;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.model.components.BoardComponent;
 import com.mygdx.game.model.screens.LoadingScreen;
 import com.mygdx.game.model.screens.utils.Assets;
 
@@ -18,6 +16,11 @@ public class CardGame extends Game {
 	public SpriteBatch batch;
 	private Assets assets;
 	public Engine engine;
+	public AndroidInterface androidInterface;
+
+	public CardGame(AndroidInterface androidInterface){
+		this.androidInterface = androidInterface;
+	}
 	
 	@Override
 	public void create () {
@@ -33,7 +36,6 @@ public class CardGame extends Game {
 		//this.setScreen(new MenuScreen(this));
 		this.setScreen(new LoadingScreen(this, engine));
 
-
 	}
 
 	@Override
@@ -43,6 +45,7 @@ public class CardGame extends Game {
 		//gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.render();
+		// System.out.println(this.androidInterface.getMessage()); ONLY USED TO TEST INTERFACE
 	}
 	
 	@Override

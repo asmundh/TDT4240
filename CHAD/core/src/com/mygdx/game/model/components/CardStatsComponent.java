@@ -13,4 +13,6 @@ public class CardStatsComponent implements Component {
     public int health;
     public int cost;
     public boolean selected = false;
+    public boolean sleeping = false;
+    public int id;
 }
