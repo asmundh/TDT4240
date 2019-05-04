@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.model.components.CardPowerComponent;
 import com.mygdx.game.model.components.CardStatsComponent;
-import com.mygdx.game.model.components.RectangleComponent;
 
 /*
 This is the system that updates the components in the card entity.
@@ -15,7 +14,7 @@ It is also the bridge to get data from the components to the views.
 
 public class CardSystem extends IteratingSystem {
 
-    private static final Family family = Family.all(CardStatsComponent.class, CardPowerComponent.class, RectangleComponent.class).get();
+    private static final Family family = Family.all(CardStatsComponent.class, CardPowerComponent.class).get();
     private ComponentMapper<CardStatsComponent> csm;
     private ComponentMapper<CardPowerComponent> cpm;
 

@@ -49,9 +49,11 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         this.flagLookingForMatch = false;
         this.foundMatch = false;
 
-        this.bgMusic = Assets.getMusic(Assets.backgroundMusic);
+        //this.bgMusic = Assets.getMusic(Assets.backgroundMusic);
+        this.bgMusic = game.getBgMusic();
         this.bgMusic.setVolume(0.3f);
-        this.bgMusic.play();
+        //this.bgMusic.play();
+        game.playMusic(bgMusic);
 
         this.btnClick = Assets.getSound(Assets.btnClick);
 
@@ -94,7 +96,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
                 flagLookingForMatch = true;
                 System.out.println("Now looking for game...");
                 btnClick.play();
-                bgMusic.stop();
+                game.getBgMusic().stop();
             }
 
             @Override // Fires when the button is pressed down
