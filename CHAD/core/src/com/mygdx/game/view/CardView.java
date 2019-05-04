@@ -23,7 +23,6 @@ public class CardView {
     private Texture greenRect;
     private Texture blackRect;
     private BitmapFont font;
-    private Entity cardEntity;
 
     // Paths to static textures for all cards.
     private String pathToAttackIcon = Assets.pathToAttackIcon;
@@ -36,8 +35,6 @@ public class CardView {
     public static final int cardHeight = 250;
     private int fontOffset = 35;
 
-    private int attackPower;
-    private int health;
     private int cost;
     private boolean selected;
     private boolean sleeping;

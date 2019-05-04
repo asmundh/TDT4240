@@ -21,8 +21,6 @@ import java.util.List;
 
 public class BoardView {
 
-    private CardGame game;
-    private Texture deck;
     private Texture background;
     private Texture enemyRect;
     private Texture handRect;
@@ -38,13 +36,11 @@ public class BoardView {
     private Entity enemyPlayer;
     private int health; //your own health
 
-    private String deckPath = Assets.deck;
     private String boardBackgroundPath = Assets.boardBackground;
     private String enemyRectPath = Assets.enemyRect;
     private String handRectPath = Assets.handRect;
     private String healthIconPath = Assets.pathToHealtchIcon;
 
-    private List<CardView> allCardViews;
     private CardView cardView;
     private Vector2 showHandButtonPos;
     private Vector2 endTurnButtonPos;
@@ -55,10 +51,6 @@ public class BoardView {
     private List<Entity> friendlyCardsOnBoardEntity;
     private List<Entity> enemyCardsOnBoardEntity;
     private List<Entity> cardsInHandEntity;
-
-    private List<CardView> friendlyCardsOnBoard;
-    private List<CardView> enemyCardsOnBoard;
-    private List<CardView> cardsInHand;
 
     private String opponentDisplayName = null;
 
@@ -125,13 +117,11 @@ public class BoardView {
 
     public BoardView(CardGame game, Entity boardEntity) {
         this.boardEntity = boardEntity;
-        this.deck = Assets.getTexture(deckPath);
         this.background = Assets.getTexture(boardBackgroundPath);
         this.enemyRect = Assets.getTexture(enemyRectPath);
         this.handRect = Assets.getTexture(handRectPath);
         this.healthIconTexture = Assets.getTexture(healthIconPath);
         this.font = new BitmapFont();
-        this.game = game;
 
 
         shapeRenderer = new ShapeRenderer();
@@ -148,10 +138,6 @@ public class BoardView {
         enemyCardsOnBoardEntity = pm.get(enemyPlayer).cardsOnTable;
         cardsInHandEntity = pm.get(player).hand;
 
-        friendlyCardsOnBoard = new ArrayList<CardView>();
-        enemyCardsOnBoard = new ArrayList<CardView>();
-        cardsInHand = new ArrayList<CardView>();
-        allCardViews = new ArrayList<CardView>();
         cardView = new CardView();
 
         showHandButtonPos = new Vector2(50, 150);
