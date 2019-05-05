@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.model.components.CardStatsComponent;
 import com.mygdx.game.model.components.TextureComponent;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
 
 
 public class CardView {
@@ -23,7 +23,6 @@ public class CardView {
     private Texture greenRect;
     private Texture blackRect;
     private BitmapFont font;
-    private Entity cardEntity;
 
     // Paths to static textures for all cards.
     private String pathToAttackIcon = Assets.pathToAttackIcon;
@@ -36,30 +35,9 @@ public class CardView {
     public static final int cardHeight = 250;
     private int fontOffset = 35;
 
-    private int attackPower;
-    private int health;
     private int cost;
     private boolean selected;
     private boolean sleeping;
-
-
-
-/*
-    public CardView(String pathToImageFile, int attackPower, int health, Entity cardEntity) {
-        shapeRenderer = new ShapeRenderer();
-        Maintexture = new Texture(Gdx.files.local(pathToImageFile));
-        attackIconTexture = new Texture(Gdx.files.local(pathToAttackIcon));
-        healthIconTexture = new Texture(Gdx.files.local(pathToHealtchIcon));
-        greenRect = new Texture(Gdx.files.local(pathToGreenRect));
-        blackRect = new Texture(Gdx.files.local(pathToBlackRect));
-        font = new BitmapFont();
-        //this.activated = false;
-        this.attackPower = attackPower;
-        this.health = health;
-        this.cardEntity = cardEntity;
-    }
-*/
-
 
     private ComponentMapper<TextureComponent> tm;
     private ComponentMapper<CardStatsComponent> cm;
@@ -160,7 +138,5 @@ public class CardView {
             font.draw(batch, String.valueOf(cost), xCoord + 0.5f*fontOffset, yCoord + font.getLineHeight());
             batch.end();
         }
-
     }
-
 }

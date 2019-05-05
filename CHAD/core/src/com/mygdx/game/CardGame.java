@@ -3,10 +3,13 @@ package com.mygdx.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.model.screens.LoadingScreen;
-import com.mygdx.game.model.screens.utils.Assets;
+import com.mygdx.game.model.Assets;
+import com.mygdx.game.view.LoadingScreen;
+import com.mygdx.game.model.screens.utils.MusicStateManager;
+
 
 public class CardGame extends Game {
 	public final static int HEIGHT = 1080; // Dev: DEL in production, sets window size to mobile
@@ -17,6 +20,8 @@ public class CardGame extends Game {
 	private Assets assets;
 	public Engine engine;
 	public AndroidInterface androidInterface;
+	private Music bgMusic;
+	public MusicStateManager musicStateManager;
 
 	public CardGame(AndroidInterface androidInterface){
 		this.androidInterface = androidInterface;
@@ -30,22 +35,16 @@ public class CardGame extends Game {
 		Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
 
 		batch = new SpriteBatch();
-
 		Gdx.gl.glClearColor(1, 0, 0, 1);
-    
-		//this.setScreen(new MenuScreen(this));
-		this.setScreen(new LoadingScreen(this, engine));
 
+		this.setScreen(new LoadingScreen(this, engine));
+		this.musicStateManager = new MusicStateManager(this);
 	}
 
 	@Override
 	public void render () {
 		GL20 gl = Gdx.gl;
-		//gl.glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
-		//gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		super.render();
-		// System.out.println(this.androidInterface.getMessage()); ONLY USED TO TEST INTERFACE
 	}
 	
 	@Override
@@ -60,5 +59,17 @@ public class CardGame extends Game {
 
 	public float getHeight() {
 		return Gdx.graphics.getHeight();
+	}
+
+	public Music getBgMusic() {
+		return Assets.getMusic(Assets.backgroundMusic);
+	}
+
+	public void playMusic(Music music){
+		Music bgMusic = getBgMusic();
+		if(musicStateManager.getMusicState() && !bgMusic.isPlaying()){
+			bgMusic.play();
+			bgMusic.setLooping(true);
+		}
 	}
 }
