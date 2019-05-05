@@ -260,6 +260,21 @@ public class World  {
                 tc.texture = Assets.getTexture(Assets.magmaGolem);
 
                 break;
+
+            case 6:
+                cardPower.powerName = "Test3Effekt";
+                cardPower.powerEffectText = "Description3";
+                cardPower.powerSize = 3;
+                cardPower.powerType = 1;
+
+                cardStats.attackPower = attack;
+                cardStats.health = health;
+                cardStats.cost = 9;
+                cardStats.id = 6;
+
+                tc.texture = Assets.getTexture(Assets.dragon);
+
+                break;
         }
 
         cardEntity.add(cardPower);
@@ -376,6 +391,21 @@ public class World  {
                 cardStats.id = 5;
 
                 tc.texture = Assets.getTexture(Assets.magmaGolem);
+
+                break;
+
+            case 6:
+                cardPower.powerName = "Test3Effekt";
+                cardPower.powerEffectText = "Description3";
+                cardPower.powerSize = 3;
+                cardPower.powerType = 1;
+
+                cardStats.attackPower = 4;
+                cardStats.health = 14;
+                cardStats.cost = 9;
+                cardStats.id = 6;
+
+                tc.texture = Assets.getTexture(Assets.dragon);
 
                 break;
         }

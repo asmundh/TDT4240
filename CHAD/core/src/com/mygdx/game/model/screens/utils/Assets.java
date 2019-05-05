@@ -30,6 +30,7 @@ public class Assets {
     public static String playBtn = "textures/playBtn.png";
     public static String settingBtn = "textures/settingBtn.png";
     public static String background = "textures/background.png";
+    public static String background2 = "textures/background2.png";
     public static String menuBG = "textures/menu_bg.png";
     public static String backBtn = "textures/back.png";
     public static String exitBtn = "textures/exit.png";
@@ -51,6 +52,8 @@ public class Assets {
     public static String iceGolem = "textures/cards/ice_golem.png";
     public static String magmaGolem = "textures/cards/magma_golem.png";
     public static String mossGolem = "textures/cards/moss_golem.png";
+    public static String dragon = "textures/cards/dragon.png";
+
 
     public static String signInButton = "textures/sign_in_button.png";
     public static String lookingForMatch = "textures/lookingForMatch.png";
@@ -70,6 +73,8 @@ public class Assets {
         put("magma_golem", "textures/cards/magma_golem.png");
         put("ice_golem", "textures/cards/ice_golem.png");
         put("moss_golem", "textures/cards/moss_golem.png");
+        put("dragon", "textures/cards/dragon.png");
+
     }};
 
     private static AssetManager assetManager;
@@ -103,6 +108,8 @@ public class Assets {
         assetManager.load(playBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
+        assetManager.load(background2, Texture.class);
+
 
         assetManager.load(pathToAttackIcon, Texture.class);
         assetManager.load(pathToHealtchIcon, Texture.class);
