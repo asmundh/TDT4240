@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -43,11 +44,14 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     private int turnCounter = 0;
     private boolean loadedNewTurn = false;
+
+    private Sound clickSound;
   
     protected GameScreen(CardGame game, Engine engine) {
         this.game = game;
         this.engine = engine;
         this.world = new World(engine);
+        this.clickSound = Assets.getSound(Assets.btnClick);
 
         create();
     }
@@ -79,6 +83,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             quitBtn.addListener(new ClickListener() {
                 @Override // Fires when the user lets go of the button
                 public void clicked(InputEvent event, float x, float y) {
+                    clickSound.play();
                     game.setScreen(new ConfirmationScreen(game, engine, "Are you sure you want to end this game?"));
 
                 }
@@ -115,6 +120,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
 
         loadTurnCounter();
+        engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), game.androidInterface.getIsDoingTurn());
     }
 
     @Override
@@ -555,16 +561,21 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
             if (bv.getShowHandButtonRect().contains(pos)){ // Hides the hand when the button is clicked. Button for showing and hiding hand
+                clickSound.play();
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
                 deselectCard(prevClickedCard);
             }
             if (!isMyTurn()){
                 if((bv.getLoadTurnButtonRect().contains(pos))){
+                    clickSound.play();
+                    System.out.println("getIsDoingTurn(): "+ game.androidInterface.getIsDoingTurn());
+                    engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), game.androidInterface.getIsDoingTurn());
                     loadTurnCounter();
                 } else return;
             }
             else if (bv.getEndTurnButtonRect().contains(pos)) { //End turn and switch whose turn it is
                 deselectCard(prevClickedCard);
+                clickSound.play();
                 engine.getSystem(BoardSystem.class).turnSwitcher(boardEntity);
                 endTurn(boardEntity);
             }

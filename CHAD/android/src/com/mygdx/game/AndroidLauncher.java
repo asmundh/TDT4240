@@ -867,6 +867,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		switch (turnStatus) {
 			case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
 				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_my_turn");
+				isDoingTurn = true;
 				mTurnData = SkeletonTurn.unpersist(mMatch.getData());
 				//setGameplayUI();
 				return;
