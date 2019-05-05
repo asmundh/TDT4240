@@ -115,6 +115,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         }
 
         loadTurnCounter();
+        engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), game.androidInterface.getIsDoingTurn());
     }
 
     @Override
