@@ -79,4 +79,7 @@ public interface AndroidInterface {
 
     // Used to forcibly dismiss all matches on the server for logged in user
     public void dismissAllMatches();
+
+    // Used to ask server if it is a players turn
+    public boolean getIsDoingTurn();
 }
