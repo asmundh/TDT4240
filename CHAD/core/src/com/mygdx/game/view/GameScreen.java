@@ -561,6 +561,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             }
             if (!isMyTurn()){
                 if((bv.getLoadTurnButtonRect().contains(pos))){
+                    System.out.println("getIsDoingTurn(): "+ game.androidInterface.getIsDoingTurn());
+                    engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), game.androidInterface.getIsDoingTurn());
                     loadTurnCounter();
                 } else return;
             }
