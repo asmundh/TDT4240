@@ -547,7 +547,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     @Override
     public void handleInput() {
         //Input will not be handled if it is not your turn.
-
         if (Gdx.input.justTouched()) {
 
             Vector2 pos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
@@ -555,44 +554,28 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             // Depending on where the player has clicked, act accordingly.
             Entity prevClickedCard = engine.getSystem(BoardSystem.class).getPreviouslyClickedCard(boardEntity);
 
-            if (!isMyTurn()){
-
-                if((bv.getLoadTurnButtonRect().contains(pos))){
-                    loadTurnCounter();
-                }
-                else{
-                    return;
-                }
-            }
-
             if (bv.getShowHandButtonRect().contains(pos)){ // Hides the hand when the button is clicked. Button for showing and hiding hand
-
                 engine.getSystem(BoardSystem.class).changeShowHand(boardEntity);
                 deselectCard(prevClickedCard);
             }
-
-            else if (bv.getEndTurnButtonRect().contains(pos)) {
-
-                //End turn and switch whose turn it is
-                System.out.println("Trying to end turn");
+            if (!isMyTurn()){
+                if((bv.getLoadTurnButtonRect().contains(pos))){
+                    loadTurnCounter();
+                } else return;
+            }
+            else if (bv.getEndTurnButtonRect().contains(pos)) { //End turn and switch whose turn it is
                 deselectCard(prevClickedCard);
                 engine.getSystem(BoardSystem.class).turnSwitcher(boardEntity);
                 endTurn(boardEntity);
             }
-
-            else if (bv.getLoadTurnButtonRect().contains(pos)) {
-
-                //End turn and switch whose turn it is
-                System.out.println("Trying to load new turn");
+            else if (bv.getLoadTurnButtonRect().contains(pos)) { //End turn and switch whose turn it is
                 deselectCard(prevClickedCard);
                 loadTurnCounter();
             }
-
             else if (isHandShowing()) {
                 this.handleInputHand(pos);
 
             }
-
             else if (bv.getEnemyRectangle().contains(pos)) { // Attack enemy card if we have selected a card from table.
                 if (prevClickedCard == null) return;
                 else {
@@ -601,9 +584,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     engine.getSystem(CardSystem.class).setSleeping(prevClickedCard, true);
                 }
             }
-
             else {
-
                 this.handleInputTable(pos);
             }
             searchAndDestroyDeadCards();
