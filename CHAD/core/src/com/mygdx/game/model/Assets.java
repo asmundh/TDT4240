@@ -34,6 +34,7 @@ public class Assets {
     public static String backBtn = "textures/back.png";
     public static String exitBtn = "textures/exit.png";
     public static String exit_gameBtn = "textures/exit_game.png";
+    public static String doneBtn = "textures/doneBtn.png";
 
     // For the tutorial
     public static String gameStart = "screenshots/GameStart.png";
@@ -113,6 +114,7 @@ public class Assets {
         assetManager.load(replayBtn, Texture.class);
         assetManager.load(menuBtn, Texture.class);
         assetManager.load(playBtn, Texture.class);
+        assetManager.load(doneBtn, Texture.class);
         assetManager.load(settingBtn, Texture.class);
         assetManager.load(background, Texture.class);
 

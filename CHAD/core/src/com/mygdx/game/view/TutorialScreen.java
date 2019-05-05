@@ -30,6 +30,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
 
     private Button stepForwardBtn;
     private Button stepBackBtn;
+    private Button doneBtn;
 
     private Sound btnSound;
 
@@ -81,6 +82,11 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         stepBackBtn.setTransform(true);
         stepBackBtn.setSize(200, 200);
         stepBackBtn.setOrigin(stepBackBtn.getWidth()/2, stepBackBtn.getHeight()/2);
+
+        doneBtn = new Button(new TextureRegionDrawable(new TextureRegion(Assets.getTexture(Assets.doneBtn))));
+        doneBtn.setTransform(true);
+        doneBtn.setSize(200, 200);
+        doneBtn.setOrigin(stepBackBtn.getWidth()/2, stepBackBtn.getHeight()/2);
 
         // Input functionality for buttons
         backBtn.addListener(new ClickListener() {
@@ -143,16 +149,38 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
                 stepForwardBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
             }
         });
+        doneBtn.addListener(new ClickListener() {
+            @Override // Fires when the user lets go of the button
+            public void clicked(InputEvent event, float x, float y) {
+                btnSound.play();
+                game.setScreen(new MenuScreen(game, engine));
+            }
+
+            @Override // Fires when the button is pressed down
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                stepForwardBtn.addAction(Actions.scaleTo(0.95f, 0.95f, 0.1f));
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override // Fires when the button is released
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                stepForwardBtn.addAction(Actions.scaleTo(1f, 1f, 0.1f));
+            }
+        });
 
         backBtn.setPosition(40, game.getHeight() - backBtn.getHeight() - 20);
         stepBackBtn.setPosition(game.getWidth()-500, 50);
         stepForwardBtn.setPosition(game.getWidth()- 250, 50);
+        doneBtn.setPosition(game.getWidth()- 250, 50);
+        doneBtn.setVisible(false);
 
         createTutorialBoxes();
 
         stage.addActor(backBtn);
         stage.addActor(stepBackBtn);
         stage.addActor(stepForwardBtn);
+        stage.addActor(doneBtn);
 
         showTutorialStep();
     }
@@ -231,7 +259,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         textBox11.setVisible(false);
 
         textBox12 = new TextArea("When your opponent has finished, you'll receive a \"A match was updated\" notification. When this happens, press the \"Load Turn\" button!", skin);
-        textBox12.setSize(400f, 200f);
+        textBox12.setSize(400f, 250f);
         textBox12.setPosition(game.getWidth()/2 - textBox12.getWidth()/2, 400f);
         textBox12.setDisabled(true);
         textBox12.setVisible(false);
@@ -334,6 +362,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
             case 11:
                 background = Assets.getTexture(Assets.gameLoadTurn);
                 stepForwardBtn.setVisible(true);
+                doneBtn.setVisible(false);
                 textBox11.setVisible(false);
                 textBox12.setVisible(true);
                 textBox13.setVisible(false);
@@ -341,6 +370,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
             case 12:
                 background = Assets.getTexture(Assets.gameEnd);
                 stepForwardBtn.setVisible(false);
+                doneBtn.setVisible(true);
                 textBox12.setVisible(false);
                 textBox13.setVisible(true);
                 break;
