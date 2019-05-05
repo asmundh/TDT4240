@@ -48,12 +48,12 @@ public class SkeletonTurn {
             retVal.put("turnCounter", turnCounter);
 
         } catch (JSONException e) {
-            Log.e("SkeletonTurn", "There was an issue writing JSON!", e);
+
         }
 
         String st = retVal.toString();
 
-        Log.d(TAG, "==== PERSISTING\n" + st);
+
 
         return st.getBytes(Charset.forName("UTF-8"));
     }
@@ -62,7 +62,7 @@ public class SkeletonTurn {
     static public SkeletonTurn unpersist(byte[] byteArray) {
 
         if (byteArray == null) {
-            Log.d(TAG, "Empty array---possible bug.");
+
             return new SkeletonTurn();
         }
 
@@ -74,7 +74,7 @@ public class SkeletonTurn {
             return null;
         }
 
-        Log.d(TAG, "====UNPERSIST \n" + st);
+
 
         SkeletonTurn retVal = new SkeletonTurn();
 
@@ -89,7 +89,7 @@ public class SkeletonTurn {
             }
 
         } catch (JSONException e) {
-            Log.e("SkeletonTurn", "There was an issue parsing JSON!", e);
+
         }
 
         return retVal;

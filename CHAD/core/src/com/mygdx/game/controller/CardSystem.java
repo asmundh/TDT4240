@@ -38,7 +38,7 @@ public class CardSystem extends IteratingSystem {
     }
 
     public void takeDamage(Entity entity, int damage) {
-        System.out.println("took damage");
+
         if (getHealth(entity) - damage <= 0) {
             setHealth(entity, 0);
         }

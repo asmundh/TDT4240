@@ -154,7 +154,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	@Override
 	protected void onResume() {
-		Log.d(AppSettings.tag, "onResume()");
+
 		super.onResume();
 
 		// Since the state of the signed in user can change when the activity is not active
@@ -171,7 +171,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d(AppSettings.tag, "onPause()");
+
 
 		// Unregister the invitation callbacks; they will be re-registered via
 		// onResume->signInSilently->onConnected.
@@ -181,7 +181,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 		if (mTurnBasedMultiplayerClient != null) {
 			mTurnBasedMultiplayerClient.unregisterTurnBasedMatchUpdateCallback(mMatchUpdateCallback);
-			Log.d(AppSettings.tag, "mMatchUpdateCallBack unregistered from mTurnBasedMultiplayerClient");
+
 		}
 	}
 
@@ -190,7 +190,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	private void onConnected(GoogleSignInAccount googleSignInAccount) {
 
-		Log.d(TAG, "onConnected(): connected to Google APIs");
+
 
 		mTurnBasedMultiplayerClient = Games.getTurnBasedMultiplayerClient(this, googleSignInAccount);
 		mInvitationsClient = Games.getInvitationsClient(this, googleSignInAccount);
@@ -202,7 +202,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 							@Override
 							public void onSuccess(Player player) {
 								mDisplayName = player.getDisplayName();
-								Log.d(AppSettings.tag, "Displayname: " + mDisplayName);
+
 								mPlayerId = player.getPlayerId();
 								gameView.setVisibility(View.VISIBLE);
 								//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
@@ -211,7 +211,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				)
 				.addOnFailureListener(createFailureListener("There was a problem getting the player!"));
 
-		Log.d(TAG, "onConnected(): Connection successful");
+
 
 		// Retrieve the TurnBasedMatch from the connectionHint
 		GamesClient gamesClient = Games.getGamesClient(this, googleSignInAccount);
@@ -223,7 +223,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 							TurnBasedMatch match = hint.getParcelable(Multiplayer.EXTRA_TURN_BASED_MATCH);
 
 							if (match != null) {
-								Log.d(AppSettings.tag, "Found a match after connecting!");
+
 								updateMatch(match);
 							}
 						}
@@ -250,7 +250,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	private void onDisconnected() {
 
-		Log.d(TAG, "onDisconnected()");
+
 
 		mTurnBasedMultiplayerClient = null;
 		mInvitationsClient = null;
@@ -512,19 +512,19 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	 * If the user has already signed in previously, it will not show dialog.
 	 */
 	public void signInSilently() {
-		Log.d(TAG, "signInSilently()");
+
 
 		mGoogleSignInClient.silentSignIn().addOnCompleteListener(this,
 				new OnCompleteListener<GoogleSignInAccount>() {
 					@Override
 					public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
 						if (task.isSuccessful()) {
-							Log.d(TAG, "signInSilently(): success");
+
 							mSignedIn = true;
 							mGoogleSignInAccount = task.getResult();
 							onConnected(task.getResult());
 						} else {
-							Log.d(TAG, "signInSilently(): failure", task.getException());
+
 							onDisconnected();
 						}
 					}
@@ -533,7 +533,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 
 	public void signOut() {
-		Log.d(TAG, "signOut()");
+
 
 		mGoogleSignInClient.signOut().addOnCompleteListener(this,
 				new OnCompleteListener<Void>() {
@@ -541,7 +541,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 					public void onComplete(@NonNull Task<Void> task) {
 
 						if (task.isSuccessful()) {
-							Log.d(TAG, "signOut(): success");
+
 						} else {
 							handleException(task.getException(), "signOut() failed!");
 						}
@@ -560,7 +560,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	 *                  why the exception happened
 	 */
 	private void handleException(Exception exception, String details) {
-		Log.d(TAG, "handling exception");
+
 		int status = 0;
 
 		if (exception instanceof TurnBasedMultiplayerClient.MatchOutOfDateApiException) {
@@ -579,10 +579,10 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		}
 
 		if (exception instanceof ApiException) {
-			Log.d(TAG, "ApiException!");
+
 			ApiException apiException = (ApiException) exception;
 			status = apiException.getStatusCode();
-			Log.d(TAG, "Statuscode: " + status);
+
 		}
 
 		if (!checkStatusCode(status)) {
@@ -598,8 +598,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	}
 
 	private void logBadActivityResult(int requestCode, int resultCode, String message) {
-		Log.i(TAG, "Bad activity result(" + resultCode + ") for request (" + requestCode + "): "
-				+ message);
+
 	}
 
 	// This function is what gets called when you return from either the Play
@@ -610,7 +609,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 			Task<GoogleSignInAccount> task =
 					GoogleSignIn.getSignedInAccountFromIntent(intent);
-			Log.d(TAG, "onActivityResult - RC_SIGN_IN.");
+
 
 			try {
 				GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -644,7 +643,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				updateMatch(match);
 			}
 
-			Log.d(TAG, "Match = " + match);
+
 		} else if (requestCode == RC_SELECT_PLAYERS) {
 			// Returning from 'Select players to Invite' dialog
 
@@ -735,7 +734,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	// callback to OnTurnBasedMatchUpdated(), which will show the game
 	// UI.
 	public void startMatch(TurnBasedMatch match) {
-		Log.d(TAG, "startMatch()");
+
 		mTurnData = new SkeletonTurn();
 		// Some basic turn data
 		mTurnData.data = "First turn";
@@ -783,10 +782,10 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	public String getNextParticipantId() {
 
 		String myParticipantId = mMatch.getParticipantId(mPlayerId);
-		Log.d(AppSettings.tag, "My partcipantID: " + myParticipantId);
+
 
 		ArrayList<String> participantIds = mMatch.getParticipantIds();
-		Log.d(AppSettings.tag, "Participant IDs: "+ String.valueOf(participantIds));
+
 
 		int desiredIndex = -1;
 
@@ -813,12 +812,12 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	// This is the main function that gets called when players choose a match
 	// from the inbox, or else create a match and want to start it.
 	public void updateMatch(TurnBasedMatch match) {
-		Log.d(TAG, "updateMatch()");
+
 		mMatch = match;
-		Log.d(AppSettings.tag, "match.getData() in updateMatch(): " + match.getData());
-		Log.d(AppSettings.tag, "match.getStatus() in updateMatch(): " +match.getStatus());
-		Log.d(AppSettings.tag, "match.getTurnStatus() in updateMatch(): " +match.getTurnStatus());
-		Log.d(AppSettings.tag, "match.getMatchId() in updateMatch(): " +match.getMatchId());
+
+
+
+
 
 		//mTurnBasedMultiplayerClient.loadMatch(match.getMatchId());
 
@@ -829,30 +828,30 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		int turnStatus = match.getTurnStatus();
 
 		if(status == TurnBasedMatch.MATCH_STATUS_COMPLETE){
-			Log.d(AppSettings.tag, "Match is completed! Someone ended it.");
+
 			mMatch = null;
 		}
 
 		switch (status) {
 			case TurnBasedMatch.MATCH_STATUS_CANCELED:
 				//showWarning("Canceled!", "This game was canceled!");
-				Log.d(TAG, "Canceled! This game was canceled!");
+
 				return;
 			case TurnBasedMatch.MATCH_STATUS_EXPIRED:
 				//showWarning("Expired!", "This game is expired.  So sad!");
-				Log.d(TAG, "Expired! This game is expired.  So sad!");
+
 				return;
 			case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
 				//showWarning("Waiting for auto-match...",
 				//		"We're still waiting for an automatch partner.");
-				Log.d(TAG, "We're still waiting for an automatch partner.");
+
 				return;
 			case TurnBasedMatch.MATCH_STATUS_COMPLETE:
 				 /*showWarning("Complete!",
 				"This game is over; someone finished it, and so did you!  " +
 				"There is nothing to be done. This game will get dismissed now.");*/
-					Log.d(TAG, "This game is over; someone finished it, and so did you!  ");
-					Log.d(AppSettings.tag, "Dismissing the game since it is completed");
+
+
 					mTurnBasedMultiplayerClient.dismissMatch(match.getMatchId());
 					mMatch = null;
 					return;
@@ -862,26 +861,26 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				//showWarning("Complete!",
 				//		"This game is over; someone finished it!  You can only finish it now.");
 		}
-		Log.d(TAG, "Match is active, checking turnStatus");
+
 		// OK, it's active. Check on turn status.
 		switch (turnStatus) {
 			case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
-				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_my_turn");
+
 				isDoingTurn = true;
 				mTurnData = SkeletonTurn.unpersist(mMatch.getData());
 				//setGameplayUI();
 				return;
 			case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
-				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_their_turn");
+
 				// Should return results.
 				//showWarning("Alas...", "It's not your turn.");
 				break;
 			case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
-				Log.d(AppSettings.tag, "Turnstatus: Match_turn_status_invited");
+
 				/*showWarning("Good inititative!",
 						"Still waiting for invitations.\n\nBe patient!");*/
 		}
-		Log.d(AppSettings.tag, "setting mTurnData to null");
+
 		mTurnData = null;
 
 		//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
@@ -898,7 +897,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	private void onInitiateMatch(TurnBasedMatch match) {
 		dismissSpinner();
-		Log.d(TAG, "onInitiateMatch()");
+
 
 		if (match.getData() != null) {
 			// This is a game that has been initialized already
@@ -918,7 +917,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 
 	public void onUpdateMatch(TurnBasedMatch match) {
-		Log.d(AppSettings.tag, "onUpdateMatch()");
+
 		dismissSpinner();
 
 		if (match.canRematch()) {
@@ -926,10 +925,10 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		}
 
 		isDoingTurn = (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
-		Log.d(AppSettings.tag, "changed isDoingTurn to match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN");
+
 
 		if (isDoingTurn) {
-			Log.d(AppSettings.tag, "isDoingTurn is true, so updateMatch(match) will be called");
+
 			updateMatch(match);
 			return;
 		}
@@ -959,7 +958,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	private TurnBasedMatchUpdateCallback mMatchUpdateCallback = new TurnBasedMatchUpdateCallback() {
 		@Override
 		public void onTurnBasedMatchReceived(@NonNull TurnBasedMatch turnBasedMatch) {
-			Log.d(AppSettings.tag, "onTurnBasedMatchReceived():A Match was updated");
+
 			Toast.makeText(AndroidLauncher.this, "A match was updated.", Toast.LENGTH_LONG).show();
 			updateMatch(turnBasedMatch);
 		}
@@ -1001,8 +1000,6 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				break;
 			default:
 				showErrorMessage(R.string.unexpected_status);
-				Log.d(TAG, "Did not have warning or string to deal with: "
-						+ statusCode);
 		}
 
 		return false;
@@ -1037,7 +1034,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 			case R.id.sign_in_button:
 				mMatch = null;
 				findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-				Log.d(AppSettings.tag, "starting signInIntent");
+
 				startSignInIntent();
 				break;
 			case R.id.sign_out_button:
@@ -1045,35 +1042,35 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				//COMMENTED OUT BECAUSE WE DONT WANT TO USE GOOGLE UI setViewVisibility();
 				break;
 			case R.id.GDXButton:
-				Log.d(AppSettings.tag, "GDXButton was clicked");
+
 				changeView();
 				break;
 			case R.id.GDXButton2:
-				Log.d(AppSettings.tag, "GDXButton was clicked");
+
 				changeView();
 				break;
 			case R.id.TakeTurnButton:
-				Log.d(AppSettings.tag, "Take turn button was clicked");
+
 				takeTurn();
 				break;
 			case R.id.LoadMatchButton:
-				Log.d(AppSettings.tag, "Load Match button was clicked");
+
 				loadMatch();
 				break;
 			case R.id.DismissMatchButton:
-				Log.d(AppSettings.tag, "Dismiss Match button was clicked");
+
 				dismissMatch();
 				break;
 			case R.id.CreateNewMatch:
-				Log.d(AppSettings.tag, "Create New Match button was clicked");
+
 				createNewMatch();
 				break;
 			case R.id.FinishMatch:
-				Log.d(AppSettings.tag, "Finish Match button was clicked");
+
 				endMatch();
 				break;
 			case R.id.CheckMatchStatus:
-				Log.d(AppSettings.tag, "Check Match Status was clicked:");
+
 				mTurnBasedMultiplayerClient.getInboxIntent()
 						.addOnSuccessListener(new OnSuccessListener<Intent>() {
 							@Override
@@ -1085,7 +1082,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				checkMatchStatus();
 				break;
 			case R.id.CheckTurnStatus:
-				Log.d(AppSettings.tag, "Check Turn Status was Clicked:");
+
 				checkTurnStatus();
 				break;
 		}
@@ -1095,15 +1092,15 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 	public void createNewMatch(){
 		// check if gamesclient is not null
 		if(mTurnBasedMultiplayerClient != null){
-			Log.d(AppSettings.tag, "createNewMatch(): mTurnBasedMultiplayerClient is not null");
+
 		}
-		Log.d(AppSettings.tag, "Creating a new match!");
+
 		Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
 
 		TurnBasedMatchConfig turnBasedMatchConfig = TurnBasedMatchConfig.builder()
 				.setAutoMatchCriteria(autoMatchCriteria).build();
 
-		Log.d(AppSettings.tag, "Config finished, trying create match through client...");
+
 
 		//showSpinner();
 		// Start the match
@@ -1111,10 +1108,10 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
 					@Override
 					public void onSuccess(TurnBasedMatch turnBasedMatch) {
-						Log.d(AppSettings.tag, "success from create match from client...");
-						Log.d(AppSettings.tag, "Trying to onInitiateMatch(turnBasedMatch");
+
+
 						onInitiateMatch(turnBasedMatch);
-						Log.d(AppSettings.tag, "Created a new match!");
+
 					}
 				})
 				.addOnFailureListener(createFailureListener("There was a problem creating a match!"));
@@ -1125,73 +1122,73 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		// Check if there is a mMatch first
 		if(mMatch != null) {
 			// There is a match
-			Log.d(AppSettings.tag, "Dismissing match");
+
 			mTurnBasedMultiplayerClient.dismissMatch(mMatch.getMatchId());
 		}
 		else{
-			Log.d(AppSettings.tag, "There was no mMatch to dismiss");
+
 		}
 	}
 
 	//CheckMatchStatus for testing
 	public void checkMatchStatus(){
-		Log.d(AppSettings.tag, "checkMatchStatus():");
+
 		if(mTurnBasedMultiplayerClient != null){
 			if(mMatch != null) {
-				Log.d(AppSettings.tag, String.valueOf(mMatch.getStatus()));
+
 			}
 			else{
-				Log.d(AppSettings.tag, "mMatch = null");
+
 			}
 		}
 	}
 
 	//CheckTurnStatus for testing
 	public void checkTurnStatus(){
-		Log.d(AppSettings.tag, "checkTurnStatus():");
+
 		if(mTurnBasedMultiplayerClient != null){
 			if(mMatch != null) {
-				Log.d(AppSettings.tag, String.valueOf(mMatch.getTurnStatus()));
+
 			}
 			else{
-				Log.d(AppSettings.tag, "mMatch = null");
+
 			}
 		}
 	}
 
 	// Function to take a turn (For testing)
 	public void takeTurn() {
-		Log.d(AppSettings.tag, "takeTurn(): starting...");
+
 		if(mMatch.getTurnStatus() == 1) {
-			Log.d(AppSettings.tag, "takeTurn(): isDoingTurn is true");
+
 			//showSpinner();
 
 			String nextParticipantId = getNextParticipantId();
-			Log.d(AppSettings.tag, "takeTurn(): got nextParticipantID: "+ getNextParticipantId());
+
 			// Create the next turn
 			mTurnData.turnCounter += 1;
 			// mTurnData.data = mDataView.getText().toString(); commented out because we dont use the textView
 			// mTurnData.data = mDisplayName;
 			// Set turn data to be equal to gameDataFromCore
 			mTurnData.data = gameDataFromCore;
-			Log.d(AppSettings.tag, "takeTurn(): mTurnData.data: " + mTurnData.data);
-			Log.d(AppSettings.tag, "takeTurn(): mMatch.getMatchId():" + mMatch.getMatchId());
+
+
 
 			mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
 					mTurnData.persist(), nextParticipantId)
 					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
 						@Override
 						public void onSuccess(TurnBasedMatch turnBasedMatch) {
-							Log.d(AppSettings.tag, "Successfully uploaded turn going to call onUpdateMatch)");
+
 							onUpdateMatch(turnBasedMatch);
 						}
 					})
 					.addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
-			Log.d(AppSettings.tag, "Uploaded turn, setting mTurnData to null");
+
 			mTurnData = null;
 		}
 		else{
-			Log.d(AppSettings.tag, "It is not your turn!");
+
 			//showWarning("STOP!", "It is not your turn!");
 		}
 	}
@@ -1203,11 +1200,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		// Check if logged in
 		if(mGoogleSignInAccount != null) {
 			// Attempting to register turnBasedMatchUpdateCallback
-			Log.d(AppSettings.tag, "Registering TurnbasedMatchUpdateCallback");
+
 			mTurnBasedMultiplayerClient.registerTurnBasedMatchUpdateCallback(mMatchUpdateCallback);
 			// First  check if we have a mTurnBasedMultiplayerClient
 			if (mTurnBasedMultiplayerClient != null) {
-				Log.d(AppSettings.tag, "mMatch is: " + mMatch);
+
 				// First figure out if there exists any matches that involves the logged in user.
 				int[] mMatchStatuses = new int[2];
 				mMatchStatuses[0] = TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN;
@@ -1215,8 +1212,8 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				mTurnBasedMultiplayerClient.loadMatchesByStatus(mMatchStatuses).addOnSuccessListener(new OnSuccessListener<AnnotatedData<LoadMatchesResponse>>() {
 					@Override
 					public void onSuccess(AnnotatedData<LoadMatchesResponse> loadMatchesResponseAnnotatedData) {
-						Log.d(AppSettings.tag, "Loaded this many My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
-						Log.d(AppSettings.tag, "Loaded this many Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
+
+
 						if (loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0) {
 							// there is one OR MORE matches where it is my turn
 							mMatch = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(0); // Pick first match - can there be more than one? Would be a bug if so
@@ -1228,7 +1225,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				}).addOnFailureListener(new OnFailureListener() {
 					@Override
 					public void onFailure(@NonNull Exception e) {
-						Log.d(AppSettings.tag, "There was an error loading matches.");
+
 					}
 				});
 			}
@@ -1242,19 +1239,19 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 			if(mTurnBasedMultiplayerClient != null){
 				if (mMatch != null) {
 					updateMatch(mMatch);
-					Log.d(TAG, "mMatch.getStatus(): "+ String.valueOf(mMatch.getStatus()));
+
 					//mTurnBasedMultiplayerClient.takeTurn(null, null, null);
 				}
 
 				else {
-					Log.d(AppSettings.tag, "Creating a new match!");
+
 					Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
 
 					TurnBasedMatchConfig turnBasedMatchConfig = TurnBasedMatchConfig.builder()
 							.setAutoMatchCriteria(autoMatchCriteria).build();
 
 					//showSpinner();
-					Log.d(AppSettings.tag, "startQuickMatch()");
+
 					// Start the match
 					mTurnBasedMultiplayerClient.createMatch(turnBasedMatchConfig)
 							.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
@@ -1284,11 +1281,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		mTurnBasedMultiplayerClient.loadMatchesByStatus(mMatchStatuses).addOnSuccessListener(new OnSuccessListener<AnnotatedData<LoadMatchesResponse>>() {
 			@Override
 			public void onSuccess(AnnotatedData<LoadMatchesResponse> loadMatchesResponseAnnotatedData) {
-				Log.d(AppSettings.tag, "Loaded My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
-				Log.d(AppSettings.tag, "Loaded Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
-				Log.d(AppSettings.tag, "Loaded completed matches: " + loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount());
+
+
+
 				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount() == 0){
-					Log.d(AppSettings.tag, "There are 0 matches going on. Setting mMatch to null");
+
 					mMatch = null;
 				}
 				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0){
@@ -1305,11 +1302,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 					// there is one OR MORE matches that is completed, will loop through all and delete them
 					// Amount of matches
 					int amountToLoop = loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount();
-					Log.d(AppSettings.tag, "getcompletedMatches().getCount() = " + amountToLoop);
+
 					for(int i = 0; i < amountToLoop; i++){
-						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountToLoop) + " matches that are completed. Dismissing them all.");
+
 						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getCompletedMatches().get(i);
-						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+
 						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
 					}
 				}
@@ -1317,7 +1314,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		}).addOnFailureListener(new OnFailureListener() {
 			@Override
 			public void onFailure(@NonNull Exception e) {
-				Log.d(AppSettings.tag, "There was an error loading matches.");
+
 			}
 		});
 	}
@@ -1330,11 +1327,11 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		mTurnBasedMultiplayerClient.loadMatchesByStatus(mMatchStatuses).addOnSuccessListener(new OnSuccessListener<AnnotatedData<LoadMatchesResponse>>() {
 			@Override
 			public void onSuccess(AnnotatedData<LoadMatchesResponse> loadMatchesResponseAnnotatedData) {
-				Log.d(AppSettings.tag, "Loaded My turn matches: " + loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount());
-				Log.d(AppSettings.tag, "Loaded Their turn matches: " + loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount());
-				Log.d(AppSettings.tag, "Loaded completed matches: " + loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount());
+
+
+
 				/*if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() == 0 && loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount() == 0){
-					Log.d(AppSettings.tag, "There are 0 matches going on. Setting mMatch to null");
+
 					mMatch = null;
 				}
 				if(loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0){
@@ -1351,32 +1348,32 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 					// there is one OR MORE matches that is completed, will loop through all and delete them
 					// Amount of matches
 					int amountToLoop = loadMatchesResponseAnnotatedData.get().getCompletedMatches().getCount();
-					Log.d(AppSettings.tag, "getcompletedMatches().getCount() = " + amountToLoop);
+
 					for (int i = 0; i < amountToLoop; i++) {
-						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountToLoop) + " matches that are completed. Dismissing them all.");
+
 						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getCompletedMatches().get(i);
-						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+
 						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
 					}
 				}
 				if (loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount() > 0) {
 					int amountMyTurn = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().getCount();
-					Log.d(AppSettings.tag, "getMyTurnMatches().getCount() = " + amountMyTurn);
+
 					for (int i = 0; i < amountMyTurn; i++) {
-						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountMyTurn) + " matches that are my turn. Dismissing them all.");
+
 						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getMyTurnMatches().get(i);
-						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+
 						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
 					}
 				}
 				if (loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount() > 0){
 					int amountTheirTurn = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().getCount();
-					Log.d(AppSettings.tag, "getTheirTurnMatches().getCount() = " + amountTheirTurn);
+
 
 					for(int i = 0; i < amountTheirTurn; i++){
-						Log.d(AppSettings.tag, "loadMatch(): found " + String.valueOf(amountTheirTurn) + " matches that are their turn. Dismissing them all.");
+
 						TurnBasedMatch matchToDismiss = loadMatchesResponseAnnotatedData.get().getTheirTurnMatches().get(i);
-						Log.d(AppSettings.tag, "Dismissing match: " + matchToDismiss.getMatchId());
+
 						mTurnBasedMultiplayerClient.dismissMatch(matchToDismiss.getMatchId());
 					}
 				}
@@ -1384,21 +1381,21 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 		}).addOnFailureListener(new OnFailureListener() {
 			@Override
 			public void onFailure(@NonNull Exception e) {
-				Log.d(AppSettings.tag, "There was an error loading matches.");
+
 			}
 		});
 	}
 
 	// Function used to end the current match, return true if ended, return false if not
 	public boolean endMatch(){
-		Log.d(AppSettings.tag, "endMatch was called...");
+
 		// Attempt to end the match
 		try {
 			mTurnBasedMultiplayerClient.finishMatch(mMatch.getMatchId())
 					.addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
 						@Override
 						public void onSuccess(TurnBasedMatch turnBasedMatch) {
-							Log.d(AppSettings.tag, "endMatch(): Successfully ended match, setting mMatch to null after onUpdateMatch");
+
 							mMatch = null;
 							onUpdateMatch(turnBasedMatch);
 						}
@@ -1409,13 +1406,13 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				return true;
 			}
 			else{
-				Log.d(AppSettings.tag, "Something went wrong trying to end/finish the game");
+
 				mMatch = null;
 				return false;
 			}
 		}
 		catch (Exception e){
-			Log.d(AppSettings.tag, "Something went wrong when trying to end/finish the game");
+
 			mMatch = null;
 			return false;
 		}
@@ -1479,30 +1476,30 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// returns the latest data this androidlauncher has received from matchupdates
 	public String getGameData(){
-		Log.d(AppSettings.tag, "getGameData(): starting...");
-		Log.d(AppSettings.tag, "getGameData(): trying to loadMatch()...");
+
+
 		loadMatch();
 		if(mMatch != null) {
-			Log.d(AppSettings.tag, "getGameData(): starting...");
-			Log.d(AppSettings.tag, "getGameData(): trying to update the match before fetching data...");
+
+
 			updateMatch(mMatch);
 		}
 		if(mTurnData != null){
-			Log.d(AppSettings.tag, "getGameData(): the mTurnData is not null! Returning the data to core.");
+
 			return mTurnData.data;
 		}
 		else{
-			Log.d(AppSettings.tag, "getGameData(): the mTurnData was null, returning null to core");
+
 			return null;
 		}
 	}
 
 	public void receiveGameData(String gameData){
-		Log.d(AppSettings.tag, "Received gamedata: " + gameData);
+
 		gameDataFromCore = gameData;
-		Log.d(AppSettings.tag, "Attempting to take turn...");
+
 		takeTurn();
-		Log.d(AppSettings.tag, "Took turn.");
+
 	}
 
 	// Called from core to know if it is a players turn
@@ -1517,24 +1514,24 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 
 	// Call to get displayName of opponent
 	public String getOpponentDisplayName() {
-		Log.d(TAG, "getOpponentDisplayName()");
+
 		if (mMatch == null) {
 			// There is no match yet
-			Log.d(TAG, "There is no match yet");
+
 			return null;
 		} else {
 			// Try to find opponent ID
-			Log.d(TAG, "Your playerID "+ mPlayerId);
+
 			String opponentId = mMatch.getDescriptionParticipantId();
-			Log.d(TAG, "Opponent playerID "+ opponentId);
+
 
 			ArrayList<String> allIdsInGame = mMatch.getParticipantIds();
-			Log.d(TAG, "Size of allIdsInGame: "+ String.valueOf(allIdsInGame.size()));
-			Log.d(TAG, "Result of getNextParticipantId(): "+ getNextParticipantId());
+
+
 
 			if(opponentId == null){
 				// There is no opponent yet
-				Log.d(TAG, "There is a match, but there is no opponent yet");
+
 				return null;
 			}
 			else{
@@ -1542,7 +1539,7 @@ public class AndroidLauncher extends PatchedAndroidApplication implements View.O
 				Participant opponent = mMatch.getParticipant(getNextParticipantId());
 				if(opponent == null){
 					// Something is wrong? The opponent Participant object is null?
-					Log.d(TAG, "Something is wrong? The opponent Participant object is null?");
+
 					return null;
 				}
 				else{

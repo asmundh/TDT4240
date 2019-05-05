@@ -105,7 +105,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         stepBackBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println(tutCounter);
+
                 btnSound.play();
                 tutCounter -= 2;
                 showTutorialStep();
@@ -126,7 +126,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         stepForwardBtn.addListener(new ClickListener() {
             @Override // Fires when the user lets go of the button
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println(tutCounter);
+
                 btnSound.play();
                 showTutorialStep();
             }

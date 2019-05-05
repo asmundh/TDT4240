@@ -110,11 +110,11 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     public void addCardToTable(Entity playerEntity, Entity cardEntity) {
-        System.out.println("PlayerSystem - addCardToTable(): trying to add a card to table");
+
         if (pm.get(playerEntity).cardsOnTable.size() < 5) {
 
             pm.get(playerEntity).cardsOnTable.add(cardEntity);
-            System.out.println("PlayerSystem - addCardToTable(): added a card to table");
+
         }
     }
 

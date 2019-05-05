@@ -63,7 +63,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void create() {
-        System.out.println("Entered menuscreen");
+
         stage = new Stage(new ScreenViewport()); // Create stage used by buttons
         Gdx.input.setInputProcessor(stage); // Set inputs to be handled by the stage
 
@@ -99,7 +99,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
                 playBtn.setVisible(false);
                 // show looking for match
                 flagLookingForMatch = true;
-                System.out.println("Now looking for game...");
+
                 btnClick.play();
                 game.getBgMusic().stop();
             }
@@ -208,7 +208,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
 
         // check if we have found an opponent
         if(game.androidInterface.getFoundOpponent()){
-            System.out.println("Found opponent!");
+
             // this returned true, that means we have found a match
             foundMatch = true;
         }
@@ -217,7 +217,7 @@ public class MenuScreen extends ScreenAdapter implements ScreenInterface {
         if(foundMatch) {
             flagLookingForMatch = false;
             foundMatch = false;
-            System.out.println("MenuScreen - update(): setting a new GameScreen - because of foundMatch");
+
             game.setScreen(new GameScreen(game, engine));
         }
         handleInput();

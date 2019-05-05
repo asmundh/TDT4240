@@ -172,18 +172,15 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     public boolean checkNotFirstTurn() {
         if(game.androidInterface.getTurnCounter() == 9000){
-            System.out.println("There seems to be a new game and it is now you who started");
             return false;
         }
         return true;
     }
 
     public void loadTurnCounter() {
-        System.out.println("loadTurnCounter(): my local turncounter: " + turnCounter);
 
         // Loads the turncounter on the server
         int loadedTurnCounter = game.androidInterface.getTurnCounter();
-        System.out.println("loadTurnCounter(): received turnCounter: " + loadedTurnCounter);
 
 
         // Compare the turnCounter to the local turncounter
@@ -194,13 +191,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             checkAndLoadNewTurn();
         }
         else{
-            System.out.println("loadTurnCounter(): the counter received from server is equal to your local counter...");
         }
     }
 
     public void checkAndLoadNewTurn() {
         if (checkNotFirstTurn()) {
-            System.out.println("gameData received: " + game.androidInterface.getGameData());
             if(!(loadedNewTurn)){
                 parseNewTurn(game.androidInterface.getGameData());
                 loadedNewTurn = true;
@@ -211,13 +206,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
     public void parseNewTurn(String gameState) {
         if(gameState.equals("First turn")){
-            System.out.println("Received - first turn - from server, game just started, will not parse...");
             return;
         }
-
-
-        System.out.println("parseNewTurn starting...");
-        System.out.println("parseNewTurn(): gameState: " + gameState);
 
         int playerHealth = 0;
         int enemyHealth = 0;
@@ -265,7 +255,6 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
 
             if (currentCategory == 2) {
-                System.out.println("parseNewturn(): currentCategory == 2");
                 boolean finishedCard = false;
                 if (!(gameState.charAt(i) == '#')) {
                     if(gameState.charAt(i) == 'c'){
@@ -273,11 +262,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     }
                     else{
                         if (currentCardCategory == 0) {
-                            System.out.println("parseNewturn(): currentCardCategory == 0");
                             if (!(gameState.charAt(i) == 'i')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                System.out.println("parseNewTurn(): Found an 'i', setting currentCardCategoryFlag to true");
                                 currentCardCategoryFlag = true;
                                 currentCardId = Integer.valueOf(sb);
                                 sb = "";
@@ -285,22 +272,18 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                             }
                         }
                         if (currentCardCategory == 1) {
-                            System.out.println("parseNewturn(): currentCardCategory == 1");
                             if (!(gameState.charAt(i) == 'h')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                System.out.println("parseNewTurn(): Found an 'h', setting currentCardCategoryFlag to true");
                                 currentCardCategoryFlag = true;
                                 currentCardHealth = Integer.valueOf(sb);
                                 sb = "";
                             }
                         }
                         if (currentCardCategory == 2) {
-                            System.out.println("parseNewturn(): currentCardCategory == 2");
                             if (!(gameState.charAt(i) == 'a')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                System.out.println("parseNewTurn(): Found an 'a', setting currentCardCategoryFlag to true");
 
                                 currentCardAttack = Integer.valueOf(sb);
                                 sb = "";
@@ -315,8 +298,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                         newCard.add(currentCardHealth);
                         newCard.add(currentCardAttack);
                         enemyBoard.add(newCard);
-                        System.out.println("parseNewTurn(): Attempted to add a card to enemyBoard");
-                        System.out.println("parseNewTurn(): These were the stats of the attempted card: " + "id: " + currentCardId+ ", health: "+ currentCardHealth + ", attack: " + currentCardAttack +".");
+
+
                         currentCardCategory = 0;
                         finishedCard = false;
                     }
@@ -328,8 +311,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                 }
             }
             if (currentCategory == 3) {
-                System.out.println("parseNewTurn(): currentCatergory is 3.");
-                System.out.println("parseNewTurn(): currentCardCategory is: " + currentCardCategory);
+
+
                 boolean finishedCard = false;
                 if (!(gameState.charAt(i) == '#')) {
                     if(gameState.charAt(i) == 'c'){
@@ -337,22 +320,22 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                     }
                     else{
                         if (currentCardCategory == 0) {
-                            System.out.println("parseNewTurn(): currentCardCategory == 0");
+
                             if (!(gameState.charAt(i) == 'i')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                System.out.println("parseNewTurn(): Found an 'i', setting currentCardCategoryFlag to true");
+
                                 currentCardCategoryFlag = true;
                                 currentCardId = Integer.valueOf(sb);
                                 sb = "";
                             }
                         }
                         if (currentCardCategory == 1) {
-                            System.out.println("parseNewTurn(): currentCardCategory == 1");
+
                             if (!(gameState.charAt(i) == 'h')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                System.out.println("parseNewTurn(): Found an 'h', setting currentCardCategoryFlag to true");
+
 
                                 //currentCardCategory++;
                                 currentCardCategoryFlag = true;
@@ -361,12 +344,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                             }
                         }
                         if (currentCardCategory == 2) {
-                            System.out.println("parseNewTurn(): currenCardCategory == 2");
+
                             if (!(gameState.charAt(i) == 'a')) {
                                 sb = sb + gameState.charAt(i);
                             } else {
-                                System.out.println("parseNewTurn(): Found an 'a', setting currentCardCategoryFlag to true");
-                                System.out.println("parseNewTurn(): found an 'a' setting finishedCard to true");
+
+
                                 //currentCardCategory++;
                                 //currentCardCategoryFlag = true;
                                 currentCardAttack = Integer.valueOf(sb);
@@ -382,8 +365,8 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
                         newCard.add(currentCardHealth);
                         newCard.add(currentCardAttack);
                         playerBoard.add(newCard);
-                        System.out.println("parseNewTurn(): Attempted to add a card to playerBoard");
-                        System.out.println("parseNewTurn(): These were the stats of the attempted card: " + "id: " + currentCardId+ ", health: "+ currentCardHealth + ", attack: " + currentCardAttack +".");
+
+
                         currentCardCategory = 0;
                         finishedCard = false;
                     }
@@ -398,20 +381,20 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         // printing hands of players
         for(int i = 0; i < playerHand.size(); i++){
-            System.out.println("parseNewTurn(): playerHand array: index of :" + i + ": " + playerHand.get(i));
+
         }
 
         for(int i = 0; i < enemyHand.size(); i++){
-            System.out.println("parseNewTurn(): enemyHand array: index of :" + i + ": " + enemyHand.get(i));
+
         }
 
         // printing boards of players
         for(int i = 0; i < playerBoard.size(); i++){
-            System.out.println("parseNewTurn(): playerBoard array: index of :" + i + ": " + playerBoard.get(i));
+
         }
 
         for(int i = 0; i < enemyBoard.size(); i++){
-            System.out.println("parseNewTurn(): enemyBoard array: index of :" + i + ": " + enemyBoard.get(i));
+
         }
 
         //Updating players healths
@@ -436,12 +419,12 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
 
         endCheck();
 
-        System.out.println("parseNewTurn(): playerBoardCards.size(): " + playerBoardCards.size());
+
 
         for (int i = 0; i < playerBoardCards.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToTable(players.get(0), playerBoardCards.get(i));
         }
-        System.out.println("parseNewTurn(): enemyBoardCards.size(): " + enemyBoardCards.size());
+
         for (int i = 0; i < enemyBoardCards.size(); i++) {
             engine.getSystem(PlayerSystem.class).addCardToTable(players.get(1), enemyBoardCards.get(i));
         }
@@ -451,11 +434,11 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         engine.getSystem(PlayerSystem.class).pickFromDeck(players.get(0)); //draw new card
         engine.getSystem(PlayerSystem.class).setManaPoints(players.get(0), 10); //Reset mana points. All turns after 9, players mana points will be reset to 10
 
-        System.out.println("parseNewTurn() ended...");
-        System.out.println("parseNewTurn() playerBoardCards size:" + playerBoardCards.size());
-        System.out.println("parseNewTurn() enemyBoardCards size:" + enemyBoardCards.size());
-        System.out.println("parseNewTurn(): Playerhand size: "+ playerHand.size());
-        System.out.println("parseNewTurn(): enemyHand size: "+ enemyHand.size());
+
+
+
+
+
 
         wakeAllCards();
     }
@@ -494,7 +477,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             card.add(engine.getSystem(CardSystem.class).getAttackPower(playerBoard.get(i)));
 
             playerBoardId.add(card);
-            System.out.println("endTurn(): added these stats for a card on player: id: " + card.get(0) + ", health: " +card.get(1) + ", attack: " + card.get(2) + ".");
+
         }
         for(int i = 0; i < enemyBoard.size(); i++) {
             List card = new ArrayList();
@@ -503,7 +486,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             card.add(engine.getSystem(CardSystem.class).getAttackPower(enemyBoard.get(i)));
 
             enemyBoardId.add(card);
-            System.out.println("endTurn(): added these stats for a card on enemy: id: " + card.get(0) + ", health: " +card.get(1) + ", attack: " + card.get(2) + ".");
+
 
         }
 
@@ -514,9 +497,9 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
         gameState.enemyBoard = enemyBoardId;
 
 
-        System.out.println("Trying to send game data to server and end turn");
+
         game.androidInterface.sendGameDataAndEndTurn(gameState.toString());
-        System.out.println("Have sent data to server and ended turn AFAIK");
+
     }
 
     public void searchAndDestroyDeadCards() {
@@ -544,10 +527,10 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void startCheck() {
-                            System.out.println("handleInput START: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+
     }
     public void endCheck() {
-        System.out.println("handleInput END: size of playerBoardCards:" + engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size());
+
     }
 
     @Override
@@ -568,7 +551,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             if (!isMyTurn()){
                 if((bv.getLoadTurnButtonRect().contains(pos))){
                     clickSound.play();
-                    System.out.println("getIsDoingTurn(): "+ game.androidInterface.getIsDoingTurn());
+
                     engine.getSystem(PlayerSystem.class).setIsYourTurn(players.get(0), game.androidInterface.getIsDoingTurn());
                     loadTurnCounter();
                 } else return;
@@ -667,7 +650,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Rectangle rec = handPos.get(i);
             if (rec.contains(pos)) {
                 index = handPos.indexOf(rec);
-                System.out.println("Hit" + index);
+
                 break;
             }
         }
@@ -677,13 +660,13 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     private int getCardTouchedOnTable(Vector2 pos) {
         int index = -1;
         List<Rectangle> boardPos = bv.getBoardPosition();
-        System.out.println("Pos" + pos);
+
 
         for (int i = 0; i < engine.getSystem(PlayerSystem.class).getCardsOnTable(players.get(0)).size(); i++) {
             Rectangle rec = boardPos.get(i);
             if (rec.contains(pos)) {
                 index = boardPos.indexOf(rec);
-                System.out.println("Hit" + index);
+
                 break;
             }
         }
@@ -691,7 +674,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
             Rectangle rec = boardPos.get(i);
             if (rec.contains(pos)) {
                 index = boardPos.indexOf(rec);
-                System.out.println("Hit" + index);
+
                 break;
             }
         }
@@ -699,7 +682,7 @@ public class GameScreen extends ScreenAdapter implements ScreenInterface {
     }
 
     public void placeCard(Entity cardEntity, int indexOfCardToPlace) {
-        System.out.println("placeCard(): trying to AddCardToTable: - indexOfCardToPlace = " + indexOfCardToPlace );
+
         engine.getSystem(PlayerSystem.class).AddCardToTable(players.get(0), indexOfCardToPlace);
         engine.getSystem(CardSystem.class).deployCard(cardEntity);
         engine.getSystem(PlayerSystem.class).payForCard(players.get(0), engine.getSystem(CardSystem.class).getCost(cardEntity));

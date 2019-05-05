@@ -41,7 +41,7 @@ public class World  {
     }
 
     public Entity createBoardCard(int id, int health, int attack) {
-        System.out.println("World.createBoardCard(): I was fired from somewhere... trying to create a card for a board");
+
         Entity cardEntity = new Entity();
 
         CardPowerComponent cardPower = new CardPowerComponent();
