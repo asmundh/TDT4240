@@ -189,13 +189,13 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         skin.getFont("font").getData().setScale(2.0f,2.0f);
 
-        textBox1 = new TextArea("Welcome to CHAD. This tutorial will take you through the basic and get you going in no time! Use the button to navigate through the tutorial.", skin);
+        textBox1 = new TextArea("Welcome to CHAD. This tutorial will take you through the basics and get you going in no time! Use the button to navigate through the tutorial.", skin);
         textBox1.setSize(600f, 300f);
         textBox1.setPosition(game.getWidth()/2 - textBox1.getWidth()/2, game.getHeight()/2 - textBox1.getHeight()/2 + 100);
         textBox1.setDisabled(true); // Disables input into box
         textBox1.setVisible(false);
 
-        textBox2 = new TextArea("The highlighted area is your hand. These are the cards you can hoist to the table to later attack with.", skin);
+        textBox2 = new TextArea("The highlighted area is your hand. These are the cards you can hoist to the table to later destroy with.", skin);
         textBox2.setSize(400f, 200f);
         textBox2.setPosition(500f, 400f);
         textBox2.setDisabled(true);
@@ -219,7 +219,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         textBox5.setDisabled(true);
         textBox5.setVisible(false);
 
-        textBox6 = new TextArea("The card is now placed on the table. To show the tabel, tap the \"Hide hand\" button.", skin);
+        textBox6 = new TextArea("The card is now placed on the table. To show the table, tap the \"Hide hand\" button.", skin);
         textBox6.setSize(400f, 200f);
         textBox6.setPosition(700f, 400f);
         textBox6.setDisabled(true);
@@ -239,7 +239,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         textBox8.setVisible(false);
 
         textBox9 = new TextArea("You win if you reduce your opponents health to 0. " +
-                "This means you have to prioritize if you want to attack a card or the player directly." +
+                "This means you have to prioritize if you want to attack a card or the player directly. " +
                 "To attack, select a card and then tap the card you want to attack or the enemy.", skin);
         textBox9.setSize(400f, 480f);
         textBox9.setPosition(1050, 300f);
@@ -265,7 +265,7 @@ public class TutorialScreen extends ScreenAdapter implements ScreenInterface {
         textBox12.setVisible(false);
 
         textBox13 = new TextArea("Now you know the basics of how to play CHAD," +
-                " the game all about collecting cards, hoisting them and going for the attack! CHAD can be a pretty serious game, " +
+                " the game all about collecting cards, hoisting them and using them to destroy your opponent! CHAD can be a pretty serious game, " +
                 "but remember: The most important ting is to GLHF!", skin);
         textBox13.setSize(600f, 300f);
         textBox13.setPosition(game.getWidth()/2 - textBox1.getWidth()/2, game.getHeight()/2 - textBox1.getHeight()/2 + 100);
